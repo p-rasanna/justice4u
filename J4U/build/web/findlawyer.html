@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justice4U - Find a Lawyer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="Home.html">
+                        <h1>Justice4U</h1>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="Home.html">Home</a></li>
+                    <li><a href="findlawyer.html" class="active">Find Lawyer</a></li>
+                    <li><a href="Login.html">Login</a></li>
+                </ul>
+                <div class="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Search Section -->
+        <section class="search-section" style="padding: var(--space-4xl) 0; background-color: var(--color-soft-stone);">
+            <div class="container">
+                <div class="search-header" style="text-align: center; margin-bottom: var(--space-3xl);">
+                    <h1 style="font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); color: var(--color-charcoal-black); margin-bottom: var(--space-lg);">Find Your Perfect Lawyer</h1>
+                    <p style="font-size: var(--font-size-xl); color: var(--color-muted-graphite); max-width: 600px; margin: 0 auto;">Connect with experienced legal professionals in your area</p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-bar" style="max-width: 800px; margin: 0 auto; display: flex; gap: var(--space-md);">
+                    <div class="search-input-container" style="flex: 1; position: relative;">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-antique-gold)" stroke-width="2" style="position: absolute; left: var(--space-md); top: 50%; transform: translateY(-50%);">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search by name, specialization, or location..." autocomplete="off" style="width: 100%; padding: var(--space-md) var(--space-md) var(--space-md) 3rem; border: var(--border-width-thin) solid var(--color-warm-gray); border-radius: var(--radius-lg); font-family: var(--font-family-primary); font-size: var(--font-size-base); transition: border-color var(--transition-fast);">
+                        <button type="button" class="search-clear" style="display: none; position: absolute; right: var(--space-md); top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--color-muted-graphite);" aria-label="Clear search">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-primary search-button">
+                        <span>Search</span>
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-section">
+                    <div class="filters-header">
+                        <h3>Filters</h3>
+                        <button type="button" class="filters-toggle" aria-expanded="false">
+                            <span>Show Filters</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6,9 12,15 18,9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="filters-content" style="display: none;">
+                        <div class="filter-group">
+                            <label for="specialization">Specialization</label>
+                            <select id="specialization" multiple>
+                                <option value="criminal">Criminal Law</option>
+                                <option value="civil">Civil Law</option>
+                                <option value="corporate">Corporate Law</option>
+                                <option value="family">Family Law</option>
+                                <option value="property">Property Law</option>
+                                <option value="tax">Tax Law</option>
+                                <option value="immigration">Immigration Law</option>
+                                <option value="intellectual-property">Intellectual Property</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="experience">Experience Level</label>
+                            <select id="experience">
+                                <option value="">Any Experience</option>
+                                <option value="1-3">1-3 years</option>
+                                <option value="3-5">3-5 years</option>
+                                <option value="5-10">5-10 years</option>
+                                <option value="10+">10+ years</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="rating">Minimum Rating</label>
+                            <select id="rating">
+                                <option value="">Any Rating</option>
+                                <option value="4.5">4.5+ Stars</option>
+                                <option value="4.0">4.0+ Stars</option>
+                                <option value="3.5">3.5+ Stars</option>
+                                <option value="3.0">3.0+ Stars</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" placeholder="City, State">
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="availability">Availability</label>
+                            <select id="availability">
+                                <option value="">Any Time</option>
+                                <option value="immediate">Immediate</option>
+                                <option value="this-week">This Week</option>
+                                <option value="next-week">Next Week</option>
+                                <option value="this-month">This Month</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button type="button" class="btn btn-secondary filter-reset">Reset Filters</button>
+                            <button type="button" class="btn btn-primary filter-apply">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="container">
+                <div class="results-header">
+                    <div class="results-count">
+                        <span id="resultsCount">0</span> lawyers found
+                    </div>
+                    <div class="results-sort">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy">
+                            <option value="relevance">Relevance</option>
+                            <option value="rating">Rating</option>
+                            <option value="experience">Experience</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="loading-state" style="display: none;">
+                    <div class="lawyers-grid">
+                        <div class="lawyer-card skeleton">
+                            <div class="lawyer-header">
+                                <div class="lawyer-avatar skeleton"></div>
+                                <div class="lawyer-info">
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line short"></div>
+                                </div>
+                            </div>
+                            <div class="lawyer-specializations">
+                                <div class="skeleton-line short"></div>
+                            </div>
+                            <div class="lawyer-stats">
+                                <div class="skeleton-line short"></div>
+                            </div>
+                        </div>
+                        <div class="lawyer-card skeleton">
+                            <div class="lawyer-header">
+                                <div class="lawyer-avatar skeleton"></div>
+                                <div class="lawyer-info">
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line short"></div>
+                                </div>
+                            </div>
+                            <div class="lawyer-specializations">
+                                <div class="skeleton-line short"></div>
+                            </div>
+                            <div class="lawyer-stats">
+                                <div class="skeleton-line short"></div>
+                            </div>
+                        </div>
+                        <div class="lawyer-card skeleton">
+                            <div class="lawyer-header">
+                                <div class="lawyer-avatar skeleton"></div>
+                                <div class="lawyer-info">
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line short"></div>
+                                </div>
+                            </div>
+                            <div class="lawyer-specializations">
+                                <div class="skeleton-line short"></div>
+                            </div>
+                            <div class="lawyer-stats">
+                                <div class="skeleton-line short"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lawyers Grid -->
+                <div id="lawyersGrid" class="lawyers-grid">
+                    <!-- Lawyer cards will be populated here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-state-content">
+                        <svg class="empty-state-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14,2 14,8 20,8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10,9 9,9 8,9"></polyline>
+                        </svg>
+                        <h3>No lawyers found</h3>
+                        <p>Try adjusting your search criteria or filters to find more results.</p>
+                        <button type="button" class="btn btn-primary" onclick="clearAllFilters()">Clear All Filters</button>
+                    </div>
+                </div>
+
+                <!-- Load More -->
+                <div id="loadMoreContainer" class="load-more-container" style="display: none;">
+                    <button type="button" class="btn btn-secondary" id="loadMoreBtn">
+                        <span>Load More Lawyers</span>
+                        <div class="btn-spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Justice4U</h3>
+                    <p>Connecting you with trusted legal professionals for all your legal needs.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="Home.html">Home</a></li>
+                        <li><a href="findlawyer.html">Find Lawyer</a></li>
+                        <li><a href="Login.html">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: support@justice4u.com</p>
+                    <p>Phone: +91 9322295063</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Justice4U. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

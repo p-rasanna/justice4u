@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Justice4U – Counsel Accreditation</title>
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================
+       1. THE SANCTUARY THEME (Shared)
+       ============================ */
+    :root {
+      /* Palette */
+      --bg-color: #FAFAF9;
+      --ink-primary: #111111;
+      --ink-secondary: #555555;
+      --ink-tertiary: #999999;
+      
+      /* Trust Colors */
+      --gold-main: #C6A75E;
+      --gold-faint: rgba(198, 167, 94, 0.08);
+      --secure-green: #059669;
+      
+      /* Surface */
+      --surface-glass: rgba(255, 255, 255, 0.95); /* Slightly more opaque for long forms */
+      --border-line: #E5E5E5;
+      
+      /* Physics */
+      --shadow-soft: 0 4px 20px rgba(0,0,0,0.03);
+      --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; outline: none; }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--ink-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================
+       2. BACKGROUND & HEADER
+       ============================ */
+    .ambience {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    .pillar-bg {
+      position: fixed; top: 0; left: 50%; width: 1200px; height: 100%;
+      transform: translateX(-50%); opacity: 0.03;
+      background: repeating-linear-gradient(90deg, #000 0, #000 1px, transparent 1px, transparent 100px);
+      z-index: -1;
+    }
+
+    .header {
+      padding: 20px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .logo h1 {
+      font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0; 
+      color: var(--ink-primary); letter-spacing: -0.01em;
+    }
+
+    .nav-links { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
+    .nav-links a {
+      text-decoration: none; color: var(--ink-secondary); font-size: 0.85rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-main); }
+
+    /* ============================
+       3. REGISTRATION STAGE
+       ============================ */
+    .stage {
+      max-width: 760px; /* Slightly wider for complex lawyer form */
+      margin: 60px auto 100px; padding: 0 20px;
+      opacity: 0; animation: fadeUp 1s var(--ease-smooth) forwards;
+    }
+
+    .form-header { text-align: center; margin-bottom: 40px; }
+    
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 100px;
+      background: #FFFBEB; color: #B45309; /* Gold/Amber for Lawyers */
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 24px; border: 1px solid rgba(180, 83, 9, 0.1);
+    }
+    
+    h2 {
+      font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 0 0 16px 0; color: var(--ink-primary);
+    }
+    .subtext { font-size: 1rem; line-height: 1.6; color: var(--ink-secondary); max-width: 500px; margin: 0 auto; }
+
+    /* Glass Form Card */
+    .form-card {
+      background: var(--surface-glass);
+      border: 1px solid var(--border-line);
+      border-radius: 16px; padding: 48px;
+      box-shadow: var(--shadow-soft);
+      position: relative; overflow: hidden;
+    }
+    .form-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+      background: linear-gradient(90deg, var(--gold-main), #E5D4A5);
+    }
+
+    /* ============================
+       4. FORM ELEMENTS
+       ============================ */
+    fieldset { border: none; padding: 0; margin: 0 0 48px 0; }
+    legend {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem; 
+      color: var(--ink-primary); margin-bottom: 24px; width: 100%;
+      border-bottom: 1px solid var(--border-line); padding-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    legend i { color: var(--gold-main); font-size: 1.1em; }
+
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .input-group { position: relative; margin-bottom: 24px; }
+    
+    label {
+      display: block; font-size: 0.8rem; font-weight: 600; color: var(--ink-secondary);
+      margin-bottom: 8px; letter-spacing: 0.02em;
+    }
+
+    .input-field {
+      width: 100%; background: #FFFFFF;
+      border: 1px solid var(--border-line);
+      padding: 14px 16px 14px 44px; /* Space for icon */
+      border-radius: 8px;
+      font-size: 0.95rem; color: var(--ink-primary);
+      font-family: 'Inter', sans-serif; transition: all 0.2s;
+    }
+    
+    /* File Input Styling */
+    input[type="file"].input-field {
+      padding: 10px 16px 10px 44px;
+      font-size: 0.85rem; color: var(--ink-secondary);
+    }
+
+    .input-icon {
+      position: absolute; left: 14px; top: 38px;
+      font-size: 1.2rem; color: var(--ink-tertiary);
+      pointer-events: none; transition: color 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--ink-primary);
+      box-shadow: 0 0 0 3px var(--gold-faint);
+    }
+    .input-field:focus ~ .input-icon { color: var(--gold-main); }
+
+    select.input-field { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; }
+
+    /* Checkbox Grid for Practice Areas */
+    .checkbox-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .checkbox-tile {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px; border: 1px solid var(--border-line); border-radius: 6px;
+      background: #FFF; font-size: 0.85rem; color: var(--ink-secondary);
+      cursor: pointer; transition: 0.2s;
+    }
+    .checkbox-tile:hover { border-color: var(--gold-main); }
+    .checkbox-tile input { accent-color: var(--gold-main); }
+
+    /* Terms Checkbox */
+    .terms-row {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;
+      font-size: 0.9rem; color: var(--ink-secondary); line-height: 1.5;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%; padding: 18px;
+      background: var(--ink-primary); color: #fff;
+      font-weight: 600; font-size: 1rem; letter-spacing: 0.05em;
+      border: none; border-radius: 8px; cursor: pointer;
+      margin-top: 32px; transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15); background: #000;
+    }
+
+    .toggle-pass {
+      position: absolute; right: 14px; top: 38px;
+      background: none; border: none; cursor: pointer; color: var(--ink-tertiary);
+    }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+      .input-grid, .checkbox-grid { grid-template-columns: 1fr; }
+      .form-card { padding: 24px; }
+      h2 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambience"><div class="pillar-bg"></div></div>
+
+  <header class="header">
+    <div class="logo"><a href="Home.html" style="text-decoration:none;"><h1>Justice4U</h1></a></div>
+    <ul class="nav-links">
+      <li><a href="Home.html">Home</a></li>
+      <li><a href="findlawyer.html">Find Lawyer</a></li>
+      <li><a href="Lawyer_login.html">Log In</a></li>
+    </ul>
+  </header>
+
+  <div class="stage">
+    
+    <div class="form-header">
+      <div class="verified-badge"><i class="ph-bold ph-seal-check"></i> &nbsp; Admin Approved Network</div>
+      <h2>Counsel Accreditation</h2>
+      <p class="subtext">
+        Join our network of verified legal professionals. Please provide your Bar Council credentials for administrative review.
+      </p>
+    </div>
+
+    <form class="form-card" id="lawyerRegForm" action="RegisterServlet" method="post" enctype="multipart/form-data" novalidate>
+      
+      <fieldset>
+        <legend><i class="ph-duotone ph-user-circle"></i> Professional Identity</legend>
+        <div class="input-group">
+          <label>Full Name (As per Bar Record)</label>
+          <input type="text" name="fullName" class="input-field" placeholder="Adv. Firstname Lastname" required>
+          <i class="ph ph-user input-icon"></i>
+        </div>
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Official Email</label>
+            <input type="email" name="email" class="input-field" placeholder="counsel@firm.com" required>
+            <i class="ph ph-envelope-simple input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Date of Birth</label>
+            <input type="date" name="dob" class="input-field" required>
+            <i class="ph ph-calendar input-icon"></i>
+          </div>
+        </div>
+        
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Mobile Number</label>
+            <input type="tel" name="phone" class="input-field" placeholder="10-digit number" pattern="[0-9]{10}" required>
+            <i class="ph ph-phone input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Aadhar Number</label>
+            <input type="text" name="ano" class="input-field" placeholder="12-digit Aadhar" pattern="[0-9]{12}" required>
+            <i class="ph ph-identification-card input-icon"></i>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Current Address (Chamber/Office)</label>
+            <textarea name="cadd" class="input-field" rows="2" placeholder="Your office/chamber address" required></textarea>
+            <i class="ph ph-map-pin input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Permanent Address</label>
+            <textarea name="padd" class="input-field" rows="2" placeholder="Your permanent residence address" required></textarea>
+            <i class="ph ph-house-line input-icon"></i>
+          </div>
+        </div>
+        
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Years of Experience</label>
+            <input type="number" name="experienceYears" class="input-field" placeholder="e.g. 5" min="0" max="50" required>
+            <i class="ph ph-briefcase input-icon"></i>
+          </div>
+        </div>
+        
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" id="pass1" class="input-field" placeholder="Secure passphrase" required minlength="8">
+            <i class="ph ph-lock-key input-icon"></i>
+            <button type="button" class="toggle-pass" onclick="togglePass('pass1')"><i class="ph ph-eye"></i></button>
+          </div>
+          <div class="input-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirmPassword" id="pass2" class="input-field" placeholder="Repeat passphrase" required>
+            <i class="ph ph-lock-key input-icon"></i>
+          </div>
+        </div>
+        
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Security Question (For Password Reset)</label>
+            <select name="securityQuestion" class="input-field" required>
+              <option value="">Select a security question</option>
+              <option value="What city were you born in?">What city were you born in?</option>
+              <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+              <option value="What was the name of your first law school professor?">What was the name of your first law school professor?</option>
+              <option value="What is the name of your first pet?">What is the name of your first pet?</option>
+            </select>
+            <i class="ph ph-question input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Security Answer</label>
+            <input type="text" name="securityAnswer" class="input-field" placeholder="Your secret answer" required>
+            <i class="ph ph-key input-icon"></i>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i class="ph-duotone ph-gavel"></i> Legal Credentials</legend>
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Bar Council Reg. No.</label>
+            <input type="text" name="barNumber" class="input-field" placeholder="e.g. MAH/1234/2018" required>
+            <i class="ph ph-certificate input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Enrollment Year</label>
+            <input type="number" name="enrollmentYear" class="input-field" placeholder="YYYY" min="1950" max="2026" required>
+            <i class="ph ph-calendar-blank input-icon"></i>
+          </div>
+        </div>
+        
+        <div class="input-grid">
+          <div class="input-group">
+            <label>State Bar Council</label>
+            <select name="stateBar" class="input-field" required>
+              <option value="">Select Jurisdiction</option>
+              <option value="Maharashtra">Maharashtra & Goa</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Other">Other</option>
+            </select>
+            <i class="ph ph-map-pin input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Practice Location (City/Address)</label>
+            <input type="text" name="practiceLocation" class="input-field" placeholder="e.g. Mumbai, Maharashtra" required>
+            <i class="ph ph-buildings input-icon"></i>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label style="margin-bottom:12px;">Areas of Practice</label>
+          <div class="checkbox-grid">
+            <label class="checkbox-tile"><input type="checkbox" name="practiceAreas" value="Criminal"> Criminal</label>
+            <label class="checkbox-tile"><input type="checkbox" name="practiceAreas" value="Civil"> Civil</label>
+            <label class="checkbox-tile"><input type="checkbox" name="practiceAreas" value="Corporate"> Corporate</label>
+            <label class="checkbox-tile"><input type="checkbox" name="practiceAreas" value="Family"> Family</label>
+            <label class="checkbox-tile"><input type="checkbox" name="practiceAreas" value="Property"> Property</label>
+            <label class="checkbox-tile"><input type="checkbox" name="practiceAreas" value="Constitutional"> Const.</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i class="ph-duotone ph-file-lock"></i> Verification Documents</legend>
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Bar Certificate (PDF/JPG)</label>
+            <input type="file" name="barCertificate" class="input-field" accept=".pdf,.jpg,.jpeg,.png" required>
+            <i class="ph ph-upload-simple input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Government ID (Aadhar)</label>
+            <input type="file" name="idProof" class="input-field" accept=".pdf,.jpg,.jpeg,.png" required>
+            <i class="ph ph-identification-card input-icon"></i>
+          </div>
+        </div>
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Profile Photo</label>
+            <input type="file" name="profilePhoto" class="input-field" accept=".jpg,.png" required>
+            <i class="ph ph-user-focus input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label>Live Selfie (KYC)</label>
+            <input type="file" name="selfie" class="input-field" accept=".jpg,.png" required>
+            <i class="ph ph-camera input-icon"></i>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i class="ph-duotone ph-currency-inr"></i> Processing Fee</legend>
+        <div style="background:#F9FAFB; padding:20px; border-radius:8px; border:1px solid var(--border-line); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+            <span style="font-weight:600;">Verification Fee</span>
+            <span style="font-weight:700; color:var(--ink-primary);">₹500.00</span>
+          </div>
+          <div class="input-grid">
+            <div class="input-group" style="margin:0;">
+              <label>Mode</label>
+              <select name="paymentMode" class="input-field" required>
+                <option value="razorpay-test">Razorpay (Test)</option>
+                <option value="manual">UPI Manual</option>
+              </select>
+              <i class="ph ph-credit-card input-icon"></i>
+            </div>
+            <div class="input-group" style="margin:0;">
+              <label>Transaction ID</label>
+              <input type="text" name="transactionId" class="input-field" placeholder="Ref No." required>
+              <i class="ph ph-hash input-icon"></i>
+            </div>
+          </div>
+          <input type="hidden" name="amount" value="500">
+        </div>
+      </fieldset>
+
+      <div class="terms-row">
+        <input type="checkbox" required>
+        <span>I confirm that I am a licensed practitioner and the documents provided are authentic.</span>
+      </div>
+      <div class="terms-row">
+        <input type="checkbox" required>
+        <span>I agree to the <a href="#" style="color:var(--gold-main); text-decoration:none;">Terms of Service</a> & Code of Ethics.</span>
+      </div>
+
+      <button type="submit" class="btn-submit">Submit for Verification</button>
+      
+      <p style="text-align:center; margin-top:24px; font-size:0.85rem; color:var(--ink-secondary);">
+        Already a partner? <a href="Lawyer_login.html" style="color:var(--ink-primary); font-weight:600; text-decoration:none;">Access Terminal</a>
+      </p>
+
+    </form>
+
+  </div>
+
+  <script>
+    function togglePass(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    document.getElementById('lawyerRegForm').addEventListener('submit', function(e) {
+      const p1 = document.getElementById('pass1').value;
+      const p2 = document.getElementById('pass2').value;
+      if(p1 !== p2) {
+        e.preventDefault();
+        alert("Passwords do not match.");
+      }
+    });
+  </script>
+
+</body>
+</html>

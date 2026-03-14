@@ -1,0 +1,2 @@
+- [x] Remove the "Unlocked" animation from the sign-in button in cust_login.html
+- [x] Add a back button in the intro-text section to redirect to Home.html

@@ -1,0 +1,107 @@
+--- All Tables ---
+admin
+allotlawyer
+audit_log
+case_status
+case_timeline
+case_types
+casetb
+client_profiles
+cust_reg
+customer_cases
+customer_documents
+discussion
+discussions
+hearing_schedule
+intern
+intern_assignments
+intern_submissions
+intern_tasks
+lawyer_documents
+lawyer_reg
+lawyer_remarks
+pma__bookmark
+pma__central_columns
+pma__column_info
+pma__designer_settings
+pma__export_templates
+pma__favorite
+pma__history
+pma__navigationhiding
+pma__pdf_pages
+pma__recent
+pma__relation
+pma__savedsearches
+pma__table_coords
+pma__table_info
+pma__table_uiprefs
+pma__tracking
+pma__userconfig
+pma__usergroups
+pma__users
+
+--- Columns for customer_cases ---
+case_id (INT)
+customer_id (INT)
+case_type_id (INT)
+title (VARCHAR)
+description (TEXT)
+preferred_court_location (VARCHAR)
+urgency_level (VARCHAR)
+status (VARCHAR)
+created_date (TIMESTAMP)
+assigned_lawyer_id (INT)
+
+--- Columns for casetb ---
+cid (INT)
+name (VARCHAR)
+title (VARCHAR)
+des (TEXT)
+curdate (VARCHAR)
+courttype (VARCHAR)
+city (VARCHAR)
+mop (VARCHAR)
+tid (VARCHAR)
+amt (VARCHAR)
+cname (VARCHAR)
+flag (INT)
+
+--- Columns for lawyer_reg ---
+lid (INT)
+lname (VARCHAR)
+email (VARCHAR)
+pass (VARCHAR)
+dob (VARCHAR)
+mobno (VARCHAR)
+ano (VARCHAR)
+cadd (VARCHAR)
+padd (VARCHAR)
+mop (VARCHAR)
+tid (VARCHAR)
+amt (VARCHAR)
+flag (INT)
+document_verification_status (VARCHAR)
+
+--- Columns for payments ---
+(Table not found)
+
+--- Columns for documents ---
+(Table not found)
+
+--- Columns for milestones ---
+(Table not found)
+
+--- Columns for chat ---
+(Table not found)
+
+--- Columns for case_milestones ---
+(Table not found)
+
+--- Columns for case_documents ---
+(Table not found)
+
+--- Columns for case_chats ---
+(Table not found)
+
+--- Columns for messages ---
+(Table not found)

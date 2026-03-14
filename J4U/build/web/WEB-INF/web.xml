@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>Justice4U</display-name>
+
+    <!-- Obsolete: Logic moved to RegisterServlet
+    <servlet>
+        <servlet-name>LawyerRegistrationServlet</servlet-name>
+        <jsp-file>/Lawyer.jsp</jsp-file>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>52428800</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LawyerRegistrationServlet</servlet-name>
+        <url-pattern>/Lawyer.jsp</url-pattern>
+    </servlet-mapping>
+    -->
+
+    <!-- Configuration for case submission with file uploads -->
+    <!-- Obsolete: Logic moved to process_case_request.jsp directly called by form
+    <servlet>
+        <servlet-name>CaseSubmissionServlet</servlet-name>
+        <jsp-file>/processaddcase.jsp</jsp-file>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>52428800</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CaseSubmissionServlet</servlet-name>
+        <url-pattern>/processaddcase.jsp</url-pattern>
+    </servlet-mapping>
+    -->
+
+    <!-- Configuration for intern registration with file uploads -->
+    <servlet>
+        <servlet-name>InternRegistrationServlet</servlet-name>
+        <jsp-file>/processintern.jsp</jsp-file>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size> <!-- 10MB -->
+            <max-request-size>52428800</max-request-size> <!-- 50MB -->
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>InternRegistrationServlet</servlet-name>
+        <url-pattern>/processintern.jsp</url-pattern>
+    </servlet-mapping>
+
+    <!-- Intern Work Upload -->
+    <servlet>
+        <servlet-name>InternUploadServlet</servlet-name>
+        <jsp-file>/uploadInternWork.jsp</jsp-file>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>52428800</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InternUploadServlet</servlet-name>
+        <url-pattern>/uploadInternWork.jsp</url-pattern>
+    </servlet-mapping>
+
+    <!-- Lawyer Case Document Upload -->
+    <servlet>
+        <servlet-name>LawyerCaseUploadServlet</servlet-name>
+        <jsp-file>/upload_case_doc.jsp</jsp-file>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>52428800</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LawyerCaseUploadServlet</servlet-name>
+        <url-pattern>/upload_case_doc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <!-- Security Filter Configuration -->
+    <!-- Removed J4USecurityFilter for simplification -->
+
+    <welcome-file-list>
+        <welcome-file>Home.html</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>AddCaseServlet</servlet-name>
+        <servlet-class>com.j4u.AddCaseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddCaseServlet</servlet-name>
+        <url-pattern>/AddCaseServlet</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- 100/100 Upgrade: Global Error Handling -->
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+</web-app>

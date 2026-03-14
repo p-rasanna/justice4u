@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="J4U/justice4u-testing/WEB-INF/classes"/>
+	<classpathentry excluding="util/" kind="src" path="J4U/src/java"/>
+	<classpathentry kind="src" path="J4U/src/java/util"/>
+	<classpathentry kind="src" path="J4U/test"/>
+	<classpathentry excluding="testing/WEB-INF/classes/|WEB-INF/classes/|justice4u-testing/WEB-INF/classes/" kind="src" path="J4U/web"/>
+	<classpathentry kind="src" path="J4U/web/justice4u-testing/WEB-INF/classes"/>
+	<classpathentry kind="src" path="J4U/web/testing/WEB-INF/classes"/>
+	<classpathentry kind="src" path="J4U/web/WEB-INF/classes"/>
+	<classpathentry kind="lib" path="J4U/build/web/dsn.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/dsn copy.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/gimap.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/gimap copy.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/imap.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/imap copy.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/mailapi.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/mailapi copy.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/pop3.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/pop3 copy.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/smtp.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/smtp copy.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/activation.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/commons-fileupload-1.5.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/dsn.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/gimap.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/gson-2.10.1.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/imap.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/jakarta.mail-api.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/mail.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/mailapi.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/mysql-connector-j-9.4.0.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/pop3.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="J4U/build/web/WEB-INF/lib/smtp.jar"/>
+	<classpathentry excluding="J4U/justice4u-testing/WEB-INF/classes/|J4U/src/java/|J4U/src/java/util/|J4U/test/|J4U/web/|J4U/web/justice4u-testing/WEB-INF/classes/|J4U/web/testing/WEB-INF/classes/|J4U/web/WEB-INF/classes/" kind="src" path=""/>
+	<classpathentry kind="output" path="J4U/build/web/WEB-INF/classes"/>
+</classpath>

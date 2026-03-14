@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Justice4U – Secure Client Registration</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Styles (reuse your main styles.css) -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page j4u-has-animations">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Optional: reuse main header -->
+  <header class="header">
+    <nav class="nav">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <a href="Home.html">
+            <h1>Justice4U</h1>
+          </a>
+        </div>
+        <ul class="nav-menu" aria-label="Primary navigation">
+          <li><a href="Home.html">Home</a></li>
+          <li><a href="findlawyer.html">Find Lawyer</a></li>
+          <li><a href="cust_login.html" class="active">Client Login</a></li>
+          <li><a href="Lawyer_login.html">Lawyer Login</a></li>
+        </ul>
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" class="auth-section">
+    <div class="auth-container j4u-reveal">
+      <!-- Trust-focused header -->
+      <section class="auth-card">
+        <header class="auth-header">
+          <h2>Secure Client Registration</h2>
+          <p>Your legal information is encrypted, confidential, and handled with care.</p>
+          <p class="mb-md" style="font-size:0.85rem; color:#3A3A3A;">
+            🔒 End-to-end protected • Admin-reviewed accounts • Court-grade confidentiality (by design)
+          </p>
+        </header>
+
+        <!-- Small trust badges strip -->
+        <div
+          class="mb-lg"
+          style="
+            display:flex;
+            flex-wrap:wrap;
+            gap:0.5rem 1rem;
+            padding:0.75rem 1rem;
+            border-radius:12px;
+            background-color:#F1F1ED;
+            border:1px solid #D8D6CF;
+            font-size:0.8rem;
+            color:#3A3A3A;
+          "
+        >
+          <span>🔒 Encrypted Data</span>
+          <span>🛡 Admin Controlled Access</span>
+          <span>📁 Confidential Document Handling</span>
+        </div>
+
+        <!-- Registration form -->
+        <form class="auth-form" id="clientRegistrationForm" action="customer.jsp" method="post" novalidate>
+          <!-- 1️⃣ Account Details -->
+          <section aria-labelledby="account-details-heading" class="mb-2xl">
+            <h3 id="account-details-heading" class="mb-md" style="font-size:1.1rem;">
+              Account Details
+            </h3>
+
+            <div class="form-group">
+              <label for="fullName">Full Name (as per government ID)</label>
+              <input type="text" id="fullName" name="txtname" required autocomplete="name">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="txtemail" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <input type="date" id="dob" name="txtdob" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Mobile Number (OTP verified)</label>
+              <input
+                type="tel"
+                id="phone"
+                name="txtmno"
+                required
+                inputmode="tel"
+                pattern="[0-9]{10}"
+                placeholder="10-digit mobile number"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="password-input-container">
+                <input
+                  type="password"
+                  id="password"
+                  name="txtpass"
+                  required
+                  minlength="8"
+                  autocomplete="new-password"
+                >
+                <button
+                  type="button"
+                  class="password-toggle"
+                  aria-label="Show or hide password"
+                  data-toggle-password="password"
+                >
+                  👁
+                </button>
+              </div>
+              <div
+                id="passwordStrength"
+                style="margin-top:0.4rem; font-size:0.8rem; color:#3A3A3A;"
+              >
+                Use a strong password to protect your legal data.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <div class="password-input-container">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="txtpass"
+                  required
+                  minlength="8"
+                  autocomplete="new-password"
+                >
+                <button
+                  type="button"
+                  class="password-toggle"
+                  aria-label="Show or hide password confirmation"
+                  data-toggle-password="confirmPassword"
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2️⃣ Identity Verification -->
+          <section aria-labelledby="identity-heading" class="mb-2xl">
+            <h3 id="identity-heading" class="mb-sm" style="font-size:1.1rem;">
+              Identity Verification
+            </h3>
+            <p style="font-size:0.9rem; color:#3A3A3A; margin-bottom:1rem;">
+              To help prevent misuse and impersonation, identity verification is required for all clients.
+            </p>
+
+            <div class="form-group">
+              <label for="aadhaar">Aadhaar Number</label>
+              <input type="text" id="aadhaar" name="txtadhar" required>
+            </div>
+
+            <div class="form-group">
+              <label for="currentAddress">Current Address</label>
+              <textarea id="currentAddress" name="txtadd" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="permanentAddress">Permanent Address</label>
+              <textarea id="permanentAddress" name="txtper" rows="3" required></textarea>
+            </div>
+
+            <p style="font-size:0.8rem; color:#3A3A3A; margin-top:0.25rem;">
+              📁 Documents are intended to be encrypted and restricted to view-only access for authorized personnel.
+            </p>
+          </section>
+
+          <!-- 3️⃣ Case Information -->
+          <section aria-labelledby="case-info-heading" class="mb-2xl">
+            <h3 id="case-info-heading" class="mb-sm" style="font-size:1.1rem;">
+              Case Information
+            </h3>
+            <p style="font-size:0.9rem; color:#3A3A3A; margin-bottom:1rem;">
+              This information helps the platform route your matter to an appropriate legal professional.
+            </p>
+
+            <div class="form-group">
+              <label for="currentAddress">Current Address</label>
+              <textarea id="currentAddress" name="txtadd" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="permanentAddress">Permanent Address</label>
+              <textarea id="permanentAddress" name="txtper" rows="3" required></textarea>
+            </div>
+          </section>
+
+          <!-- 4️⃣ Lawyer Assignment Preference -->
+          <section aria-labelledby="lawyer-pref-heading" class="mb-2xl">
+            <h3 id="lawyer-pref-heading" class="mb-sm" style="font-size:1.1rem;">
+              Lawyer Assignment Preference
+            </h3>
+
+            <div class="form-group" style="font-size:0.9rem; color:#3A3A3A;">
+              <label style="display:flex; align-items:flex-start; gap:0.5rem; margin-bottom:0.5rem;">
+                <input type="radio" name="assignmentPreference" value="admin" checked>
+                <span>
+                  <strong>Admin Assigned (Recommended)</strong><br>
+                  An administrator can assign a suitable lawyer based on your case category and urgency.
+                </span>
+              </label>
+
+              <label style="display:flex; align-items:flex-start; gap:0.5rem;">
+                <input type="radio" name="assignmentPreference" value="manual">
+                <span>
+                  <strong>Choose Lawyer Manually</strong><br>
+                  You may later select from a list of available legal professionals.
+                </span>
+              </label>
+            </div>
+          </section>
+
+          <!-- 5️⃣ Consent & Privacy -->
+          <section aria-labelledby="consent-heading" class="mb-2xl">
+            <h3 id="consent-heading" class="mb-sm" style="font-size:1.1rem;">
+              Consent &amp; Privacy Agreement
+            </h3>
+
+            <div class="form-group" style="font-size:0.85rem; color:#3A3A3A; display:flex; flex-direction:column; gap:0.5rem;">
+              <label class="checkbox-container">
+                <input type="checkbox" name="consentTruth" required>
+                <span class="checkmark"></span>
+                <span>I confirm that all details provided are accurate to the best of my knowledge.</span>
+              </label>
+
+              <label class="checkbox-container">
+                <input type="checkbox" name="consentSecurity" required>
+                <span class="checkmark"></span>
+                <span>
+                  I understand that my uploaded documents are intended to be protected and restricted from unauthorized download or sharing.
+                </span>
+              </label>
+
+              <label class="checkbox-container">
+                <input type="checkbox" name="consentTerms" required>
+                <span class="checkmark"></span>
+                <span>
+                  I agree to the <a href="#" class="auth-link">Terms</a> &amp; <a href="#" class="auth-link">Privacy Policy</a>.
+                </span>
+              </label>
+            </div>
+
+            <p style="font-size:0.8rem; color:#3A3A3A;">
+              Justice4U is being built to follow strict data protection and confidentiality principles.
+            </p>
+          </section>
+
+          <!-- Error message container -->
+          <div id="formError" class="form-error">
+            Please review the highlighted fields and complete all required information.
+          </div>
+
+          <!-- 7️⃣ Final CTA -->
+          <button type="submit" class="btn btn-primary btn-full">
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Create Secure Client Account
+          </button>
+          <p style="margin-top:0.75rem; font-size:0.8rem; color:#3A3A3A;">
+            Your account will be activated after identity verification by an administrator.
+          </p>
+        </form>
+
+        <footer class="auth-footer">
+          <p style="font-size:0.9rem; color:#3A3A3A;">
+            Already registered?
+            <a href="cust_login.html" class="auth-link">Log in as a client</a>
+          </p>
+        </footer>
+      </section>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+  <!-- Optional small inline script just for password toggles & simple validation -->
+  <script>
+    // Show / hide password
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-toggle-password');
+        const input = document.getElementById(targetId);
+        if (!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+      });
+    });
+
+    // Very simple front-end validation (no backend logic here)
+    document.getElementById('clientRegistrationForm').addEventListener('submit', function (e) {
+      const form = this;
+      const errorBox = document.getElementById('formError');
+      errorBox.style.display = 'none';
+
+      // Password match check
+      const pwd = form.password.value.trim();
+      const cpwd = form.confirmPassword.value.trim();
+      let hasError = false;
+
+      if (pwd !== cpwd) {
+        hasError = true;
+        errorBox.textContent = 'Passwords do not match. Please re-enter.';
+      }
+
+      if (!form.checkValidity() || hasError) {
+        e.preventDefault();
+        errorBox.style.display = 'block';
+        errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  </script>
+</body>
+</html>

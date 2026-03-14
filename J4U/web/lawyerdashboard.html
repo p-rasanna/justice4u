@@ -1,0 +1,537 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+  String username = (String) session.getAttribute("lname");
+  if (username == null) {
+    response.sendRedirect("Lawyerlogin.html");
+    return;
+  }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Justice4U · Lawyer Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+  <!-- Inter font (same as client) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+  <style>
+    :root {
+      --j4u-bg: #f5f2ea;
+      --j4u-surface: #fdfbf6;
+      --j4u-surface-soft: #faf5ea;
+      --j4u-border: #ddd1b8;
+      --j4u-gold: #c9a76a;
+      --j4u-gold-soft: #e3c796;
+      --j4u-text-main: #111827;
+      --j4u-text-muted: #6b7280;
+      --j4u-accent-green: #16a34a;
+      --j4u-danger: #b91c1c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 0 32px;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--j4u-text-main);
+      background:
+        radial-gradient(circle at top, #f0ebe0 0, #f5f2ea 32%, #e8decc 100%);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .page-shell::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      margin: auto;
+      max-width: 900px;
+      height: 240px;
+      background:
+        radial-gradient(circle at top, rgba(233, 213, 166, 0.6), transparent 70%);
+      opacity: 0.75;
+      filter: blur(18px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Welcome header, mirrored from client dashboard */
+    .welcome-header {
+      margin-bottom: 20px;
+      padding: 20px 20px 18px;
+      background: linear-gradient(145deg, rgba(253, 251, 246, 0.96), rgba(244, 237, 220, 0.96));
+      border-radius: 20px;
+      border: 1px solid rgba(221, 209, 184, 0.9);
+      box-shadow:
+        0 22px 45px rgba(15, 23, 42, 0.14),
+        0 0 0 1px rgba(148, 133, 96, 0.12);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .welcome-header::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, rgba(233, 213, 166, 0.6), transparent 65%),
+        radial-gradient(circle at 100% 100%, rgba(209, 213, 219, 0.45), transparent 60%);
+      mix-blend-mode: soft-light;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .welcome-main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-header h1 {
+      color: var(--j4u-text-main);
+      font-size: 1.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .welcome-header p {
+      color: var(--j4u-text-muted);
+      font-size: 0.98rem;
+      margin: 0;
+    }
+
+    .welcome-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 133, 96, 0.6);
+      background: rgba(253, 251, 246, 0.95);
+      color: #7c5f2b;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .welcome-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--j4u-accent-green);
+      box-shadow: 0 0 10px rgba(22,163,74,0.7);
+    }
+
+    .welcome-avatar {
+      position: relative;
+      z-index: 1;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 25% 0%, #ffffff, rgba(240, 230, 210, 0.7)),
+        linear-gradient(135deg, var(--j4u-gold), var(--j4u-gold-soft));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1f2933;
+      font-size: 1.7rem;
+      font-weight: 700;
+      box-shadow:
+        0 12px 26px rgba(15, 23, 42, 0.3),
+        0 0 0 2px rgba(253, 251, 246, 0.9);
+    }
+
+    /* Grid layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    .card-j4u {
+      background: var(--j4u-surface);
+      border-radius: 20px;
+      border: 1px solid var(--j4u-border);
+      box-shadow:
+        0 18px 36px rgba(15, 23, 42, 0.12),
+        0 0 0 1px rgba(148, 133, 96, 0.09);
+      padding: 20px 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transform: translateY(0) scale(1);
+      transition:
+        transform 0.22s ease,
+        box-shadow 0.24s ease,
+        border-color 0.24s ease,
+        background 0.24s ease;
+    }
+
+    .card-j4u::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 20px;
+      right: 20px;
+      height: 4px;
+      border-radius: 0 0 999px 999px;
+      background: linear-gradient(90deg, var(--j4u-gold), var(--j4u-gold-soft));
+      opacity: 0.9;
+    }
+
+    .card-j4u:hover {
+      transform: translate3d(0, -4px, 0) scale(1.01);
+      box-shadow:
+        0 24px 50px rgba(15, 23, 42, 0.18),
+        0 0 0 1px rgba(148, 133, 96, 0.18);
+      border-color: rgba(201, 167, 106, 0.95);
+      background: var(--j4u-surface-soft);
+    }
+
+    .card-header-j4u {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(221, 209, 184, 0.9);
+    }
+
+    .card-title-j4u {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--j4u-text-main);
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title-j4u span.emoji {
+      font-size: 1.15rem;
+    }
+
+    .card-subtitle-j4u {
+      margin-top: 3px;
+      font-size: 0.86rem;
+      color: var(--j4u-text-muted);
+    }
+
+    .small-tag {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #7c5f2b;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #fffbeb;
+      border: 1px solid rgba(221, 209, 184, 0.9);
+    }
+
+    /* Main actions (links) */
+    .list-group-j4u {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      text-decoration: none;
+      color: var(--j4u-text-main);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.16s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .action-item span.label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-item span.chevron {
+      font-size: 0.9rem;
+      color: var(--j4u-text-muted);
+    }
+
+    .action-item:hover {
+      background: #fefce8;
+      border-color: rgba(201, 167, 106, 0.9);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(148, 118, 62, 0.25);
+      text-decoration: none;
+    }
+
+    .action-item.text-danger {
+      color: var(--j4u-danger);
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    /* Simple stats / overview card */
+    .stat-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #fdf6e3;
+      border: 1px solid rgba(221, 209, 184, 0.9);
+      font-size: 0.9rem;
+      color: var(--j4u-text-main);
+    }
+
+    .stat-label {
+      color: var(--j4u-text-muted);
+    }
+
+    .stat-value {
+      font-weight: 600;
+    }
+
+    /* Quick actions footer card */
+    .quick-actions-card {
+      grid-column: 1 / -1;
+    }
+
+    .quick-actions-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .btn-primary-gold {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--j4u-gold), var(--j4u-gold-soft));
+      border-color: var(--j4u-gold);
+      color: #1f2933;
+      padding: 9px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      box-shadow:
+        0 14px 32px rgba(148, 118, 62, 0.38),
+        0 0 0 1px rgba(148, 118, 62, 0.35);
+      cursor: pointer;
+      transition:
+        transform 0.16s ease,
+        box-shadow 0.2s ease,
+        filter 0.16s ease;
+    }
+
+    .btn-primary-gold:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      text-decoration: none;
+    }
+
+    .btn-outline-gold {
+      border: 1px solid var(--j4u-gold);
+      background: #fdfbf6;
+      color: #7c5f2b;
+      padding: 9px 20px;
+      border-radius: 999px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.14s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .btn-outline-gold:hover {
+      background: var(--j4u-gold);
+      color: #111827;
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(148, 118, 62, 0.28);
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      .welcome-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body { padding-top: 18px; }
+      .welcome-header {
+        padding: 18px 14px 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+
+    <!-- Welcome block -->
+    <div class="welcome-header">
+      <div class="welcome-main">
+        <h1>Welcome, <%= username %></h1>
+        <p>Your Justice4U lawyer workspace for managing clients, discussions, and interns.</p>
+        <div class="welcome-pill">
+          <span class="welcome-pill-dot"></span>
+          Live client assignments • Secure portal
+        </div>
+      </div>
+      <div class="welcome-avatar">
+        <%= username != null && !username.isEmpty() ? username.charAt(0) : 'L' %>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Main actions card -->
+      <div class="card-j4u">
+        <div class="card-header-j4u">
+          <div>
+            <h2 class="card-title-j4u">
+              <span class="emoji">⚡</span>
+              Main Actions
+            </h2>
+            <p class="card-subtitle-j4u">
+              Quick links to your daily Justice4U tasks.
+            </p>
+          </div>
+          <span class="small-tag">Lawyer panel</span>
+        </div>
+
+        <div class="list-group-j4u">
+          <a href="viewcustdetails.jsp" class="action-item">
+            <span class="label">👥 View Allotted Customers</span>
+            <span class="chevron">›</span>
+          </a>
+          <a href="disf.jsp" class="action-item">
+            <span class="label">💬 Discussion with Customer</span>
+            <span class="chevron">›</span>
+          </a>
+          <a href="viewdisl.jsp" class="action-item">
+            <span class="label">📝 View Discussions</span>
+            <span class="chevron">›</span>
+          </a>
+          <a href="viewinternl.jsp" class="action-item">
+            <span class="label">🎓 View All Interns</span>
+            <span class="chevron">›</span>
+          </a>
+          <a href="lsignout.jsp" class="action-item text-danger">
+            <span class="label">🚪 Sign Out</span>
+            <span class="chevron">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Overview / status card -->
+      <div class="card-j4u">
+        <div class="card-header-j4u">
+          <div>
+            <h2 class="card-title-j4u">
+              <span class="emoji">📊</span>
+              Today’s Overview
+            </h2>
+            <p class="card-subtitle-j4u">
+              At a glance view of your Justice4U activity.
+            </p>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-item">
+            <span class="stat-label">Clients allotted</span>
+            <span class="stat-value">View in “Allotted Customers”</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Active discussions</span>
+            <span class="stat-value">Check “Discussion with Customer”</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Interns linked</span>
+            <span class="stat-value">See “All Interns” section</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick actions footer -->
+      <div class="card-j4u quick-actions-card">
+        <div class="card-header-j4u" style="justify-content:center;">
+          <h2 class="card-title-j4u">
+            <span class="emoji">🚀</span>
+            Quick Actions
+          </h2>
+        </div>
+        <div class="quick-actions-buttons">
+          <a href="viewcustdetails.jsp" class="btn-primary-gold">
+            👥 Allotted Customers
+          </a>
+          <a href="disf.jsp" class="btn-outline-gold">
+            💬 Open Discussion
+          </a>
+          <a href="lsignout.jsp" class="btn-outline-gold">
+            🚪 Sign Out
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

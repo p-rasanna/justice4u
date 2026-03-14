@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Justice4U – Admin Portal</title>
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================
+       1. 2026 DESIGN TOKENS
+       ============================ */
+    :root {
+      --bg-color: #FAFAF8;
+      --ink-primary: #121212;
+      --ink-secondary: #666666;
+      --gold-accent: #C6A75E;
+      --gold-glow: rgba(198, 167, 94, 0.25);
+      
+      --glass-surface: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.8);
+      --glass-blur: blur(30px);
+      
+      --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+      --shadow-float: 0 40px 80px -20px rgba(198, 167, 94, 0.15);
+    }
+
+    * { box-sizing: border-box; outline: none; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      width: 100%;
+      background-color: var(--bg-color);
+      color: var(--ink-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ============================
+       2. CINEMATIC ATMOSPHERE (Kept Intact)
+       ============================ */
+    .ambience {
+      position: absolute; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none; overflow: hidden;
+    }
+
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.5;
+      animation: breathe 10s infinite alternate ease-in-out;
+    }
+    .orb-1 { width: 500px; height: 500px; background: var(--gold-accent); top: -15%; left: -10%; }
+    .orb-2 { width: 600px; height: 600px; background: #fff; bottom: -15%; right: -10%; animation-delay: -5s; opacity: 0.8; }
+
+    .grain-overlay {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+      z-index: 1; pointer-events: none;
+    }
+
+    /* ============================
+       3. STAGE LAYOUT
+       ============================ */
+    .stage {
+      position: relative; z-index: 10;
+      display: flex; gap: 120px; align-items: center;
+      max-width: 1200px; width: 90%;
+    }
+
+    .brand-section {
+      flex: 1;
+      padding-right: 40px;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      animation: slideUp 1s var(--ease-smooth) forwards;
+    }
+    .d-1 { animation-delay: 0.1s; }
+    .d-2 { animation-delay: 0.2s; }
+    .d-3 { animation-delay: 0.3s; }
+
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: 100px;
+      background: #fff; border: 1px solid rgba(0,0,0,0.05);
+      color: var(--gold-accent); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    
+    .pulse-dot { width: 6px; height: 6px; background: var(--gold-accent); border-radius: 50%; animation: pulse 2s infinite; }
+
+    /* REPLACED HEADLINE */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; /* Massive Size */
+      line-height: 1; margin: 0 0 24px 0;
+      color: var(--ink-primary);
+      letter-spacing: -0.02em;
+    }
+    /* Gold Gradient on Text */
+    h1 span {
+      background: linear-gradient(135deg, #C6A75E, #8E702D);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-style: italic;
+    }
+
+    .description {
+      font-size: 1.05rem; line-height: 1.6; color: var(--ink-secondary);
+      max-width: 440px; border-left: 3px solid var(--gold-accent); padding-left: 20px;
+    }
+
+    /* ============================
+       4. THE CERAMIC CARD
+       ============================ */
+    .card-scene {
+      flex: 0.8;
+      perspective: 1500px;
+    }
+
+    .login-card {
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      padding: 56px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-float);
+      opacity: 0; transform: translateY(40px) rotateX(10deg);
+      animation: cardBoot 1.2s var(--ease-elastic) forwards 0.4s;
+      position: relative; overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .spotlight {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: radial-gradient(800px circle at var(--x) var(--y), rgba(198, 167, 94, 0.1), transparent 40%);
+      pointer-events: none; z-index: 1;
+      opacity: 0.8; mix-blend-mode: overlay;
+    }
+
+    .card-content { position: relative; z-index: 2; }
+
+    .card-header { margin-bottom: 36px; }
+    .card-header h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0; }
+    .card-header p { font-size: 0.9rem; color: var(--ink-secondary); margin-top: 6px; }
+
+    /* ============================
+       5. INPUTS
+       ============================ */
+    .input-group { position: relative; margin-bottom: 24px; }
+
+    .input-modern {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #E5E5E5;
+      padding: 18px 16px 18px 50px;
+      border-radius: 12px;
+      font-size: 1rem; color: var(--ink-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.3s var(--ease-smooth);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    .input-icon {
+      position: absolute; left: 18px; top: 18px;
+      font-size: 1.2rem; color: #999;
+      transition: all 0.3s var(--ease-elastic);
+      pointer-events: none;
+    }
+
+    .input-modern:focus {
+      border-color: var(--gold-accent);
+      box-shadow: 0 8px 30px var(--gold-glow);
+      transform: translateY(-2px) scale(1.01);
+    }
+    .input-modern:focus ~ .input-icon { color: var(--gold-accent); transform: scale(1.1); }
+
+    .toggle-pass {
+      position: absolute; right: 18px; top: 18px;
+      background: none; border: none; cursor: pointer; color: #999;
+      padding: 0; transition: color 0.2s;
+    }
+    .toggle-pass:hover { color: var(--ink-primary); }
+
+    /* ============================
+       6. BUTTON
+       ============================ */
+    .btn-primary {
+      width: 100%; padding: 18px;
+      background: linear-gradient(135deg, #111 0%, #333 100%);
+      color: #fff;
+      font-weight: 700; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;
+      border: none; border-radius: 12px;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: all 0.3s var(--ease-smooth);
+      margin-top: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary::after {
+      content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+      opacity: 0.3; transform: translateX(-100%) skewX(-20deg);
+      transition: transform 0.6s;
+    }
+    .btn-primary:hover::after { transform: translateX(100%) skewX(-20deg); }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .footer {
+      margin-top: 24px; text-align: center;
+      font-size: 0.8rem; color: var(--ink-secondary);
+      border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px;
+    }
+    .footer a { color: var(--ink-secondary); text-decoration: none; transition: color 0.2s; font-weight: 600; }
+    .footer a:hover { color: var(--gold-accent); }
+
+    /* Animations */
+    @keyframes breathe { 0% { opacity: 0.4; transform: scale(1); } 100% { opacity: 0.7; transform: scale(1.1); } }
+    @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes cardBoot { to { opacity: 1; transform: translateY(0) rotateX(0); } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(198, 167, 94, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(198, 167, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(198, 167, 94, 0); } }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-4px)} 40%,80%{transform:translateX(4px)} }
+    .shake-anim { animation: shake 0.3s ease-in-out; border-color: #D32F2F !important; }
+
+    @media (max-width: 900px) {
+      body { height: auto; padding: 40px 20px; overflow-y: auto; }
+      .stage { flex-direction: column; gap: 40px; }
+      .brand-section { text-align: center; padding: 0; }
+      .description { margin: 0 auto; border: none; padding: 0; }
+      .login-card { transform: none !important; padding: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambience">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="grain-overlay"></div>
+
+  <div class="stage">
+    
+    <div class="brand-section">
+      <div class="status-pill reveal d-1">
+        <div class="pulse-dot"></div> &nbsp; System Operational
+      </div>
+      
+      <h1 class="reveal d-2">
+        <span>ADMIN</span>
+      </h1>
+      
+      <p class="description reveal d-3">
+        Welcome to the Justice4U central command. Manage global settings, user registries, and case distribution with absolute precision.
+      </p>
+    </div>
+
+    <div class="card-scene">
+      <div class="login-card" id="adminCard">
+        <div class="spotlight" id="spotlight"></div>
+
+        <div class="card-content">
+          <div class="card-header">
+            <h2>Admin Login</h2>
+            <p>Authentication Required</p>
+          </div>
+
+          <form action="LoginServlet" method="post" onsubmit="return handleLogin(event)" novalidate>
+            <input type="hidden" name="role" value="admin">
+
+            <div id="errorMessage" style="color: #D32F2F; font-size: 0.9rem; margin-bottom: 16px; display: none;"></div>
+
+            <div class="input-group">
+              <input type="text" id="txtname" name="email" class="input-modern" placeholder="Administrator ID" autocomplete="off">
+              <i class="ph ph-crown input-icon"></i>
+            </div>
+
+            <div class="input-group">
+              <div style="position:relative;">
+                <input type="password" id="txtpass" name="password" class="input-modern" placeholder="Secure Passkey">
+                <i class="ph ph-shield-key input-icon"></i>
+                <button type="button" class="toggle-pass" onclick="togglePass()">
+                  <i class="ph ph-eye" id="eyeIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btnSubmit">
+              Initiate Session
+            </button>
+
+            <div class="footer">
+              <a href="Home.html">Return to Portal</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const card = document.getElementById('adminCard');
+    const spotlight = document.getElementById('spotlight');
+    const isMobile = window.innerWidth < 900;
+
+    let mouse = { x: 0, y: 0 };
+    let current = { x: 0, y: 0 };
+
+    if (!isMobile) {
+      document.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        
+        // Spotlight
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spotlight.style.setProperty('--x', `${x}px`);
+        spotlight.style.setProperty('--y', `${y}px`);
+
+        // Tilt
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        mouse.x = (e.clientX - centerX) / 45;
+        mouse.y = ((e.clientY - centerY) / 45) * -1;
+      });
+
+      function animate() {
+        current.x += (mouse.x - current.x) * 0.08;
+        current.y += (mouse.y - current.y) * 0.08;
+        card.style.transform = `perspective(1200px) rotateX(${current.y}deg) rotateY(${current.x}deg)`;
+        requestAnimationFrame(animate);
+      }
+      animate();
+      
+      document.addEventListener('mouseleave', () => { mouse.x = 0; mouse.y = 0; });
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+
+      const idInput = document.getElementById('txtname');
+      const passInput = document.getElementById('txtpass');
+      const btn = document.getElementById('btnSubmit');
+      const errorDiv = document.getElementById('errorMessage');
+
+      idInput.classList.remove('shake-anim');
+      passInput.classList.remove('shake-anim');
+      errorDiv.style.display = 'none';
+
+      let isValid = true;
+
+      if(idInput.value.trim().length < 3) {
+        idInput.classList.add('shake-anim');
+        isValid = false;
+      }
+      if(passInput.value.length < 6) {
+        passInput.classList.add('shake-anim');
+        isValid = false;
+      }
+
+      if(isValid) {
+        document.forms[0].submit();
+      }
+      return false;
+    }
+
+    // Check for error parameter in URL (from backend redirect)
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorParam = urlParams.get('error');
+    if(errorParam) {
+      document.getElementById('errorMessage').textContent = errorParam;
+      document.getElementById('errorMessage').style.display = 'block';
+    }
+
+    function togglePass() {
+      const input = document.getElementById('txtpass');
+      const icon = document.getElementById('eyeIcon');
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.replace('ph-eye', 'ph-eye-slash');
+      } else {
+        input.type = "password";
+        icon.classList.replace('ph-eye-slash', 'ph-eye');
+      }
+    }
+  </script>
+
+</body>
+</html>

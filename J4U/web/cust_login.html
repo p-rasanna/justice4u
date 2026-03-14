@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Justice4U | Secure Portal</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================
+       1. CUPERTINO DESIGN SYSTEM
+       ============================ */
+    :root {
+      /* Colors */
+      --text-main: #1d1d1f; 
+      --text-muted: #86868b;
+      --gold-mac: #D4AF37;
+      --gold-dark: #B59328;
+      
+      /* The "Super-Glass" Material */
+      --glass-surface: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.8);
+      --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      
+      /* Apple-style Spring Animation */
+      --ease-spring: cubic-bezier(0.25, 0.8, 0.25, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * { box-sizing: border-box; outline: none; -webkit-font-smoothing: antialiased; }
+    
+    body {
+      margin: 0;
+      height: 100vh;
+      width: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #F5F5F7;
+    }
+
+    /* ============================
+       2. THE "AURORA" MESH BACKGROUND
+       ============================ */
+    .aurora-bg {
+      position: absolute;
+      width: 100%; height: 100%;
+      background: 
+        radial-gradient(at 0% 0%, rgba(255, 237, 213, 0.5) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(255, 255, 255, 0.8) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.1) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(243, 244, 246, 0.5) 0px, transparent 50%);
+      filter: blur(60px);
+      z-index: 0;
+      animation: auroraMove 20s infinite alternate linear;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      opacity: 0.6;
+      animation: float 10s ease-in-out infinite;
+    }
+    .orb-1 { width: 400px; height: 400px; background: rgba(198, 167, 94, 0.2); top: -10%; left: -10%; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(255, 255, 255, 0.8); bottom: 10%; right: 10%; animation-delay: -5s; }
+
+    /* ============================
+       3. STAGE & LAYOUT
+       ============================ */
+    .stage {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      gap: 100px;
+      align-items: center;
+      max-width: 1100px;
+      width: 90%;
+    }
+
+    .intro-text { flex: 1; padding-right: 40px; position: relative; }
+
+    /* ============================
+       4. BACK BUTTON (Glassmorphism)
+       ============================ */
+    .back-button {
+      position: absolute; 
+      top: -70px; 
+      left: 0; 
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 99px;
+      padding: 8px 18px 8px 14px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.3s var(--ease-spring);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .back-button i {
+      font-size: 1.1rem;
+      transition: transform 0.3s var(--ease-spring);
+    }
+
+    .back-button:hover { 
+      background: rgba(255, 255, 255, 0.95); 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+      border-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .back-button:hover i {
+      transform: translateX(-3px);
+    }
+
+    /* Typography */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 99px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(0,0,0,0.05);
+      color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; line-height: 1.05; color: var(--text-main); margin: 0 0 20px 0;
+      letter-spacing: -0.02em;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #C6A75E, #9A8038);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic;
+    }
+
+    .description {
+      font-size: 1.05rem; line-height: 1.6; color: var(--text-muted); max-width: 440px;
+    }
+
+    /* ============================
+       5. THE "SUPER-GLASS" CARD
+       ============================ */
+    .card-wrapper {
+      flex: 0.8;
+      perspective: 1200px;
+      position: relative;
+    }
+
+    .login-card {
+      background: var(--glass-surface);
+      backdrop-filter: saturate(180%) blur(25px);
+      -webkit-backdrop-filter: saturate(180%) blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: var(--glass-shadow);
+      
+      opacity: 0; transform: translateY(20px) scale(0.98);
+      animation: popIn 1s var(--ease-spring) forwards 0.3s;
+
+      position: relative; overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .glare {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.8), transparent 40%);
+      opacity: 0.5; mix-blend-mode: overlay; pointer-events: none;
+    }
+
+    .auth-header { text-align: center; margin-bottom: 32px; }
+    .auth-header h2 { font-size: 1.5rem; margin: 0 0 6px; color: var(--text-main); font-weight: 700; letter-spacing: -0.01em; }
+    .auth-header p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* ============================
+       6. IOS-STYLE INPUTS
+       ============================ */
+    .form-group { position: relative; margin-bottom: 20px; }
+
+    .input-field {
+      width: 100%;
+      background: rgba(118, 118, 128, 0.08); 
+      border: 1px solid transparent;
+      color: var(--text-main);
+      padding: 16px 16px 16px 48px;
+      font-size: 1rem;
+      border-radius: 14px; 
+      transition: all 0.3s var(--ease-spring);
+    }
+
+    .input-icon {
+      position: absolute; left: 18px; top: 16px;
+      color: #999; font-size: 1.2rem;
+      transition: all 0.3s var(--ease-spring);
+      pointer-events: none;
+    }
+
+    .input-field:focus {
+      background: #fff;
+      border-color: rgba(0,0,0,0.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: scale(1.02); 
+    }
+    .input-field:focus ~ .input-icon { color: var(--gold-mac); transform: scale(1.1); }
+    .input-field:hover:not(:focus) { background: rgba(118, 118, 128, 0.12); }
+
+    .error-msg {
+      position: absolute; right: 10px; top: 18px;
+      font-size: 0.75rem; color: #FF3B30; 
+      opacity: 0; transform: translateX(10px); transition: all 0.3s var(--ease-spring);
+      font-weight: 500; pointer-events: none;
+    }
+    .form-group.error .input-field { background: #FFF2F2; color: #FF3B30; }
+    .form-group.error .input-icon { color: #FF3B30; }
+    .form-group.error .error-msg { opacity: 1; transform: translateX(0); }
+
+    /* ============================
+       7. SATIN GOLD BUTTON
+       ============================ */
+    .btn-submit {
+      width: 100%; padding: 16px;
+      background: var(--text-main); 
+      color: #fff;
+      border: none; border-radius: 14px;
+      font-size: 1rem; font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s var(--ease-spring);
+      position: relative; overflow: hidden;
+    }
+
+    .btn-bg {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(135deg, var(--gold-mac), var(--gold-dark));
+      opacity: 0; transition: opacity 0.4s ease;
+      z-index: 1;
+    }
+    .btn-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+    .btn-submit:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+    .btn-submit:hover .btn-bg { opacity: 1; }
+    .btn-submit:active { transform: scale(0.96); }
+
+    .btn-submit.success {
+      background: #34C759; 
+      pointer-events: none;
+    }
+    .btn-submit.success .btn-bg { opacity: 0; }
+
+    .footer-links {
+      margin-top: 24px; text-align: center; 
+      border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px;
+    }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; margin: 0 10px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-main); }
+
+    /* Animations */
+    @keyframes auroraMove { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    @keyframes popIn { 
+      0% { opacity: 0; transform: translateY(20px) scale(0.95); } 
+      100% { opacity: 1; transform: translateY(0) scale(1); } 
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .shake { animation: shake 0.3s ease-in-out; }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      body { height: auto; padding: 40px 20px; }
+      .stage { flex-direction: column; gap: 40px; }
+      .intro-text { text-align: center; padding: 0; }
+      .login-card { transform: none !important; }
+      
+      /* Mobile Flow for Back Button */
+      .back-button {
+        position: relative;
+        top: 0;
+        margin-bottom: 24px;
+        display: inline-flex;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="aurora-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <main class="stage">
+    
+    <div class="intro-text">
+      <a href="Home.html" class="back-button"><i class="ph ph-arrow-left"></i> Back to Home</a>
+      
+      <br class="mobile-break"> <div class="badge"><i class="ph ph-lock-key"></i> Secure Portal</div>
+      <h1>Justice, <br><span>Clarified.</span></h1>
+      <p class="description">
+        Experience legal management reimagined. Real-time updates, secure vault storage, and instant communication in one beautiful interface.
+      </p>
+    </div>
+
+    <div class="card-wrapper" id="cardWrapper">
+      <div class="login-card" id="loginCard">
+        <div class="glare"></div>
+
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to access your case files</p>
+        </div>
+
+        <form action="LoginServlet" method="post" onsubmit="return handleLogin(event)" novalidate>
+          <input type="hidden" name="role" value="client">
+          
+          <div id="errorMessage" style="color: #FF3B30; font-size: 0.9rem; margin-bottom: 16px; display: none; text-align: center; font-weight: 500; background: rgba(255, 59, 48, 0.1); padding: 10px; border-radius: 8px;"></div>
+
+          <div class="form-group" id="grp-id">
+            <i class="ph ph-user input-icon"></i>
+            <input type="text" class="input-field" id="txtname" name="email" placeholder="Email" autocomplete="username">
+            <span class="error-msg">Invalid ID</span>
+          </div>
+
+          <div class="form-group" id="grp-pass">
+            <i class="ph ph-lock-key input-icon"></i>
+            <input type="password" class="input-field" id="txtpass" name="password" placeholder="Password" autocomplete="current-password">
+            <span class="error-msg">Required</span>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btnSubmit">
+            <div class="btn-bg"></div>
+            <div class="btn-text">
+              <span>Sign In</span> <i class="ph ph-arrow-right-bold"></i>
+            </div>
+          </button>
+
+          <div class="footer-links">
+            <a href="forgot_password.html?role=client" style="color: var(--text-main);">Forgot Password?</a>
+            <a href="Lawyer_login.html">Lawyer Access</a>
+            <a href="#">Help Center</a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    /* ============================
+       THE "MAC" PHYSICS ENGINE
+       ============================ */
+    const card = document.getElementById('loginCard');
+    const glare = document.querySelector('.glare');
+    const isMobile = window.innerWidth < 900;
+
+    let mouse = { x: 0, y: 0 };
+    let current = { x: 0, y: 0 };
+    
+    const friction = 0.08; 
+
+    if (!isMobile) {
+      document.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        mouse.x = (e.clientX - centerX) / 45;
+        mouse.y = ((e.clientY - centerY) / 45) * -1;
+        
+        const glareX = e.clientX - rect.left;
+        const glareY = e.clientY - rect.top;
+        glare.style.setProperty('--x', `${glareX}px`);
+        glare.style.setProperty('--y', `${glareY}px`);
+      });
+
+      function animate() {
+        current.x += (mouse.x - current.x) * friction;
+        current.y += (mouse.y - current.y) * friction;
+        
+        card.style.transform = `perspective(1000px) rotateX(${current.y}deg) rotateY(${current.x}deg)`;
+        
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      document.addEventListener('mouseleave', () => {
+        mouse.x = 0; mouse.y = 0;
+      });
+    }
+
+    /* ============================
+       INTERACTIVE LOGIC
+       ============================ */
+    function handleLogin(e) {
+      e.preventDefault();
+      
+      const idInput = document.getElementById('txtname');
+      const passInput = document.getElementById('txtpass');
+      const btn = document.getElementById('btnSubmit');
+      const btnText = document.querySelector('.btn-text span');
+      const btnIcon = document.querySelector('.btn-text i');
+      
+      let isValid = true;
+      resetErrors();
+
+      if(idInput.value.length < 3 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(idInput.value)) {
+        setError('grp-id');
+        isValid = false;
+      }
+      if(passInput.value.length < 6) {
+        setError('grp-pass');
+        isValid = false;
+      }
+
+      if(isValid) {
+        btnText.innerText = 'Verifying...';
+        btnIcon.classList.remove('ph-arrow-right-bold');
+        btnIcon.classList.add('ph-spinner', 'ph-spin');
+
+        setTimeout(() => {
+          document.forms[0].submit();
+        }, 1500);
+      }
+      return false;
+    }
+
+    function setError(groupId) {
+      const group = document.getElementById(groupId);
+      group.classList.add('error');
+      group.classList.add('shake');
+      setTimeout(() => group.classList.remove('shake'), 300);
+    }
+
+    function resetErrors() {
+      document.querySelectorAll('.form-group').forEach(el => {
+        el.classList.remove('error');
+        el.classList.remove('shake');
+      });
+    }
+
+    // Check for msg/error parameters in URL (from backend redirect)
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorParam = urlParams.get('error');
+    const msgParam = urlParams.get('msg');
+    
+    if(errorParam) {
+      document.getElementById('errorMessage').textContent = errorParam;
+      document.getElementById('errorMessage').style.display = 'block';
+    }
+
+    if(msgParam && msgParam.includes("Registration successful")) {
+      // Create and show an elegant floating success banner
+      const banner = document.createElement("div");
+      banner.innerHTML = `
+        <div style="background: rgba(52, 199, 89, 0.9); color: white; padding: 16px 24px; border-radius: 12px;
+                    display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(52, 199, 89, 0.3);
+                    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+          <i class="ph ph-check-circle" style="font-size: 1.5rem;"></i>
+          <div>
+            <h4 style="margin: 0; font-size: 1rem;">Registration Completed</h4>
+            <p style="margin: 2px 0 0; font-size: 0.85rem; opacity: 0.9;">Your account is pending admin approval.</p>
+          </div>
+          <button onclick="this.parentElement.remove()" style="background:none; border:none; color:white; cursor:pointer; margin-left:12px;">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+      `;
+      // Styling the banner container
+      Object.assign(banner.style, {
+        position: 'fixed',
+        top: '24px',
+        left: '50%',
+        transform: 'translateX(-50%) translateY(-20px)',
+        zIndex: '1000',
+        opacity: '0',
+        transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
+      });
+      
+      document.body.appendChild(banner);
+      
+      // Animate in
+      setTimeout(() => {
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateX(-50%) translateY(0)';
+      }, 100);
+
+      // Auto dismiss
+      setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateX(-50%) translateY(-20px)';
+        setTimeout(() => banner.remove(), 500);
+      }, 6000);
+    }
+  </script>
+</body>
+</html>

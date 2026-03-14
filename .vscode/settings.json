@@ -1,0 +1,16 @@
+{
+    
+    "liveServer.settings.port": 5506,
+    "java.project.sourcePaths": [
+        "J4U\\src\\java"
+    ],
+    "java.project.referencedLibraries": [
+        "c:\\Users\\Admin\\Downloads\\javamail1_4_7 (1)\\javamail-1.4.7\\lib\\dsn.jar",
+        "c:\\Users\\Admin\\Downloads\\javamail1_4_7 (1)\\javamail-1.4.7\\lib\\gimap.jar",
+        "c:\\Users\\Admin\\Downloads\\javamail1_4_7 (1)\\javamail-1.4.7\\lib\\imap.jar",
+        "c:\\Users\\Admin\\Downloads\\javamail1_4_7 (1)\\javamail-1.4.7\\lib\\mailapi.jar",
+        "c:\\Users\\Admin\\Downloads\\javamail1_4_7 (1)\\javamail-1.4.7\\lib\\pop3.jar",
+        "c:\\Users\\Admin\\Downloads\\javamail1_4_7 (1)\\javamail-1.4.7\\lib\\smtp.jar",
+        "c:\\Users\\Admin\\Downloads\\javamail1_4_7 (1)\\javamail-1.4.7\\mail.jar"
+    ]
+}
