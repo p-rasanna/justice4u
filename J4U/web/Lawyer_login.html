@@ -1,480 +1,366 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <title>Justice4U | Partner Access</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <title>Justice4U | Attorney Login</title>
+
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Switzer:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ============================
-       1. DESIGN TOKENS
-       ============================ */
     :root {
-      /* Project Identity */
-      --ivory-bg: #FAFAF8;
-      --gold-primary: #C6A75E;
-      --gold-highlight: #D4B670;
-      --charcoal: #1C1C1C;
-      
-      /* Executive Card Specifics */
-      --card-bg: rgba(20, 20, 20, 0.96);
-      --card-border: rgba(198, 167, 94, 0.2);
-      --input-bg: rgba(255, 255, 255, 0.04);
-      
-      /* Animation Curves */
-      --ease-smooth: cubic-bezier(0.23, 1, 0.32, 1);
-      --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --bg:           #FDFBF7;
+      --bg2:          #F5F2EC;
+      --surface:      #FFFFFF;
+      --surface-glass:rgba(253,251,247,0.72);
+      --border:       rgba(28,25,23,0.08);
+      --border-mid:   rgba(28,25,23,0.14);
+      --border-focus: rgba(201,162,39,0.5);
+      --text:         #1C1917;
+      --text-muted:   #57534E;
+      --text-faint:   #A8A29E;
+      --gold:         #C9A227;
+      --gold-light:   #E8C84A;
+      --gold-dark:    #9E7C18;
+      --gold-glow:    rgba(201,162,39,0.15);
+      --error:        #DC2626;
+      --error-bg:     #FEF2F2;
+      --error-border: rgba(220,38,38,0.2);
+      --font-sans:  'Switzer', sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --ease-out:   cubic-bezier(0.16,1,0.3,1);
+    }
+    [data-theme="dark"] {
+      --bg:           #0F0E0C;
+      --bg2:          #161410;
+      --surface:      #1A1814;
+      --surface-glass:rgba(15,14,12,0.75);
+      --border:       rgba(255,255,255,0.07);
+      --border-mid:   rgba(255,255,255,0.12);
+      --border-focus: rgba(212,175,55,0.45);
+      --text:         #F5F2EC;
+      --text-muted:   #A8A29E;
+      --text-faint:   #57534E;
+      --gold:         #D4AF37;
+      --gold-light:   #F0CE5C;
+      --gold-dark:    #B4901E;
+      --gold-glow:    rgba(212,175,55,0.12);
+      --error-bg:     rgba(220,38,38,0.08);
+      --error-border: rgba(220,38,38,0.25);
     }
 
-    * { box-sizing: border-box; outline: none; }
-    
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
     body {
-      margin: 0;
-      height: 100vh;
-      width: 100%;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--ivory-bg);
-      color: var(--charcoal);
-      overflow: hidden;
+      min-height: 100svh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
       display: flex;
+      align-items: center;
       justify-content: center;
-      align-items: center;
-    }
-
-    /* ============================
-       2. AMBIENT BACKGROUND
-       ============================ */
-    .bg-grid {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background-image: 
-        linear-gradient(rgba(28, 28, 28, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(28, 28, 28, 0.03) 1px, transparent 1px);
-      background-size: 80px 80px;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .bg-pillar {
-      position: absolute;
-      right: 5%; bottom: -15%;
-      width: 45vw; height: 70vh;
-      background: radial-gradient(circle, rgba(198, 167, 94, 0.25) 0%, transparent 70%);
-      filter: blur(90px);
-      z-index: 0;
-      animation: pulseLight 14s ease-in-out infinite alternate;
-    }
-
-    /* ============================
-       3. STAGE & LAYOUT
-       ============================ */
-    .stage {
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
       position: relative;
-      z-index: 10;
-      display: flex;
-      gap: 80px;
-      align-items: center;
-      max-width: 1200px;
-      width: 90%;
+      overflow: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    [data-theme="dark"] body::before { opacity: 0.045; }
+
+    .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
+    .orb-1 { width:55vw; height:55vw; top:-20%; left:-15%; background:radial-gradient(circle,rgba(201,162,39,.1),transparent 70%); animation:d1 18s ease-in-out infinite alternate; }
+    .orb-2 { width:40vw; height:40vw; bottom:-10%; right:-10%; background:radial-gradient(circle,rgba(245,222,179,.07),transparent 70%); animation:d2 22s ease-in-out infinite alternate; }
+    @keyframes d1 { 0%{transform:translate(0,0)} 100%{transform:translate(4vw,4vh)} }
+    @keyframes d2 { 0%{transform:translate(0,0)} 100%{transform:translate(-3vw,5vh)} }
+    @media (prefers-reduced-motion: reduce) { .orb { animation: none !important; } }
+
+    .theme-btn {
+      position: fixed; top: 20px; right: 20px; z-index: 100;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--surface-glass); border: 1px solid var(--border-mid);
+      backdrop-filter: blur(16px); color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; transition: all 0.2s;
+    }
+    .theme-btn:hover { background: var(--bg2); color: var(--text); }
+
+    /* Split layout — left panel + card */
+    .page-wrap {
+      display: flex; align-items: center; gap: 80px;
+      max-width: 900px; width: 100%; position: relative; z-index: 10;
     }
 
-    .intro-text {
-      position: relative;
-      flex: 1;
-      padding-right: 40px;
+    /* Left panel */
+    .side-panel {
+      flex: 1; display: flex; flex-direction: column; gap: 28px;
+      animation: slideIn 0.9s var(--ease-out) 0.15s both;
     }
-
-    /* ============================
-       4. BACK BUTTON
-       ============================ */
-    .back-button {
-      position: absolute; 
-      top: -70px; 
-      left: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--charcoal);
-      border: 1px solid var(--card-border);
-      border-radius: 99px;
-      padding: 8px 18px 8px 14px;
-      text-decoration: none;
-      color: var(--ivory-bg);
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: all 0.3s var(--ease-smooth);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      z-index: 100;
+    @keyframes slideIn {
+      from { opacity:0; transform: translateX(-24px); }
+      to   { opacity:1; transform: none; }
     }
-
-    .back-button i {
-      font-size: 1.1rem;
-      color: var(--gold-primary);
-      transition: transform 0.3s var(--ease-smooth);
+    .side-label {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold-dark); background: rgba(201,162,39,0.08);
+      border: 1px solid rgba(201,162,39,0.2); padding: 5px 12px; border-radius: 100px;
+      width: fit-content;
     }
-
-    .back-button:hover {
-      background: #000;
-      border-color: var(--gold-primary);
-      transform: translateX(-5px); /* Slide left to indicate "back" */
-      box-shadow: 0 6px 16px rgba(198, 167, 94, 0.15);
+    .side-title {
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.035em; line-height: 1.1;
     }
+    .side-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--gold); }
+    .side-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; max-width: 320px; }
 
-    .back-button:hover i {
-      transform: translateX(-3px);
+    .trust-items { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+    .trust-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.85rem; color: var(--text-muted);
     }
+    .trust-item i { color: var(--gold); font-size: 1rem; flex-shrink: 0; }
 
-    /* Staggered Text Entrance */
-    .fade-in {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-
-    .badge-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 14px; border-radius: 4px;
-      background: var(--charcoal); 
-      color: #fff;
-      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5rem; line-height: 1.1; color: var(--charcoal); margin: 0 0 24px 0;
-    }
-    h1 span { color: var(--gold-primary); font-style: italic; }
-
-    .description {
-      font-size: 1.1rem; line-height: 1.6; color: #555; max-width: 460px;
-      border-left: 3px solid var(--charcoal); padding-left: 20px;
-    }
-
-    /* ============================
-       5. THE "BLACK CARD" (With Physics)
-       ============================ */
-    .card-wrapper {
-      flex: 0.8;
-      perspective: 1200px;
-      position: relative;
-    }
-
+    /* Login card */
     .login-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 50px;
-      color: #FAFAF8;
-      box-shadow: 0 30px 70px -10px rgba(0,0,0,0.4);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 48px 44px;
+      width: 100%; max-width: 400px;
+      flex-shrink: 0;
       position: relative;
-      overflow: hidden;
-      
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      
-      transform-style: preserve-3d;
-      will-change: transform;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.04);
+      animation: cardIn 0.8s var(--ease-out) 0.1s both;
+    }
+    [data-theme="dark"] .login-card { box-shadow: 0 8px 48px rgba(0,0,0,0.3); }
+    @keyframes cardIn {
+      from { opacity:0; transform: translateY(20px) scale(0.98); }
+      to   { opacity:1; transform: none; }
+    }
+    .login-card::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 64px; height: 3px; background: var(--gold); border-radius: 0 0 4px 4px;
     }
 
-    .spotlight {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(800px circle at var(--x, 50%) var(--y, 50%), rgba(198, 167, 94, 0.12), transparent 40%);
-      pointer-events: none;
-      z-index: 1;
+    .card-logo {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      text-decoration: none; color: var(--text);
+      font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 28px;
     }
-
-    .card-content { position: relative; z-index: 2; }
-
-    .auth-header { margin-bottom: 32px; text-align: center; }
-    .auth-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 8px; color: var(--gold-primary); }
-    .auth-header p { font-size: 0.9rem; color: #888; }
-
-    /* ============================
-       6. INPUTS (Depth & Authority)
-       ============================ */
-    .form-group { position: relative; margin-bottom: 24px; }
-
-    .input-field {
-      width: 100%;
-      background: var(--input-bg);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-left: 2px solid rgba(255,255,255,0.2);
-      color: #fff;
-      padding: 16px 16px 16px 45px;
-      font-size: 1rem;
-      border-radius: 3px;
-      transition: all 0.3s var(--ease-smooth);
+    .logo-icon {
+      width: 32px; height: 32px; border-radius: 9px;
+      background: var(--gold); display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1rem;
     }
+    .card-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 5px; }
+    .card-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--gold); }
+    .card-sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 28px; }
 
-    .input-icon {
-      position: absolute; left: 16px; top: 16px;
-      color: #666; font-size: 1.2rem;
-      transition: all 0.3s var(--ease-smooth);
-      pointer-events: none;
+    .error-banner {
+      display: none; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: 12px; margin-bottom: 20px;
+      background: var(--error-bg); border: 1px solid var(--error-border);
+      color: var(--error); font-size: 0.88rem; font-weight: 500; line-height: 1.5;
     }
+    .error-banner.visible { display: flex; }
+    .error-banner i { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
 
-    .input-field:focus {
-      background: rgba(0,0,0,0.5);
-      border-color: var(--gold-primary);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      transform: translateY(-2px);
-    }
-    .input-field:focus ~ .input-icon { 
-      color: var(--gold-primary); 
-      transform: scale(1.1);
-    }
-    .input-field::placeholder { color: rgba(255,255,255,0.2); }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.83rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+    .input-wrap { position: relative; }
+    .input-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-faint); font-size: 1.1rem; pointer-events: none; transition: color 0.2s; }
 
-    /* ============================
-       7. BUTTON (Ceremonial Feel)
-       ============================ */
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%; padding: 12px 14px 12px 40px;
+      border-radius: 11px; border: 1px solid var(--border);
+      background: var(--bg2); color: var(--text);
+      font-family: var(--font-sans); font-size: 0.93rem;
+      transition: all 0.25s var(--ease-out); -webkit-appearance: none;
+    }
+    input::placeholder { color: var(--text-faint); }
+    input:hover { border-color: var(--border-mid); }
+    input:focus {
+      outline: none; border-color: var(--border-focus);
+      background: var(--surface); box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+    .input-wrap:focus-within .input-icon { color: var(--gold-dark); }
+
+    .pass-toggle {
+      position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--text-faint); font-size: 1.1rem; padding: 4px; transition: color 0.2s; line-height: 1;
+    }
+    .pass-toggle:hover { color: var(--text-muted); }
+
     .btn-submit {
-      width: 100%; padding: 16px;
-      background: var(--gold-primary);
-      color: #000;
-      border: none; border-radius: 3px;
-      font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 10px;
-      position: relative;
-      overflow: hidden;
+      width: 100%; padding: 13px;
+      background: var(--text); color: var(--bg);
+      border: none; border-radius: 11px; cursor: pointer;
+      font-family: var(--font-sans); font-size: 0.95rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 8px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      transition: all 0.25s var(--ease-out);
     }
+    .btn-submit:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: 0 8px 22px var(--gold-glow); }
+    .btn-submit:active { transform: none; }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    .btn-submit:hover {
-      background: var(--gold-highlight);
-      box-shadow: 0 0 25px rgba(198, 167, 94, 0.5);
-      transform: translateY(-1px);
+    .card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border);
+      font-size: 0.82rem;
     }
+    .card-footer a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .card-footer a:hover { color: var(--gold-dark); }
+    .back-link { display: inline-flex; align-items: center; gap: 5px; }
 
-    .btn-submit:active {
-      transform: translateY(1px) scale(0.98);
-      box-shadow: none;
+    @media (max-width: 780px) {
+      .side-panel { display: none; }
+      .page-wrap { justify-content: center; }
+      .login-card { max-width: 440px; }
     }
-
-    .btn-submit.loading {
-      pointer-events: none;
-      background: #fff;
-      color: #000;
-      letter-spacing: 0.2em;
-    }
-
-    .footer-links {
-      margin-top: 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;
-    }
-    .footer-links a { color: #666; text-decoration: none; font-size: 0.85rem; margin: 0 10px; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--gold-primary); }
-
-    /* ============================
-       8. ANIMATIONS
-       ============================ */
-    @keyframes textEnter {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes cardEnter {
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes pulseLight {
-      0% { opacity: 0.3; transform: scale(1); }
-      100% { opacity: 0.5; transform: scale(1.1); }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-5px); }
-      40% { transform: translateX(5px); }
-      60% { transform: translateX(-5px); }
-      80% { transform: translateX(5px); }
-    }
-    .error-shake { animation: shake 0.4s ease-in-out; border-color: #ef4444 !important; }
-
-    /* ============================
-       9. MOBILE OPTIMIZATION
-       ============================ */
-    @media (max-width: 900px) {
-      body { height: auto; padding: 40px 20px; overflow-y: auto; }
-      .stage { flex-direction: column; gap: 40px; }
-      .intro-text { position: relative; text-align: center; padding-right: 0; }
-      .description { margin: 0 auto; border-left: none; border-top: 3px solid var(--charcoal); padding-top: 15px; padding-left: 0; }
-      .card-wrapper { width: 100%; }
-      .login-card:active { transform: scale(0.99); transition: transform 0.1s; }
-      
-      /* Mobile adjustment for back button */
-      .back-button {
-        position: relative;
-        top: 0;
-        margin-bottom: 24px;
-        display: inline-flex;
-        justify-content: center;
-      }
+    @media (max-width: 480px) {
+      .login-card { padding: 36px 22px; border-radius: 20px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="bg-grid"></div>
-  <div class="bg-pillar"></div>
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
 
-  <main class="stage">
-    
-    <div class="intro-text">
-      <a href="Home.html" class="back-button fade-in"><i class="ph ph-arrow-left"></i> Back to Home</a>
-      
-      <br class="mobile-break"> <div class="badge-pill fade-in delay-1"><i class="ph ph-gavel"></i> Practitioner Portal</div>
-      <h1 class="fade-in delay-2">Precision <br>meets <span>Purpose.</span></h1>
-      <p class="description fade-in delay-3">
-        Access the firm's central command. Manage case filings, review evidence, and securely communicate with clients from a unified dashboard.
-      </p>
-    </div>
+  <button class="theme-btn" id="themeToggle" aria-label="Toggle dark mode">
+    <i class="ph-fill ph-moon" id="themeIcon"></i>
+  </button>
 
-    <div class="card-wrapper" id="cardWrapper">
-      <div class="login-card" id="loginCard">
-        <div class="spotlight" id="spotlight"></div>
-        
-        <div class="card-content">
-          <div class="auth-header">
-            <h2>Partner Login</h2>
-            <p>Authorized personnel only</p>
-          </div>
+  <div class="page-wrap">
 
-          <form action="LoginServlet" method="post" onsubmit="return handleLogin(event)" novalidate>
-            <input type="hidden" name="role" value="lawyer">
-            
-            <div id="errorMessage" style="color: #ef4444; font-size: 0.9rem; margin-bottom: 16px; display: none; text-align: center; font-weight: 500;"></div>
-
-            <div class="form-group">
-              <i class="ph ph-briefcase input-icon"></i>
-              <input type="text" class="input-field" id="txtname" name="email" placeholder="Lawyer ID" autocomplete="off">
-            </div>
-
-            <div class="form-group">
-              <i class="ph ph-shield-check input-icon"></i>
-              <input type="password" class="input-field" id="txtpass" name="password" placeholder="Encrypted Password" autocomplete="current-password">
-            </div>
-
-            <button type="submit" class="btn-submit" id="btnSubmit">
-              Access Dashboard
-            </button>
-
-            <div class="footer-links">
-              <a href="forgot_password.html?role=lawyer" style="color: var(--gold-primary);">Forgot Password?</a>
-              <a href="Login.html">Admin</a>
-              <a href="cust_login.html">Client Access</a>
-              <a href="internlogin.html">Interns</a>
-            </div>
-          </form>
-        </div>
+    <!-- Left Panel -->
+    <div class="side-panel" aria-hidden="true">
+      <div class="side-label"><i class="ph-fill ph-gavel"></i> Attorney Portal</div>
+      <h2 class="side-title">Practice law,<br><em>elevated.</em></h2>
+      <p class="side-desc">Manage consultations, access case briefs, and grow your practice through our verified attorney network.</p>
+      <div class="trust-items">
+        <div class="trust-item"><i class="ph-fill ph-shield-check"></i> Bar license verified on every login</div>
+        <div class="trust-item"><i class="ph-fill ph-lock-key"></i> End-to-end encrypted case files</div>
+        <div class="trust-item"><i class="ph-fill ph-users-three"></i> 1,200+ verified attorneys network</div>
       </div>
     </div>
-  </main>
+
+    <!-- Card -->
+    <div class="login-card" role="main">
+
+      <a href="Home.html" class="card-logo" aria-label="Justice4U home">
+        <div class="logo-icon"><i class="ph-fill ph-scales"></i></div>
+        Justice4U
+      </a>
+
+      <h1 class="card-title">Welcome <em>back.</em></h1>
+      <p class="card-sub">Access your verified legal counsel portal.</p>
+
+      <div class="error-banner" id="errorBanner" role="alert" aria-live="polite">
+        <i class="ph-fill ph-warning-circle"></i>
+        <span id="errorText"></span>
+      </div>
+
+      <form action="LoginServlet" method="post" id="loginForm" novalidate>
+        <input type="hidden" name="role" value="lawyer">
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <div class="input-wrap">
+            <input type="email" id="email" name="email" required
+                   placeholder="lawyer@chambers.com" autocomplete="email">
+            <i class="ph ph-envelope input-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" required
+                   placeholder="••••••••" autocomplete="current-password">
+            <i class="ph ph-lock-simple input-icon"></i>
+            <button type="button" class="pass-toggle" id="passToggle" aria-label="Toggle password visibility">
+              <i class="ph ph-eye" id="passIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span id="btnLabel">Partner Sign In</span>
+          <i class="ph-bold ph-arrow-right" id="btnIcon"></i>
+        </button>
+      </form>
+
+      <div class="card-footer">
+        <a href="role_select.html" class="back-link">
+          <i class="ph-bold ph-arrow-left"></i> Back
+        </a>
+        <a href="Lawyer.jsp">Apply to Join</a>
+      </div>
+
+    </div>
+  </div>
 
   <script>
-    /* ============================
-       THE EXECUTIVE PHYSICS ENGINE
-       ============================ */
+    const root = document.documentElement;
+    const tBtn = document.getElementById('themeToggle');
+    const tIcon = document.getElementById('themeIcon');
+    const saved = localStorage.getItem('j4u-theme');
+    const sys   = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const init  = saved || (sys ? 'dark' : 'light');
+    root.setAttribute('data-theme', init);
+    tIcon.className = init === 'dark' ? 'ph-fill ph-sun' : 'ph-fill ph-moon';
+    tBtn.addEventListener('click', () => {
+      const n = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', n);
+      tIcon.className = n === 'dark' ? 'ph-fill ph-sun' : 'ph-fill ph-moon';
+      localStorage.setItem('j4u-theme', n);
+    });
 
-    const card = document.getElementById('loginCard');
-    const isMobile = window.innerWidth < 900;
+    document.getElementById('passToggle').addEventListener('click', () => {
+      const inp = document.getElementById('password');
+      const icon = document.getElementById('passIcon');
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      icon.className = show ? 'ph ph-eye-slash' : 'ph ph-eye';
+    });
 
-    let mouse = { x: 0, y: 0 }; 
-    let spot = { x: 0, y: 0 };  
-    
-    let current = { x: 0, y: 0 }; 
-    let currentSpot = { x: 0, y: 0 }; 
-
-    if (!isMobile) {
-      document.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        mouse.x = (e.clientX - centerX) / 40; 
-        mouse.y = ((e.clientY - centerY) / 40) * -1; 
-        
-        spot.x = e.clientX - rect.left;
-        spot.y = e.clientY - rect.top;
-      });
-
-      function animate() {
-        current.x += (mouse.x - current.x) * 0.08;
-        current.y += (mouse.y - current.y) * 0.08;
-        
-        currentSpot.x += (spot.x - currentSpot.x) * 0.1;
-        currentSpot.y += (spot.y - currentSpot.y) * 0.1;
-
-        card.style.transform = `perspective(1000px) rotateX(${current.y}deg) rotateY(${current.x}deg)`;
-        
-        card.style.setProperty('--x', `${currentSpot.x}px`);
-        card.style.setProperty('--y', `${currentSpot.y}px`);
-
-        requestAnimationFrame(animate);
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('password').value;
+      if (!email || !pass) {
+        e.preventDefault();
+        showError('Please fill in all fields.');
+        return;
       }
-      
-      animate();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      document.getElementById('btnLabel').textContent = 'Signing in…';
+      document.getElementById('btnIcon').className = 'ph ph-spinner ph-spin';
+    });
 
-      document.addEventListener('mouseleave', () => {
-        mouse.x = 0; mouse.y = 0;
-      });
+    function showError(msg) {
+      const b = document.getElementById('errorBanner');
+      document.getElementById('errorText').textContent = msg;
+      b.classList.add('visible');
     }
-
-    /* ============================
-       LOGIC & VALIDATION
-       ============================ */
-    function handleLogin(e) {
-      e.preventDefault();
-      
-      const idInput = document.getElementById('txtname');
-      const passInput = document.getElementById('txtpass');
-      const btn = document.getElementById('btnSubmit');
-      
-      let isValid = true;
-      
-      idInput.classList.remove('error-shake');
-      passInput.classList.remove('error-shake');
-
-      if(idInput.value.trim().length < 3) {
-        idInput.classList.add('error-shake'); 
-        isValid = false;
-      }
-      if(passInput.value.length < 3) {
-        passInput.classList.add('error-shake');
-        isValid = false;
-      }
-
-      if(isValid) {
-        btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Authenticating...';
-        btn.classList.add('loading'); 
-        
-        setTimeout(() => {
-          btn.innerHTML = 'Access Granted';
-          btn.style.background = '#fff';
-          btn.style.color = '#000';
-          document.forms[0].submit();
-        }, 1500);
-      }
-      return false;
-    }
-
-    // Check for error parameter in URL (from backend redirect)
-    const urlParams = new URLSearchParams(window.location.search);
-    const errorParam = urlParams.get('error');
-    if(errorParam) {
-      document.getElementById('errorMessage').textContent = errorParam;
-      document.getElementById('errorMessage').style.display = 'block';
-    }
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get('error') || params.get('msg');
+    if (err) showError(decodeURIComponent(err));
   </script>
 </body>
 </html>

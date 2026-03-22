@@ -76,7 +76,7 @@
         .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 12px; font-weight: 600; letter-spacing: 0.05em; }
         .nav-link {
             display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px;
-            color: var(--ink-secondary); text-decoration: none; font-weight: 500; transition: all 0.2s; margin-bottom: 4px; border: 1px solid transparent;
+            color: var(--ink-secondary); text-decoration: none; font-weight: 500; transition: none; margin-bottom: 4px; border: 1px solid transparent;
         }
         .nav-link:hover, .nav-link.active {
             background: #FAFAFA; color: var(--ink-primary); border-color: var(--border-subtle);
@@ -86,7 +86,7 @@
 
         .logout-link {
             display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px;
-            color: var(--ink-secondary); text-decoration: none; font-weight: 500; transition: all 0.2s; margin-top: auto;
+            color: var(--ink-secondary); text-decoration: none; font-weight: 500; transition: none; margin-top: auto;
         }
         .logout-link:hover { background: #FEF2F2; color: var(--danger-red); }
         .logout-link i { font-size: 1.2rem; }
@@ -96,11 +96,11 @@
 
         .smart-enter {
             opacity: 0; transform: translateY(15px);
-            animation: enterUp 0.6s var(--ease-smart) forwards;
+            /* animation removed */
         }
-        .d-1 { animation-delay: 0.1s; }
-        .d-2 { animation-delay: 0.2s; }
-        .d-3 { animation-delay: 0.3s; }
+        .d-1 { animation-delay: 0s; }
+        .d-2 { animation-delay: 0s; }
+        .d-3 { animation-delay: 0s; }
         @keyframes enterUp { to { opacity: 1; transform: translateY(0); } }
 
         /* HERO HEADER */
@@ -158,7 +158,7 @@
         .doc-list { display: grid; gap: 12px; }
 
         .doc-item {
-            display: flex; align-items: center; padding: 16px; background: #FAFAFA; border-radius: 12px; border: 1px solid var(--border-subtle); transition: background 0.2s;
+            display: flex; align-items: center; padding: 16px; background: #FAFAFA; border-radius: 12px; border: 1px solid var(--border-subtle); transition: none;
         }
         .doc-item:hover { background: #fff; border-color: var(--gold-dim); }
 
@@ -175,7 +175,7 @@
 
         .btn-action {
             display: inline-flex; align-items: center; gap: 8px; background: var(--ink-primary); color: white;
-            padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.2s; font-size: 0.9rem;
+            padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: none; font-size: 0.9rem;
         }
         .btn-action:hover { background: var(--gold-main); transform: translateY(-2px); color: white; }
 
@@ -376,7 +376,7 @@
                                         <span class="doc-tag"><%= status != null ? com.j4u.Sanitizer.sanitize(status) : "Draft" %></span>
                                     </div>
                                 </div>
-                                <button style="border:none; background:#fff; border:1px solid var(--border-subtle); border-radius:8px; padding:8px 12px; cursor:pointer; color:var(--ink-secondary); transition:all 0.2s;" onmouseover="this.style.borderColor='var(--ink-primary)'; this.style.color='var(--ink-primary)'" onmouseout="this.style.borderColor='var(--border-subtle)'; this.style.color='var(--ink-secondary)'"><i class="ph-bold ph-download-simple"></i></button>
+                                <button style="border:none; background:#fff; border:1px solid var(--border-subtle); border-radius:8px; padding:8px 12px; cursor:pointer; color:var(--ink-secondary); transition: none;" onmouseover="this.style.borderColor='var(--ink-primary)'; this.style.color='var(--ink-primary)'" onmouseout="this.style.borderColor='var(--border-subtle)'; this.style.color='var(--ink-secondary)'"><i class="ph-bold ph-download-simple"></i></button>
                             </div>
                             <%
                                 }
@@ -483,3 +483,4 @@
     </div>
 </body>
 </html>
+

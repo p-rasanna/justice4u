@@ -82,12 +82,12 @@
       /* Entrance Stagger */
       .smart-enter {
           opacity: 0; transform: translateY(15px);
-          animation: enterUp 0.6s var(--ease-smart) forwards;
+          /* animation removed */
       }
-      .d-1 { animation-delay: 0.1s; }
-      .d-2 { animation-delay: 0.2s; }
-      .d-3 { animation-delay: 0.3s; }
-      .d-4 { animation-delay: 0.4s; }
+      .d-1 { animation-delay: 0s; }
+      .d-2 { animation-delay: 0s; }
+      .d-3 { animation-delay: 0s; }
+      .d-4 { animation-delay: 0s; }
 
       @keyframes enterUp { to { opacity: 1; transform: translateY(0); } }
 
@@ -175,7 +175,7 @@
           padding: 16px; border-radius: 12px;
           border: 1px solid var(--border-subtle);
           background: #fff; text-decoration: none; color: var(--ink-primary);
-          transition: all 0.2s;
+          transition: none;
       }
       .action-item:hover {
           border-color: var(--gold-main); background: #FCFCFA; transform: translateY(-2px);
@@ -188,7 +188,7 @@
       }
       .action-item-text h4 { margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 600; }
       .action-item-text p { margin: 0; font-size: 0.8rem; color: var(--ink-secondary); }
-      .action-item-arrow { color: var(--ink-tertiary); transition: color 0.2s; margin-left: 12px; }
+      .action-item-arrow { color: var(--ink-tertiary); transition: none; margin-left: 12px; }
       .action-item:hover .action-item-arrow { color: var(--gold-main); }
 
       /* Stats Row */
@@ -213,7 +213,7 @@
       /* Standard Button */
       .btn-custom {
           padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;
-          text-decoration: none; border: 1px solid transparent; transition: all 0.2s; cursor: pointer;
+          text-decoration: none; border: 1px solid transparent; transition: none; cursor: pointer;
           display: inline-flex; align-items: center; gap: 6px;
       }
       .btn-accept { background: #fff; border-color: rgba(5, 150, 105, 0.4); color: var(--success-green); }
@@ -232,7 +232,7 @@
       .btn-nav-danger {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;
-          background: #FEF2F2; color: var(--danger-red); text-decoration: none; transition: all 0.2s;
+          background: #FEF2F2; color: var(--danger-red); text-decoration: none; transition: none;
           border: 1px solid rgba(220,38,38,0.2);
       }
       .btn-nav-danger:hover { background: var(--danger-red); color: #fff; }
@@ -503,7 +503,7 @@
               font-weight: 600;
               font-size: 0.95rem;
               color: var(--ink-primary);
-              transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+              transition: none;
           }
       </style>
       <script>
@@ -597,3 +597,4 @@
 
 </body>
 </html>
+

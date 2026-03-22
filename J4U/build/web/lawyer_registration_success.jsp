@@ -134,7 +134,7 @@
       display: inline-flex; align-items: center; gap: 8px;
       text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 0.9rem;
       padding: 12px 24px; border: 1px solid var(--border-line); border-radius: 50px;
-      transition: all 0.2s;
+      transition: none;
     }
     .btn-home:hover { background: #111; color: #FFF; border-color: #111; transform: translateY(-2px); }
 
@@ -196,3 +196,4 @@
 
 </body>
 </html>
+

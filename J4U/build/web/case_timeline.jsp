@@ -103,10 +103,10 @@ if (!hasAccess) {
 
         .smart-enter {
             opacity: 0; transform: translateY(15px);
-            animation: enterUp 0.6s var(--ease-smart) forwards;
+            /* animation removed */
         }
-        .d-1 { animation-delay: 0.1s; }
-        .d-2 { animation-delay: 0.2s; }
+        .d-1 { animation-delay: 0s; }
+        .d-2 { animation-delay: 0s; }
 
         @keyframes enterUp { to { opacity: 1; transform: translateY(0); } }
 
@@ -131,7 +131,7 @@ if (!hasAccess) {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 8px 16px; border-radius: 100px; font-weight: 600; font-size: 0.85rem;
             text-decoration: none; border: 1px solid var(--border-subtle); background: #fff;
-            color: var(--ink-primary); transition: all 0.2s; cursor: pointer;
+            color: var(--ink-primary); transition: none; cursor: pointer;
         }
         .btn-back-header:hover { border-color: var(--gold-main); color: var(--gold-main); transform: translateY(-1px); }
 
@@ -173,7 +173,7 @@ if (!hasAccess) {
         .timeline-content {
             background: #FAFAF8; border: 1px solid var(--border-subtle);
             border-radius: 12px; padding: 24px; margin-left: 20px;
-            transition: all 0.3s var(--ease-smart);
+            transition: none;
         }
         .timeline-content:hover {
             background: #fff; border-color: var(--gold-dim); box-shadow: 0 8px 24px rgba(0,0,0,0.03);
@@ -337,3 +337,4 @@ try {
     </div>
 </body>
 </html>
+

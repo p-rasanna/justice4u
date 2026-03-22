@@ -69,10 +69,11 @@ public class LoginServlet extends HttpServlet {
                 query = "SELECT lid, name, pass, flag FROM lawyer_reg WHERE email = ?";
                 redirectUrl = "LawyerDashboardServlet";
             }
-            // Client Table: cid, cname, email, pass, verification_status
+            // Client Table: cid, cname, email, pass, verification_status, profile_type
             else if ("client".equals(role)) {
-                query = "SELECT cid, cname, pass, COALESCE(verification_status, 'PENDING') as verification_status FROM cust_reg WHERE email = ?";
-                redirectUrl = "clientdashboard_manual.jsp";
+                query = "SELECT cid, cname, pass, COALESCE(verification_status, 'PENDING') as verification_status, COALESCE(profile_type, 'manual') as profile_type FROM cust_reg WHERE email = ?";
+                // Redirect URL will be decided dynamically after rs.next()
+                redirectUrl = "clientdashboard_manual.jsp"; 
             }
             // Intern Table: internid, name, email, pass, flag
             else if ("intern".equals(role)) {
@@ -106,16 +107,22 @@ public class LoginServlet extends HttpServlet {
                         }
                     } else if ("client".equals(role)) {
                         String verificationStatus = rs.getString("verification_status");
-                        if (verificationStatus != null && !verificationStatus.equalsIgnoreCase("VERIFIED")
-                                && !verificationStatus.equalsIgnoreCase("APPROVED")) {
-                            if (verificationStatus.equalsIgnoreCase("REJECTED")) {
-                                response.sendRedirect(
-                                        loginPage + "?error=Account%20Rejected.%20Please%20contact%20support.");
-                                return;
-                            } else {
-                                response.sendRedirect(loginPage + "?error=Account%20Pending%20Approval");
-                                return;
-                            }
+                        if (verificationStatus != null && verificationStatus.equalsIgnoreCase("REJECTED")) {
+                            response.sendRedirect(
+                                    loginPage + "?error=Account%20Rejected.%20Please%20contact%20support.");
+                            return;
+                        }
+                        if (verificationStatus != null && verificationStatus.equalsIgnoreCase("PENDING")) {
+                            response.sendRedirect(
+                                    loginPage + "?error=Account%20Pending%20Admin%20Approval");
+                            return;
+                        }
+                        
+                        String cProfileType = rs.getString("profile_type");
+                        if ("admin".equalsIgnoreCase(cProfileType)) {
+                            redirectUrl = "customerdashboard.jsp"; // Admin assigned dashboard
+                        } else {
+                            redirectUrl = "clientdashboard_manual.jsp"; // Manual selection dashboard
                         }
                     }
 

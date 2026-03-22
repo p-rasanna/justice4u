@@ -130,7 +130,7 @@
               padding: 8px 16px;
               border-radius: 8px;
               font-weight: 500;
-              transition: all 0.2s ease;
+              transition: none;
             }
 
             .btn-custom:hover {
@@ -272,3 +272,4 @@
         </body>
 
         </html>
+

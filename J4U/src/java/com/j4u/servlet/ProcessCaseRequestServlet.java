@@ -153,7 +153,7 @@ public class ProcessCaseRequestServlet extends HttpServlet {
 
             if (caseId > 0) {
                 int assignedLawyerId = dao.getLawyerIdByEmail(selectedLawyerEmail);
-                String assignmentStatus = (assignedLawyerId > 0) ? "PENDING_LAWYER_CONFIRMATION" : "OPEN";
+                String assignmentStatus = (assignedLawyerId > 0) ? "REQUESTED" : "OPEN";
 
                 int caseTypeId = 9;
                 if (category != null) {

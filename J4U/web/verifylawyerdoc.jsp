@@ -47,22 +47,18 @@
             PreparedStatement pst = con.prepareStatement(
                 "UPDATE lawyer_documents SET status='VERIFIED', admin_review_date=NOW() WHERE lawyer_id=? AND status='PENDING'");
             pst.setInt(1, Integer.parseInt(lawyerId));
-            int result = pst.executeUpdate();
-
-            if(result > 0) {
-                // Update lawyer verification status
-                PreparedStatement lawyerPst = con.prepareStatement(
-                    "UPDATE lawyer_reg SET document_verification_status='VERIFIED' WHERE lid=?");
-                lawyerPst.setInt(1, Integer.parseInt(lawyerId));
-                lawyerPst.executeUpdate();
-                lawyerPst.close();
-
-                success = true;
-                message = "All documents approved successfully! Lawyer verification status updated.";
-            } else {
-                message = "No pending documents found to approve.";
-            }
+            pst.executeUpdate();
             pst.close();
+
+            // Force update lawyer verification status immediately
+            PreparedStatement lawyerPst = con.prepareStatement(
+                "UPDATE lawyer_reg SET document_verification_status='VERIFIED' WHERE lid=?");
+            lawyerPst.setInt(1, Integer.parseInt(lawyerId));
+            lawyerPst.executeUpdate();
+            lawyerPst.close();
+
+            success = true;
+            message = "Lawyer's document verification marks as VERIFIED.";
         }
 
         // Check if all documents for lawyer are verified

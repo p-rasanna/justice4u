@@ -75,7 +75,7 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px;
     }
     .metric-card {
-      background: white; padding: 24px; border-radius: 20px; border: 1px solid #F0F0F0; transition: all 0.3s var(--ease-spring);
+      background: white; padding: 24px; border-radius: 20px; border: 1px solid #F0F0F0; transition: none;
       display: flex; align-items: center; gap: 20px;
     }
     .metric-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); border-color: var(--gold-main); }
@@ -94,7 +94,7 @@
 
     .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
     .table-custom th { padding: 12px 20px; font-size: 0.75rem; text-transform: uppercase; color: var(--ink-secondary); letter-spacing: 0.05em; font-weight: 600; }
-    .table-custom tr { background: rgba(255,255,255,0.4); transition: all 0.2s; }
+    .table-custom tr { background: rgba(255,255,255,0.4); transition: none; }
     .table-custom td { padding: 20px; border-top: 1px solid rgba(0,0,0,0.03); border-bottom: 1px solid rgba(0,0,0,0.03); }
     .table-custom td:first-child { border-left: 1px solid rgba(0,0,0,0.03); border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
     .table-custom td:last-child { border-right: 1px solid rgba(0,0,0,0.03); border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
@@ -106,7 +106,7 @@
 
     .btn-action {
       background: var(--ink-primary); color: white; border: none; padding: 10px 20px; border-radius: 12px;
-      font-size: 0.85rem; font-weight: 500; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.85rem; font-weight: 500; transition: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-action:hover { background: var(--gold-main); transform: translateY(-2px); color: white; }
 
@@ -114,7 +114,7 @@
     .form-glass { background: rgba(255,255,255,0.5); padding: 30px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.8); }
     .form-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; color: var(--ink-secondary); }
     .form-control, .form-select {
-      background: white; border: 1px solid #EAEAEA; border-radius: 12px; padding: 12px 16px; transition: all 0.3s;
+      background: white; border: 1px solid #EAEAEA; border-radius: 12px; padding: 12px 16px; transition: none;
     }
     .form-control:focus { border-color: var(--gold-main); box-shadow: 0 0 0 4px rgba(198, 167, 94, 0.1); }
 
@@ -369,3 +369,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

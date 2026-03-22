@@ -17,7 +17,7 @@ public class UserDAO {
      */
     public List<Map<String, Object>> getAllClients() throws SQLException {
         List<Map<String, Object>> clients = new ArrayList<>();
-        String query = "SELECT cid, cname, email, verification_status, dob, mobno, aadhar, pan_number, case_category, case_description, preferred_location, urgency_level FROM cust_reg";
+        String query = "SELECT cid, cname, email, verification_status, dob, mobno, ano, cadd, padd FROM cust_reg";
 
         try (Connection con = DatabaseConfig.getConnection();
                 PreparedStatement ps = con.prepareStatement(query);
@@ -31,12 +31,9 @@ public class UserDAO {
                 client.put("verificationStatus", rs.getString("verification_status"));
                 client.put("dob", rs.getString("dob"));
                 client.put("mobile", rs.getString("mobno"));
-                client.put("aadhar", rs.getString("aadhar"));
-                client.put("pan", rs.getString("pan_number"));
-                client.put("caseCategory", rs.getString("case_category"));
-                client.put("caseDescription", rs.getString("case_description"));
-                client.put("preferredLocation", rs.getString("preferred_location"));
-                client.put("urgency", rs.getString("urgency_level"));
+                client.put("aadhar", rs.getString("ano"));
+                client.put("currentAddress", rs.getString("cadd"));
+                client.put("permanentAddress", rs.getString("padd"));
                 clients.add(client);
             }
         }

@@ -95,7 +95,7 @@
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 16px;
-            transition: all 0.2s;
+            transition: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -206,3 +206,4 @@
     </div>
 </body>
 </html>
+

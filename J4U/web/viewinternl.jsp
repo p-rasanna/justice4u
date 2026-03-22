@@ -67,9 +67,9 @@
           opacity: 0; transform: translateY(15px);
           /* animation removed */
       }
-      .d-1 { animation-delay: 0.1s; }
-      .d-2 { animation-delay: 0.2s; }
-      .d-3 { animation-delay: 0.3s; }
+      .d-1 { animation-delay: 0s; }
+      .d-2 { animation-delay: 0s; }
+      .d-3 { animation-delay: 0s; }
 
       @keyframes enterUp { to { opacity: 1; transform: translateY(0); } }
 
@@ -146,7 +146,7 @@
           position: sticky; top: 0; z-index: 10;
       }
 
-      .table tbody tr { transition: background 0.2s; border-bottom: 1px solid #f5f5f5; }
+      .table tbody tr { transition: none; border-bottom: 1px solid #f5f5f5; }
       .table tbody tr:hover { background: #FCFCFA; }
 
       .table tbody td {
@@ -178,7 +178,7 @@
           display: inline-flex; align-items: center; justify-content: center; gap: 6px;
           padding: 8px 14px; border-radius: 8px;
           font-size: 0.8rem; font-weight: 600; text-decoration: none; border: none;
-          transition: all 0.2s; background: #fff; border: 1px solid var(--border-subtle); cursor: pointer; color: var(--ink-primary);
+          transition: none; background: #fff; border: 1px solid var(--border-subtle); cursor: pointer; color: var(--ink-primary);
       }
       .btn-action-primary { border-color: rgba(198, 167, 94, 0.5); color: var(--gold-dim); }
       
@@ -194,7 +194,7 @@
       .btn-nav {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;
-          text-decoration: none; transition: all 0.2s; background: #fff; border: 1px solid var(--border-subtle); color: var(--ink-primary);
+          text-decoration: none; transition: none; background: #fff; border: 1px solid var(--border-subtle); color: var(--ink-primary);
       }
       .btn-nav:hover { border-color: var(--gold-main); color: var(--gold-main); }
 
@@ -348,3 +348,4 @@
   </div>
 </body>
 </html>
+

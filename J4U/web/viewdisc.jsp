@@ -19,245 +19,375 @@
     }
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>Justice4U · Case History Logs</title>
+    <title>Justice4U | Discussion Archive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Switzer:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
+        /* =====================================================================
+           JUSTICE4U — MESSAGES / DISCUSSIONS ARCHIVE
+           Full 2026 design system — dark mode, grain, sidebar, elegant list
+           Using light typography weights (400, 500) per user preference
+           ===================================================================== */
         :root {
-            --bg-ivory: #FAFAF8;
-            --ink-primary: #121212;
-            --ink-secondary: #555555;
-            --ink-tertiary: #888888;
-            
-            --gold-main: #C6A75E;
-            --gold-dim: #9C824A;
-            --success-green: #059669;
-            --danger-red: #DC2626;
-            
-            --surface-card: #FFFFFF;
-            --border-subtle: #E6E6E6;
-            --shadow-card: 0 4px 20px rgba(0,0,0,0.02);
-            --ease-smart: cubic-bezier(0.2, 0.8, 0.2, 1);
+            --bg:           #FDFBF7;
+            --bg2:          #F5F2EC;
+            --surface:      #FFFFFF;
+            --border:       rgba(28,25,23,0.08);
+            --border-mid:   rgba(28,25,23,0.14);
+            --text:         #1C1917;
+            --text-muted:   #57534E;
+            --text-faint:   #A8A29E;
+            --gold:         #C9A227;
+            --gold-light:   #FBF2D8;
+            --gold-dark:    #9E7C18;
+            --gold-glow:    rgba(201,162,39,0.15);
+            --success:      #047857;
+            --success-bg:   rgba(4,120,87,0.07);
+            --font-sans:    'Switzer', sans-serif;
+            --font-serif:   'Instrument Serif', serif;
+            --ease-out:     cubic-bezier(0.16,1,0.3,1);
+            --sidebar-w:    256px;
         }
+        [data-theme="dark"] {
+            --bg:           #0F0E0C;
+            --bg2:          #161410;
+            --surface:      #1A1814;
+            --border:       rgba(255,255,255,0.07);
+            --border-mid:   rgba(255,255,255,0.12);
+            --text:         #F5F2EC;
+            --text-muted:   #A8A29E;
+            --text-faint:   #57534E;
+            --gold:         #D4AF37;
+            --gold-light:   rgba(212,175,55,0.12);
+            --gold-dark:    #B4901E;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
 
         body {
-            margin: 0; background-color: var(--bg-ivory); color: var(--ink-primary);
-            font-family: 'Inter', sans-serif;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+            background: var(--bg); color: var(--text);
+            font-family: var(--font-sans); line-height:1.6;
+            -webkit-font-smoothing: antialiased; font-weight: 400;
+            transition: background .4s var(--ease-out), color .4s var(--ease-out);
+            min-height: 100svh;
         }
 
-        .layout-wrapper { display: flex; min-height: 100vh; }
+        body::before {
+            content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:.025;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size:200px;
+        }
 
-        /* SIDEBAR NAVIGATION */
+        /* ---- LAYOUT & SIDEBAR ---- */
+        .app { display:flex; min-height:100svh; }
+
         .sidebar {
-            width: 260px; background: var(--surface-card); border-right: 1px solid var(--border-subtle);
-            padding: 32px 24px; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
-            flex-shrink: 0;
+            width: var(--sidebar-w); flex-shrink:0;
+            background: var(--surface); border-right:1px solid var(--border);
+            display:flex; flex-direction:column;
+            position:sticky; top:0; height:100svh;
+            padding: 28px 16px; overflow-y:auto;
         }
 
-        .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; text-decoration: none; }
-        .brand-icon { font-size: 2rem; color: var(--gold-main); }
-        .brand h2 { font-family: 'Playfair Display', serif; margin: 0; color: var(--ink-primary); font-size: 1.5rem; }
-
-        .nav-group { margin-bottom: 32px; }
-        .nav-title { font-size: 0.75rem; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 12px; font-weight: 600; letter-spacing: 0.05em; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px;
-            color: var(--ink-secondary); text-decoration: none; font-weight: 500; transition: all 0.2s; margin-bottom: 4px; border: 1px solid transparent;
+        .brand {
+            display:flex; align-items:center; gap:10px;
+            text-decoration:none; color:var(--text);
+            padding: 0 8px; margin-bottom:36px;
         }
-        .nav-link:hover, .nav-link.active {
-            background: #FAFAFA; color: var(--ink-primary); border-color: var(--border-subtle);
+        .brand-icon {
+            width:36px; height:36px; border-radius:10px;
+            background:var(--gold); display:flex; align-items:center; justify-content:center;
+            color:#fff; font-size:1.1rem; flex-shrink:0;
         }
-        .nav-link.active { box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .nav-link i { font-size: 1.2rem; color: var(--gold-dim); }
+        .brand-name { font-size:1.1rem; font-weight:500; letter-spacing:-.02em; }
 
-        .logout-link {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px;
-            color: var(--ink-secondary); text-decoration: none; font-weight: 500; transition: all 0.2s; margin-top: auto;
+        .nav-section { margin-bottom:24px; }
+        .nav-label {
+            font-size:.75rem; font-weight:500; letter-spacing:.05em; text-transform:uppercase;
+            color:var(--text-faint); padding:0 8px; margin-bottom:6px; display:block;
         }
-        .logout-link:hover { background: #FEF2F2; color: var(--danger-red); }
-        .logout-link i { font-size: 1.2rem; }
 
-        /* MAIN CONTENT */
-        .main-content { flex: 1; padding: 40px 48px; max-width: 1200px; margin: 0 auto; }
-
-        .smart-enter {
-            opacity: 0; transform: translateY(15px);
-            /* animation removed */
+        .nav-item {
+            display:flex; align-items:center; gap:10px;
+            padding:10px 12px; border-radius:10px; border:1px solid transparent;
+            color:var(--text-muted); text-decoration:none; font-size:.95rem; font-weight:400;
+            transition:all .2s var(--ease-out); margin-bottom:2px;
         }
-        .d-1 { animation-delay: 0.1s; }
-        .d-2 { animation-delay: 0.2s; }
-        @keyframes enterUp { to { opacity: 1; transform: translateY(0); } }
+        .nav-item i { font-size:1.1rem; flex-shrink:0; }
+        .nav-item:hover { color:var(--text); background:var(--bg2); }
+        .nav-item.active {
+            color:var(--gold-dark); background:var(--gold-light);
+            border-color:rgba(201,162,39,0.2); font-weight:500;
+        }
+        [data-theme="dark"] .nav-item.active { color:var(--gold); background:rgba(212,175,55,0.1); }
 
-        /* PAGE HEADER */
-        .page-header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .page-header h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0 0 8px 0; color: var(--ink-primary); }
-        .page-header p { color: var(--ink-secondary); margin: 0; font-family: 'Inter', sans-serif; font-size: 0.95rem; }
+        .sidebar-footer { margin-top:auto; padding-top:16px; border-top:1px solid var(--border); }
+        .logout-btn {
+            display:flex; align-items:center; gap:10px;
+            padding:10px 12px; border-radius:10px;
+            color:var(--text-muted); text-decoration:none; font-size:.95rem; font-weight:400;
+            transition:all .2s; width:100%;
+        }
+        .logout-btn:hover { background:var(--error-bg); color:var(--error); font-weight:500;}
 
-        /* PANEL & TABLE */
+        .theme-row {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:8px 12px; margin-bottom:8px;
+        }
+        .theme-row span { font-size:.85rem; color:var(--text-muted); font-weight:400;}
+        .theme-toggle {
+            width:34px; height:20px; border-radius:10px;
+            background:var(--border-mid); border:none; cursor:pointer;
+            position:relative; transition:background .2s; flex-shrink:0;
+        }
+        .theme-toggle.on { background:var(--gold); }
+        .theme-toggle::after {
+            content:''; position:absolute; top:3px; left:3px;
+            width:14px; height:14px; border-radius:50%; background:#fff;
+            transition:transform .2s var(--ease-out);
+        }
+        .theme-toggle.on::after { transform:translateX(14px); }
+
+        /* ---- MAIN ---- */
+        .main {
+            flex:1; overflow-y:auto;
+            padding: 36px 40px; min-width:0;
+        }
+        
+        /* TOPBAR */
+        .topbar {
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:36px;
+        }
+        .topbar-left h1 {
+            font-size:clamp(1.6rem,3vw,2.4rem); font-weight:400; font-family:var(--font-serif); font-style:italic;
+            line-height:1.1; margin-bottom:5px; color:var(--gold);
+        }
+        .topbar-left h1 em { font-family:var(--font-sans); font-style:normal; font-weight:500; color:var(--text); letter-spacing:-0.03em;}
+        .topbar-left p { color:var(--text-muted); font-size:.95rem; display:flex; align-items:center; gap:6px; font-weight:400;}
+
+        /* MESSAGES PANEL */
         .panel {
-            background: var(--surface-card); border-radius: 16px; border: 1px solid var(--border-subtle);
-            box-shadow: var(--shadow-card); overflow: hidden;
+            background: var(--surface); border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            overflow: hidden; margin-bottom: 40px;
         }
-
+        
         .panel-head {
-            padding: 24px 32px; border-bottom: 1px solid var(--border-subtle);
-            background: #FAFAFA; display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 32px; border-bottom: 1px solid var(--border-mid);
+            background: var(--bg2); display: flex; justify-content: space-between; align-items: center;
         }
         .panel-head h3 {
-            font-family: 'Inter', sans-serif; font-size: 1.1rem; margin: 0; 
-            font-weight: 600; color: var(--ink-primary); display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-sans); font-size: 1.15rem; margin: 0; 
+            font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 10px; letter-spacing:-0.01em;
         }
-        .panel-icon { color: var(--gold-main); font-size: 1.4rem; }
+        .panel-icon { color: var(--gold); font-size: 1.4rem; }
 
         .table-responsive { width: 100%; overflow-x: auto; }
-        .table { margin: 0; width: 100%; border-collapse: collapse; }
+        .table { margin: 0; width: 100%; border-collapse: collapse; text-align: left; }
         .table thead th {
-            background: #FFF; color: var(--ink-secondary);
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-            padding: 16px 32px; border-bottom: 1px solid var(--border-subtle);
-            font-family: 'Inter', sans-serif; white-space: nowrap;
+            background: transparent; color: var(--text-faint);
+            font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;
+            padding: 20px 32px; border-bottom: 1px solid var(--border);
+            font-family: var(--font-sans); white-space: nowrap;
         }
-        .table tbody tr { transition: background 0.2s; border-bottom: 1px solid #FAFAFA; }
-        .table tbody tr:hover { background: #FCFCFA; }
-        .table tbody td { padding: 20px 32px; font-size: 0.9rem; color: var(--ink-primary); vertical-align: middle; }
-
-        .col-main { font-weight: 500; font-family: 'Inter', sans-serif; color: var(--ink-primary); }
-        .col-sub { color: var(--ink-secondary); font-size: 0.8rem; margin-top: 4px; }
+        .table tbody tr { transition: background .2s var(--ease-out); border-bottom: 1px solid var(--border); }
+        .table tbody tr:hover { background: var(--bg2); }
+        .table tbody tr:last-child { border-bottom:none; }
         
-        .empty-state {
-            text-align: center; padding: 64px 24px; background: #FAFAFA;
+        .table tbody td { padding: 24px 32px; font-size: 0.95rem; color: var(--text); vertical-align: middle; font-weight:400; }
+
+        .col-ref { font-family: 'Courier New', Courier, monospace; color: var(--text-muted); font-size:0.9rem;}
+        .col-main { font-weight: 500; color: var(--text); font-size:1rem; }
+        
+        .date-chip { 
+            display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:0.9rem;
         }
-        .empty-state i { font-size: 3rem; color: var(--ink-tertiary); margin-bottom: 16px; }
-        .empty-state p { margin: 0; color: var(--ink-secondary); font-size: 1.1rem; }
+        
+        .msg-preview {
+            max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+            color:var(--text-muted);
+        }
+
+        .lawyer-chip {
+            background:var(--bg2); border:1px solid var(--border-mid); padding:6px 12px; border-radius:100px;
+            font-size:0.85rem; color:var(--text); display:inline-flex; align-items:center; gap:6px; font-weight:500;
+        }
+        .lawyer-chip i { color:var(--gold); }
+
+        .empty-state { text-align:center; padding: 80px 24px; background:transparent;}
+        .empty-state h2 { font-family:var(--font-serif); font-size:2.2rem; font-weight:400; margin-bottom:10px; color:var(--text); }
+        .empty-state p { font-size:1rem; color:var(--text-muted); font-weight:400; max-width:400px; margin:0 auto;}
+        .empty-icon { font-size:4rem; color:var(--gold); opacity:0.8; margin-bottom:20px; }
+
+        /* ---- REVEAL ANIMATION ---- */
+        .reveal { opacity:0; transform:translateY(18px); animation:revealUp .6s var(--ease-out) forwards; }
+        .r1 { animation-delay:.05s } .r2 { animation-delay:.12s }
+        @keyframes revealUp { to { opacity:1; transform:none; } }
 
         @media (max-width: 992px) {
             .sidebar { display: none; }
-            .main-content { padding: 24px; }
+            .main { padding: 24px 20px; }
+            .topbar { flex-direction:column; align-items:flex-start; gap:16px; margin-bottom:24px; }
         }
     </style>
 </head>
 <body>
-    <div class="layout-wrapper">
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <a href="clientdashboard_manual.jsp" class="brand">
-                <i class="ph-fill ph-scales brand-icon"></i>
-                <h2>Justice4U</h2>
-            </a>
+<div class="app">
 
-            <div class="nav-group">
-                <div class="nav-title">Client Workspace</div>
-                <a href="clientdashboard_manual.jsp" class="nav-link"><i class="ph-duotone ph-squares-four"></i> Console</a>
-                <a href="case.jsp" class="nav-link"><i class="ph-duotone ph-file-plus"></i> File Case</a>
-                <a href="ClientDashboard" class="nav-link"><i class="ph-duotone ph-briefcase"></i> My Portfolio</a>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" role="navigation" aria-label="Main navigation">
+        <a href="Home.html" class="brand">
+            <div class="brand-icon"><i class="ph-light ph-scales"></i></div>
+            <span class="brand-name">Justice4U</span>
+        </a>
+
+        <div class="nav-section">
+            <span class="nav-label">My Workspace</span>
+            <a href="clientdashboard_manual.jsp" class="nav-item"><i class="ph-light ph-squares-four"></i> Console</a>
+            <a href="case.jsp" class="nav-item"><i class="ph-light ph-file-plus"></i> Submit Case</a>
+            <a href="ClientDashboard" class="nav-item"><i class="ph-light ph-folders"></i> My Cases</a>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Find Representation</span>
+            <a href="findlawyer.jsp" class="nav-item"><i class="ph-light ph-magnifying-glass"></i> Browse Lawyers</a>
+            <a href="viewlawdetails.jsp" class="nav-item"><i class="ph-light ph-identification-card"></i> Assigned Lawyer</a>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Communication</span>
+            <a href="viewdisc.jsp" class="nav-item active"><i class="ph-light ph-chat-circle-dots"></i> Messages</a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="theme-row">
+                <span>Dark mode</span>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"></button>
+            </div>
+            <a href="csignout.jsp" class="logout-btn"><i class="ph-light ph-sign-out"></i> Secure Logout</a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main" role="main">
+        
+        <div class="topbar reveal r1">
+            <div class="topbar-left">
+                <h1>Communication <em>Archive</em></h1>
+                <p>Track, review, and monitor your attorney correspondence and case logs.</p>
+            </div>
+        </div>
+
+        <div class="panel reveal r2">
+            <div class="panel-head">
+                <h3><i class="ph-fill ph-chat-circle-text panel-icon"></i> Discussion History</h3>
             </div>
             
-            <div class="nav-group">
-                <div class="nav-title">Lawyer Network</div>
-                <a href="findlawyer.jsp" class="nav-link"><i class="ph-duotone ph-magnifying-glass"></i> Find Counsel</a>
-                <a href="viewlawdetails.jsp" class="nav-link"><i class="ph-duotone ph-identification-card"></i> Assigned Lawyer</a>
-            </div>
-
-            <a href="csignout.jsp" class="logout-link"><i class="ph-duotone ph-sign-out"></i> Secure Logout</a>
-        </aside>
-
-        <!-- MAIN WINDOW -->
-        <main class="main-content">
-            
-            <div class="page-header smart-enter d-1">
-                <div>
-                    <h1>History Logs</h1>
-                    <p>Review past legal consultations and discussions regarding your cases.</p>
-                </div>
-                <a href="clientdashboard_manual.jsp" class="nav-link" style="border:1px solid var(--border-subtle); background:#fff;"><i class="ph ph-arrow-left"></i> Dashboard</a>
-            </div>
-
-            <div class="panel smart-enter d-2">
-                <div class="panel-head">
-                    <div class="panel-head-left">
-                        <h3><i class="ph-fill ph-chat-circle-text panel-icon"></i> Discussion Archive</h3>
-                    </div>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Ref ID</th>
-                                <th>Subject / Title</th>
-                                <th>Date Logged</th>
-                                <th>Details</th>
-                                <th>Counsel Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%
-                                try {
-                                    Connection con = getDatabaseConnection();
-                                    
-                                    // Sanitize input to prevent XSS in SQL (though parameter binding handles it)
-                                    String safeCname = username.replace("'", "''");
-                                    
-                                    PreparedStatement pst = con.prepareStatement("SELECT * FROM discussion WHERE cname=? ORDER BY cdate DESC");
-                                    pst.setString(1, username);
-                                    ResultSet rs = pst.executeQuery();
-                                    boolean hasData = false;
-                                    
-                                    while(rs.next()) {
-                                        hasData = true;
-                                        int id = rs.getInt(1);
-                                        String title = safeEncode(rs.getString(2));
-                                        String cdate = safeEncode(rs.getString(3));
-                                        String desc = safeEncode(rs.getString(4));
-                                        String lawyerEmail = safeEncode(rs.getString(6));
-                            %>
-                            <tr>
-                                <td style="font-family:'Space Grotesk', monospace; color:var(--ink-secondary);">#<%= id %></td>
-                                <td class="col-main"><%= title %></td>
-                                <td style="white-space:nowrap;"><i class="ph-bold ph-calendar-blank" style="color:var(--ink-tertiary);"></i> <%= cdate %></td>
-                                <td><div style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><%= desc %></div></td>
-                                <td><%= lawyerEmail %></td>
-                            </tr>
-                            <%
-                                    }
-                                    if(!hasData) {
-                            %>
-                                    <tr>
-                                        <td colspan="5">
-                                            <div class="empty-state">
-                                                <i class="ph-duotone ph-chat-teardrop-slash"></i>
-                                                <p>No discussion history found for your account.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                            <%
-                                    }
-                                    rs.close();
-                                    pst.close();
-                                    con.close();
-                                } catch(Exception e) {
-                            %>
-                                    <tr>
-                                        <td colspan="5" style="color:var(--danger-red); text-align:center; padding:20px;">
-                                            Error loading history: <%= safeEncode(e.getMessage()) %>
-                                        </td>
-                                    </tr>
-                            <%
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ref #</th>
+                            <th>Subject / Thread</th>
+                            <th>Date Logged</th>
+                            <th>Message Preview</th>
+                            <th>Counsel Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            try {
+                                Connection con = getDatabaseConnection();
+                                
+                                PreparedStatement pst = con.prepareStatement("SELECT * FROM discussion WHERE cname=? ORDER BY cdate DESC");
+                                pst.setString(1, username);
+                                ResultSet rs = pst.executeQuery();
+                                boolean hasData = false;
+                                
+                                while(rs.next()) {
+                                    hasData = true;
+                                    int id = rs.getInt(1);
+                                    String title = safeEncode(rs.getString(2));
+                                    String cdate = safeEncode(rs.getString(3));
+                                    String desc = safeEncode(rs.getString(4));
+                                    String lawyerEmail = safeEncode(rs.getString(6));
+                        %>
+                        <tr>
+                            <td class="col-ref"><%= String.format("%05d", id) %></td>
+                            <td class="col-main"><%= title %></td>
+                            <td>
+                                <span class="date-chip">
+                                    <i class="ph-light ph-calendar-blank"></i> <%= cdate %>
+                                </span>
+                            </td>
+                            <td><div class="msg-preview"><%= desc %></div></td>
+                            <td>
+                                <% if(lawyerEmail != null && !lawyerEmail.isEmpty()) { %>
+                                    <span class="lawyer-chip"><i class="ph-fill ph-user-circle"></i> <%= lawyerEmail %></span>
+                                <% } else { %>
+                                    <span style="color:var(--text-faint);">Unassigned</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <%
                                 }
-                            %>
-                        </tbody>
-                    </table>
-                </div>
+                                if(!hasData) {
+                        %>
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="empty-state">
+                                            <i class="ph-light ph-envelope-simple-open empty-icon"></i>
+                                            <h2>Your inbox is quiet</h2>
+                                            <p>No discussion history or attorney logs exist for your account yet. Messages will appear here as your case progresses.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                        <%
+                                }
+                                rs.close();
+                                pst.close();
+                                con.close();
+                            } catch(Exception e) {
+                        %>
+                                <tr>
+                                    <td colspan="5" style="color:var(--error); text-align:center; padding:40px;">
+                                        System error fetching logs: <%= safeEncode(e.getMessage()) %>
+                                    </td>
+                                </tr>
+                        <%
+                            }
+                        %>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-        </main>
-    </div>
+    </main>
+</div>
+
+<script>
+    /* DARK MODE LOGIC */
+    const root = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const saved = localStorage.getItem('j4u-theme');
+    const sys   = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const init  = saved || (sys ? 'dark' : 'light');
+    root.setAttribute('data-theme', init);
+    if (init === 'dark') toggle.classList.add('on');
+
+    toggle.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        toggle.classList.toggle('on', next === 'dark');
+        localStorage.setItem('j4u-theme', next);
+    });
+</script>
 </body>
 </html>

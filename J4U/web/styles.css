@@ -395,12 +395,7 @@ a:hover {
   font-weight: 500;
   text-transform: none;
   letter-spacing: 0;
-  transition:
-    transform 0.14s ease,
-    box-shadow 0.18s ease,
-    background-color 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease;
+  transition: none;
 }
 
 .hero .btn-primary {
@@ -1239,7 +1234,7 @@ a:hover {
 }
 
 .fade-up {
-  animation: fadeUp 0.6s ease-out;
+  animation: none;
 }
 
 /* RESPONSIVE DESIGN */
@@ -1360,9 +1355,7 @@ a:hover {
 .j4u-reveal {
   opacity: 0;
   transform: translateY(18px);
-  transition:
-    opacity 0.5s ease-out,
-    transform 0.5s ease-out;
+  transition: none;
 }
 
 .j4u-reveal.j4u-reveal-visible {
@@ -1393,7 +1386,7 @@ a:hover {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: none;
   z-index: 40;
 }
 
@@ -1412,7 +1405,7 @@ a:hover {
   width: 90%;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
   transform: translateY(12px);
-  transition: transform 0.25s ease;
+  transition: none;
 }
 
 .j4u-modal-backdrop.is-open .j4u-modal {
@@ -1547,7 +1540,7 @@ body.dashboard-body {
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: none;
 }
 .nav-link:hover {
   background: rgba(255, 255, 255, 0.05);
@@ -1644,7 +1637,7 @@ body.dashboard-body {
   box-shadow: none;
   font-size: 0.95rem;
   padding: 0 16px;
-  transition: all 0.2s;
+  transition: none;
   font-family: inherit;
 }
 .dashboard-form-control:focus {
@@ -1676,7 +1669,7 @@ select.dashboard-form-control {
   border-radius: 12px;
   font-weight: 600;
   width: 100%;
-  transition: all 0.2s;
+  transition: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1704,7 +1697,7 @@ select.dashboard-form-control {
   text-align: center;
   text-decoration: none;
   margin-top: 12px;
-  transition: all 0.2s;
+  transition: none;
 }
 .btn-secondary-j4u:hover {
   background: #f8fafc;
@@ -1987,4 +1980,5 @@ tr:hover { background-color: #FAFAFA; }
         display: none; 
     }
 }
+
 

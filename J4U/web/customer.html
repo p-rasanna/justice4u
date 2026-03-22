@@ -1,337 +1,545 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Justice4U – Secure Client Registration</title>
+  <title>Justice4U | Client Registration</title>
 
-  <!-- Fonts -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Switzer:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Styles (reuse your main styles.css) -->
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg:           #FDFBF7;
+      --bg2:          #F5F2EC;
+      --surface:      #FFFFFF;
+      --surface-glass:rgba(253,251,247,0.72);
+      --border:       rgba(28,25,23,0.08);
+      --border-mid:   rgba(28,25,23,0.14);
+      --border-focus: rgba(201,162,39,0.5);
+      --text:         #1C1917;
+      --text-muted:   #57534E;
+      --text-faint:   #A8A29E;
+      --gold:         #C9A227;
+      --gold-light:   #E8C84A;
+      --gold-dark:    #9E7C18;
+      --gold-glow:    rgba(201,162,39,0.15);
+      --error:        #DC2626;
+      --error-bg:     rgba(220,38,38,0.06);
+      --error-border: rgba(220,38,38,0.2);
+      --success:      #047857;
+      --success-bg:   rgba(4,120,87,0.07);
+      --success-border:rgba(4,120,87,0.18);
+      --font-sans:  'Switzer', sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --ease-out:   cubic-bezier(0.16,1,0.3,1);
+      --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+    }
+    [data-theme="dark"] {
+      --bg:           #0F0E0C;
+      --bg2:          #161410;
+      --surface:      #1A1814;
+      --surface-glass:rgba(15,14,12,0.75);
+      --border:       rgba(255,255,255,0.07);
+      --border-mid:   rgba(255,255,255,0.12);
+      --border-focus: rgba(212,175,55,0.45);
+      --text:         #F5F2EC;
+      --text-muted:   #A8A29E;
+      --text-faint:   #57534E;
+      --gold:         #D4AF37;
+      --gold-light:   #F0CE5C;
+      --gold-dark:    #B4901E;
+      --gold-glow:    rgba(212,175,55,0.12);
+      --error-bg:     rgba(220,38,38,0.08);
+      --error-border: rgba(220,38,38,0.25);
+      --success-bg:   rgba(52,211,153,0.07);
+      --success-border:rgba(52,211,153,0.18);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:var(--font-sans); font-weight:400;
+      min-height:100svh; line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      transition:background .4s var(--ease-out),color .4s var(--ease-out);
+      padding-bottom:80px;
+    }
+    body::before {
+      content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:.028;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:200px 200px;
+    }
+    [data-theme="dark"] body::before { opacity:.045; }
+
+    .orb { position:fixed; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; }
+    .orb-1 { width:50vw; height:50vw; top:-15%; left:-10%; background:radial-gradient(circle,rgba(201,162,39,.09),transparent 70%); animation:d1 18s ease-in-out infinite alternate; }
+    .orb-2 { width:40vw; height:40vw; bottom:-10%; right:-5%; background:radial-gradient(circle,rgba(245,222,179,.06),transparent 70%); animation:d2 24s ease-in-out infinite alternate; }
+    @keyframes d1{0%{transform:translate(0,0)}100%{transform:translate(4vw,4vh)}}
+    @keyframes d2{0%{transform:translate(0,0)}100%{transform:translate(-3vw,5vh)}}
+    @media(prefers-reduced-motion:reduce){.orb,.reveal{animation:none!important;transition:none!important}}
+
+    /* HEADER */
+    header {
+      position:sticky; top:0; z-index:100;
+      background:var(--surface-glass); backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      padding:14px 28px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .logo { display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--text); font-size:1.1rem; font-weight:700; letter-spacing:-.02em; }
+    .logo-icon { width:32px; height:32px; border-radius:9px; background:var(--gold); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1rem; }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    .theme-btn { width:36px; height:36px; border-radius:50%; background:transparent; border:1px solid var(--border-mid); color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .2s; }
+    .theme-btn:hover { background:var(--bg2); color:var(--text); }
+    .header-link { font-size:.88rem; color:var(--text-muted); text-decoration:none; font-weight:500; transition:color .2s; }
+    .header-link:hover { color:var(--gold-dark); }
+
+    /* LAYOUT */
+    .shell { max-width:760px; margin:0 auto; padding:52px 24px 0; position:relative; z-index:10; }
+
+    /* PAGE HERO */
+    .page-hero { text-align:center; margin-bottom:52px; }
+    .page-label { display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-dark); background:rgba(201,162,39,.08); border:1px solid rgba(201,162,39,.2); padding:4px 12px; border-radius:100px; margin-bottom:18px; }
+    .page-hero h1 { font-size:clamp(2rem,4.5vw,3rem); font-weight:800; letter-spacing:-.035em; line-height:1.1; margin-bottom:14px; }
+    .page-hero h1 em { font-family:var(--font-serif); font-style:italic; font-weight:400; color:var(--gold); }
+    .page-hero p { color:var(--text-muted); font-size:1rem; max-width:460px; margin:0 auto; }
+
+    /* TRUST STRIP */
+    .trust-strip {
+      display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+      margin-bottom:48px;
+    }
+    .trust-pill {
+      display:inline-flex; align-items:center; gap:7px;
+      padding:7px 14px; border-radius:100px;
+      border:1px solid var(--border-mid); background:var(--surface);
+      font-size:.8rem; font-weight:500; color:var(--text-muted);
+    }
+    .trust-pill i { color:var(--gold); font-size:.95rem; }
+
+    /* PANEL */
+    .panel { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:40px; margin-bottom:24px; box-shadow:0 4px 20px rgba(0,0,0,.03); transition:border-color .3s; }
+    [data-theme="dark"] .panel { box-shadow:0 4px 20px rgba(0,0,0,.2); }
+    .panel:hover { border-color:var(--border-mid); }
+    .panel-head { display:flex; align-items:center; gap:14px; padding-bottom:22px; margin-bottom:28px; border-bottom:1px solid var(--border); }
+    .panel-icon { width:44px; height:44px; border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
+    .pi-gold  { background:rgba(201,162,39,.1); color:var(--gold-dark); border:1px solid rgba(201,162,39,.2); }
+    .pi-slate { background:rgba(71,85,105,.08); color:#475569; border:1px solid rgba(71,85,105,.14); }
+    .pi-green { background:rgba(4,120,87,.08); color:#047857; border:1px solid rgba(4,120,87,.15); }
+    .pi-rose  { background:rgba(190,18,60,.07); color:#be123c; border:1px solid rgba(190,18,60,.12); }
+    [data-theme="dark"] .pi-slate { background:rgba(148,163,184,.1); color:#94a3b8; border-color:rgba(148,163,184,.15); }
+    [data-theme="dark"] .pi-green { background:rgba(52,211,153,.1); color:#34d399; border-color:rgba(52,211,153,.15); }
+    [data-theme="dark"] .pi-rose  { background:rgba(251,113,133,.1); color:#fb7185; border-color:rgba(251,113,133,.15); }
+    .panel-head-text h3 { font-size:1.15rem; font-weight:700; letter-spacing:-.02em; margin-bottom:3px; }
+    .panel-head-text p  { font-size:.85rem; color:var(--text-muted); }
+
+    /* FORM */
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media(max-width:580px){ .grid-2 { grid-template-columns:1fr; } }
+    .form-group { margin-bottom:18px; }
+    .form-group:last-child { margin-bottom:0; }
+    .form-label { display:block; font-size:.83rem; font-weight:600; margin-bottom:7px; color:var(--text-muted); }
+    .required-star { color:var(--error); margin-left:2px; }
+    .input-wrap { position:relative; }
+    .input-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-faint); font-size:1.05rem; pointer-events:none; transition:color .2s; }
+    .has-icon input, .has-icon select, .has-icon textarea { padding-left:40px; }
+    .input-wrap:focus-within .input-icon { color:var(--gold-dark); }
+    .pass-toggle { position:absolute; right:11px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-faint); font-size:1.05rem; padding:4px; transition:color .2s; line-height:1; }
+    .pass-toggle:hover { color:var(--text-muted); }
+
+    input[type="text"],input[type="email"],input[type="password"],
+    input[type="tel"],input[type="date"],select {
+      width:100%; padding:12px 14px; border-radius:11px;
+      border:1px solid var(--border); background:var(--bg2); color:var(--text);
+      font-family:var(--font-sans); font-size:.93rem;
+      transition:all .25s var(--ease-out); -webkit-appearance:none;
+    }
+    textarea {
+      width:100%; padding:12px 14px; border-radius:11px;
+      border:1px solid var(--border); background:var(--bg2); color:var(--text);
+      font-family:var(--font-sans); font-size:.93rem; resize:vertical; min-height:80px;
+      transition:all .25s var(--ease-out);
+    }
+    input::placeholder, textarea::placeholder { color:var(--text-faint); }
+    input:hover, select:hover, textarea:hover { border-color:var(--border-mid); }
+    input:focus, select:focus, textarea:focus {
+      outline:none; border-color:var(--border-focus);
+      background:var(--surface); box-shadow:0 0 0 3px var(--gold-glow);
+    }
+    select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8A29E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+
+    /* Strength meter */
+    .strength-bar { display:flex; gap:4px; margin-top:8px; }
+    .strength-seg { flex:1; height:3px; border-radius:2px; background:var(--border); transition:background .3s; }
+    .strength-label { font-size:.75rem; color:var(--text-faint); margin-top:5px; }
+
+    /* Radio preference */
+    .radio-group { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+    .radio-label {
+      display:flex; align-items:flex-start; gap:12px;
+      padding:14px 16px; border-radius:12px; border:1px solid var(--border);
+      cursor:pointer; transition:all .2s var(--ease-out);
+    }
+    .radio-label:hover { border-color:var(--gold); background:rgba(201,162,39,.04); }
+    .radio-label:has(input:checked) { border-color:var(--gold); background:rgba(201,162,39,.07); }
+    .radio-label input[type="radio"] { accent-color:var(--gold); margin-top:3px; flex-shrink:0; }
+    .radio-label-text strong { display:block; font-size:.9rem; font-weight:600; margin-bottom:3px; }
+    .radio-label-text span { font-size:.83rem; color:var(--text-muted); }
+
+    /* Consent checkboxes */
+    .consent-list { display:flex; flex-direction:column; gap:10px; }
+    .consent-item {
+      display:flex; align-items:flex-start; gap:12px;
+      padding:12px 14px; border-radius:11px; border:1px solid var(--border);
+      font-size:.85rem; line-height:1.6; color:var(--text-muted);
+      cursor:pointer; transition:all .2s;
+    }
+    .consent-item:hover { border-color:var(--border-mid); }
+    .consent-item:has(input:checked) { border-color:var(--gold); background:rgba(201,162,39,.05); color:var(--text); }
+    .consent-item input[type="checkbox"] { accent-color:var(--gold); margin-top:3px; flex-shrink:0; }
+    .consent-item a { color:var(--gold-dark); text-decoration:none; }
+    .consent-item a:hover { text-decoration:underline; }
+
+    /* Error banner */
+    .error-banner { display:none; align-items:flex-start; gap:10px; padding:14px 16px; border-radius:12px; margin-bottom:28px; background:var(--error-bg); border:1px solid var(--error-border); color:var(--error); font-size:.9rem; font-weight:500; line-height:1.5; }
+    .error-banner.visible { display:flex; }
+    .error-banner i { font-size:1.2rem; flex-shrink:0; margin-top:1px; }
+
+    /* Submit */
+    .btn-submit { width:100%; padding:16px; background:var(--text); color:var(--bg); border:none; border-radius:14px; cursor:pointer; font-family:var(--font-sans); font-size:1rem; font-weight:700; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 16px rgba(0,0,0,.12); transition:all .25s var(--ease-out); }
+    .btn-submit:hover { background:var(--gold-dark); transform:translateY(-2px); box-shadow:0 10px 28px var(--gold-glow); }
+    .btn-submit:active { transform:none; }
+    .btn-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .form-note { margin-top:14px; text-align:center; font-size:.82rem; color:var(--text-faint); line-height:1.6; }
+    .form-note a { color:var(--gold-dark); text-decoration:none; }
+    .form-note a:hover { text-decoration:underline; }
+
+    /* Activation notice */
+    .activation-notice {
+      display:flex; align-items:flex-start; gap:10px;
+      padding:12px 16px; border-radius:12px; margin-top:16px;
+      background:var(--success-bg); border:1px solid var(--success-border);
+      font-size:.83rem; color:var(--success); line-height:1.6;
+    }
+    .activation-notice i { font-size:1.1rem; flex-shrink:0; margin-top:1px; }
+
+    /* Reveal */
+    .reveal { opacity:0; transform:translateY(22px); transition:opacity .65s var(--ease-out),transform .65s var(--ease-out); }
+    .reveal.visible { opacity:1; transform:none; }
+    .rd1{transition-delay:.05s}.rd2{transition-delay:.1s}.rd3{transition-delay:.15s}.rd4{transition-delay:.2s}
+
+    @media(max-width:600px){ .shell{padding:36px 16px 0} .panel{padding:28px 20px} }
+  </style>
 </head>
-<body class="auth-page j4u-has-animations">
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+<body>
 
-  <!-- Optional: reuse main header -->
-  <header class="header">
-    <nav class="nav">
-      <div class="nav-container">
-        <div class="nav-logo">
-          <a href="Home.html">
-            <h1>Justice4U</h1>
-          </a>
-        </div>
-        <ul class="nav-menu" aria-label="Primary navigation">
-          <li><a href="Home.html">Home</a></li>
-          <li><a href="findlawyer.html">Find Lawyer</a></li>
-          <li><a href="cust_login.html" class="active">Client Login</a></li>
-          <li><a href="Lawyer_login.html">Lawyer Login</a></li>
-        </ul>
-        <button class="nav-toggle" type="button" aria-label="Toggle navigation menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-    </nav>
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header role="banner">
+    <a href="Home.html" class="logo">
+      <div class="logo-icon"><i class="ph-fill ph-scales"></i></div>
+      Justice4U
+    </a>
+    <div class="header-right">
+      <a href="cust_login.html" class="header-link">Already registered? Sign in</a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle dark mode">
+        <i class="ph-fill ph-moon" id="themeIcon"></i>
+      </button>
+    </div>
   </header>
 
-  <main id="main-content" class="auth-section">
-    <div class="auth-container j4u-reveal">
-      <!-- Trust-focused header -->
-      <section class="auth-card">
-        <header class="auth-header">
-          <h2>Secure Client Registration</h2>
-          <p>Your legal information is encrypted, confidential, and handled with care.</p>
-          <p class="mb-md" style="font-size:0.85rem; color:#3A3A3A;">
-            🔒 End-to-end protected • Admin-reviewed accounts • Court-grade confidentiality (by design)
-          </p>
-        </header>
+  <div class="shell">
 
-        <!-- Small trust badges strip -->
-        <div
-          class="mb-lg"
-          style="
-            display:flex;
-            flex-wrap:wrap;
-            gap:0.5rem 1rem;
-            padding:0.75rem 1rem;
-            border-radius:12px;
-            background-color:#F1F1ED;
-            border:1px solid #D8D6CF;
-            font-size:0.8rem;
-            color:#3A3A3A;
-          "
-        >
-          <span>🔒 Encrypted Data</span>
-          <span>🛡 Admin Controlled Access</span>
-          <span>📁 Confidential Document Handling</span>
+    <!-- Page Hero -->
+    <div class="page-hero reveal">
+      <div class="page-label">Client Registration</div>
+      <h1>Your rights, <em>protected.</em></h1>
+      <p>Create a secure account and connect with verified legal professionals who can help you.</p>
+    </div>
+
+    <!-- Trust strip -->
+    <div class="trust-strip reveal rd1" aria-label="Security features">
+      <div class="trust-pill"><i class="ph-fill ph-lock-key"></i> End-to-end encrypted</div>
+      <div class="trust-pill"><i class="ph-fill ph-shield-check"></i> Admin-reviewed accounts</div>
+      <div class="trust-pill"><i class="ph-fill ph-file-lock"></i> Court-grade confidentiality</div>
+    </div>
+
+    <div id="errorBanner" class="error-banner" role="alert" aria-live="polite">
+      <i class="ph-fill ph-warning-circle"></i>
+      <span id="errorText">Please review the form and fill in all required fields.</span>
+    </div>
+
+    <form action="customer.jsp" method="post" id="clientForm" novalidate>
+
+      <!-- PANEL 1: Account -->
+      <div class="panel reveal rd1">
+        <div class="panel-head">
+          <div class="panel-icon pi-gold"><i class="ph-duotone ph-user-circle"></i></div>
+          <div class="panel-head-text">
+            <h3>Account Details</h3>
+            <p>Basic information to create your secure client account.</p>
+          </div>
         </div>
 
-        <!-- Registration form -->
-        <form class="auth-form" id="clientRegistrationForm" action="customer.jsp" method="post" novalidate>
-          <!-- 1️⃣ Account Details -->
-          <section aria-labelledby="account-details-heading" class="mb-2xl">
-            <h3 id="account-details-heading" class="mb-md" style="font-size:1.1rem;">
-              Account Details
-            </h3>
-
-            <div class="form-group">
-              <label for="fullName">Full Name (as per government ID)</label>
-              <input type="text" id="fullName" name="txtname" required autocomplete="name">
-            </div>
-
-            <div class="form-group">
-              <label for="email">Email Address</label>
-              <input type="email" id="email" name="txtemail" required autocomplete="email">
-            </div>
-
-            <div class="form-group">
-              <label for="dob">Date of Birth</label>
-              <input type="date" id="dob" name="txtdob" required>
-            </div>
-
-            <div class="form-group">
-              <label for="phone">Mobile Number (OTP verified)</label>
-              <input
-                type="tel"
-                id="phone"
-                name="txtmno"
-                required
-                inputmode="tel"
-                pattern="[0-9]{10}"
-                placeholder="10-digit mobile number"
-              >
-            </div>
-
-            <div class="form-group">
-              <label for="password">Password</label>
-              <div class="password-input-container">
-                <input
-                  type="password"
-                  id="password"
-                  name="txtpass"
-                  required
-                  minlength="8"
-                  autocomplete="new-password"
-                >
-                <button
-                  type="button"
-                  class="password-toggle"
-                  aria-label="Show or hide password"
-                  data-toggle-password="password"
-                >
-                  👁
-                </button>
-              </div>
-              <div
-                id="passwordStrength"
-                style="margin-top:0.4rem; font-size:0.8rem; color:#3A3A3A;"
-              >
-                Use a strong password to protect your legal data.
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label>
-              <div class="password-input-container">
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="txtpass"
-                  required
-                  minlength="8"
-                  autocomplete="new-password"
-                >
-                <button
-                  type="button"
-                  class="password-toggle"
-                  aria-label="Show or hide password confirmation"
-                  data-toggle-password="confirmPassword"
-                >
-                  👁
-                </button>
-              </div>
-            </div>
-          </section>
-
-          <!-- 2️⃣ Identity Verification -->
-          <section aria-labelledby="identity-heading" class="mb-2xl">
-            <h3 id="identity-heading" class="mb-sm" style="font-size:1.1rem;">
-              Identity Verification
-            </h3>
-            <p style="font-size:0.9rem; color:#3A3A3A; margin-bottom:1rem;">
-              To help prevent misuse and impersonation, identity verification is required for all clients.
-            </p>
-
-            <div class="form-group">
-              <label for="aadhaar">Aadhaar Number</label>
-              <input type="text" id="aadhaar" name="txtadhar" required>
-            </div>
-
-            <div class="form-group">
-              <label for="currentAddress">Current Address</label>
-              <textarea id="currentAddress" name="txtadd" rows="3" required></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="permanentAddress">Permanent Address</label>
-              <textarea id="permanentAddress" name="txtper" rows="3" required></textarea>
-            </div>
-
-            <p style="font-size:0.8rem; color:#3A3A3A; margin-top:0.25rem;">
-              📁 Documents are intended to be encrypted and restricted to view-only access for authorized personnel.
-            </p>
-          </section>
-
-          <!-- 3️⃣ Case Information -->
-          <section aria-labelledby="case-info-heading" class="mb-2xl">
-            <h3 id="case-info-heading" class="mb-sm" style="font-size:1.1rem;">
-              Case Information
-            </h3>
-            <p style="font-size:0.9rem; color:#3A3A3A; margin-bottom:1rem;">
-              This information helps the platform route your matter to an appropriate legal professional.
-            </p>
-
-            <div class="form-group">
-              <label for="currentAddress">Current Address</label>
-              <textarea id="currentAddress" name="txtadd" rows="3" required></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="permanentAddress">Permanent Address</label>
-              <textarea id="permanentAddress" name="txtper" rows="3" required></textarea>
-            </div>
-          </section>
-
-          <!-- 4️⃣ Lawyer Assignment Preference -->
-          <section aria-labelledby="lawyer-pref-heading" class="mb-2xl">
-            <h3 id="lawyer-pref-heading" class="mb-sm" style="font-size:1.1rem;">
-              Lawyer Assignment Preference
-            </h3>
-
-            <div class="form-group" style="font-size:0.9rem; color:#3A3A3A;">
-              <label style="display:flex; align-items:flex-start; gap:0.5rem; margin-bottom:0.5rem;">
-                <input type="radio" name="assignmentPreference" value="admin" checked>
-                <span>
-                  <strong>Admin Assigned (Recommended)</strong><br>
-                  An administrator can assign a suitable lawyer based on your case category and urgency.
-                </span>
-              </label>
-
-              <label style="display:flex; align-items:flex-start; gap:0.5rem;">
-                <input type="radio" name="assignmentPreference" value="manual">
-                <span>
-                  <strong>Choose Lawyer Manually</strong><br>
-                  You may later select from a list of available legal professionals.
-                </span>
-              </label>
-            </div>
-          </section>
-
-          <!-- 5️⃣ Consent & Privacy -->
-          <section aria-labelledby="consent-heading" class="mb-2xl">
-            <h3 id="consent-heading" class="mb-sm" style="font-size:1.1rem;">
-              Consent &amp; Privacy Agreement
-            </h3>
-
-            <div class="form-group" style="font-size:0.85rem; color:#3A3A3A; display:flex; flex-direction:column; gap:0.5rem;">
-              <label class="checkbox-container">
-                <input type="checkbox" name="consentTruth" required>
-                <span class="checkmark"></span>
-                <span>I confirm that all details provided are accurate to the best of my knowledge.</span>
-              </label>
-
-              <label class="checkbox-container">
-                <input type="checkbox" name="consentSecurity" required>
-                <span class="checkmark"></span>
-                <span>
-                  I understand that my uploaded documents are intended to be protected and restricted from unauthorized download or sharing.
-                </span>
-              </label>
-
-              <label class="checkbox-container">
-                <input type="checkbox" name="consentTerms" required>
-                <span class="checkmark"></span>
-                <span>
-                  I agree to the <a href="#" class="auth-link">Terms</a> &amp; <a href="#" class="auth-link">Privacy Policy</a>.
-                </span>
-              </label>
-            </div>
-
-            <p style="font-size:0.8rem; color:#3A3A3A;">
-              Justice4U is being built to follow strict data protection and confidentiality principles.
-            </p>
-          </section>
-
-          <!-- Error message container -->
-          <div id="formError" class="form-error">
-            Please review the highlighted fields and complete all required information.
+        <div class="form-group">
+          <label class="form-label" for="fullName">Full Name (as per government ID) <span class="required-star">*</span></label>
+          <div class="input-wrap has-icon">
+            <input type="text" id="fullName" name="txtname" required placeholder="Your legal full name" autocomplete="name">
+            <i class="ph ph-user input-icon"></i>
           </div>
+        </div>
 
-          <!-- 7️⃣ Final CTA -->
-          <button type="submit" class="btn btn-primary btn-full">
-            <span class="btn-spinner" aria-hidden="true"></span>
-            Create Secure Client Account
-          </button>
-          <p style="margin-top:0.75rem; font-size:0.8rem; color:#3A3A3A;">
-            Your account will be activated after identity verification by an administrator.
-          </p>
-        </form>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address <span class="required-star">*</span></label>
+            <div class="input-wrap has-icon">
+              <input type="email" id="email" name="txtemail" required placeholder="your@email.com" autocomplete="email">
+              <i class="ph ph-envelope input-icon"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phone">Mobile Number <span class="required-star">*</span></label>
+            <div class="input-wrap has-icon">
+              <input type="tel" id="phone" name="txtmno" required placeholder="10-digit number" pattern="[0-9]{10}" inputmode="tel" autocomplete="tel">
+              <i class="ph ph-phone input-icon"></i>
+            </div>
+          </div>
+        </div>
 
-        <footer class="auth-footer">
-          <p style="font-size:0.9rem; color:#3A3A3A;">
-            Already registered?
-            <a href="cust_login.html" class="auth-link">Log in as a client</a>
-          </p>
-        </footer>
-      </section>
-    </div>
-  </main>
+        <div class="form-group">
+          <label class="form-label" for="dob">Date of Birth <span class="required-star">*</span></label>
+          <div class="input-wrap has-icon">
+            <input type="date" id="dob" name="txtdob" required>
+            <i class="ph ph-calendar input-icon"></i>
+          </div>
+        </div>
 
-  <script src="main.js"></script>
-  <!-- Optional small inline script just for password toggles & simple validation -->
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="password">Password <span class="required-star">*</span></label>
+            <div class="input-wrap has-icon">
+              <input type="password" id="password" name="txtpass" required minlength="8" placeholder="Min. 8 characters" autocomplete="new-password">
+              <i class="ph ph-lock-simple input-icon"></i>
+              <button type="button" class="pass-toggle" id="passToggle1" aria-label="Show password"><i class="ph ph-eye"></i></button>
+            </div>
+            <div class="strength-bar" id="strengthBar" aria-hidden="true">
+              <div class="strength-seg" id="s1"></div>
+              <div class="strength-seg" id="s2"></div>
+              <div class="strength-seg" id="s3"></div>
+              <div class="strength-seg" id="s4"></div>
+            </div>
+            <div class="strength-label" id="strengthLabel"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="confirmPassword">Confirm Password <span class="required-star">*</span></label>
+            <div class="input-wrap has-icon">
+              <input type="password" id="confirmPassword" name="txtpassconfirm" required minlength="8" placeholder="Re-enter password" autocomplete="new-password">
+              <i class="ph ph-lock-simple input-icon"></i>
+              <button type="button" class="pass-toggle" id="passToggle2" aria-label="Show confirm password"><i class="ph ph-eye"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: Identity -->
+      <div class="panel reveal rd2">
+        <div class="panel-head">
+          <div class="panel-icon pi-slate"><i class="ph-duotone ph-identification-badge"></i></div>
+          <div class="panel-head-text">
+            <h3>Identity Verification</h3>
+            <p>Required to prevent misuse. Your data is encrypted and restricted from unauthorized access.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="aadhaar">Aadhaar Number <span class="required-star">*</span></label>
+          <div class="input-wrap has-icon">
+            <input type="text" id="aadhaar" name="txtadhar" required placeholder="12-digit Aadhaar number" pattern="\d{12}" maxlength="12" inputmode="numeric">
+            <i class="ph ph-identification-card input-icon"></i>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="cadd">Current Address <span class="required-star">*</span></label>
+            <div class="input-wrap has-icon">
+              <textarea id="cadd" name="txtadd" required placeholder="Your current address" rows="3" style="padding-top:12px;"></textarea>
+              <i class="ph ph-map-pin input-icon" style="top:18px;transform:none;"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="padd">Permanent Address <span class="required-star">*</span></label>
+            <div class="input-wrap has-icon">
+              <textarea id="padd" name="txtper" required placeholder="Your permanent address" rows="3" style="padding-top:12px;"></textarea>
+              <i class="ph ph-map-pin input-icon" style="top:18px;transform:none;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Lawyer Preference -->
+      <div class="panel reveal rd3">
+        <div class="panel-head">
+          <div class="panel-icon pi-green"><i class="ph-duotone ph-users-three"></i></div>
+          <div class="panel-head-text">
+            <h3>Lawyer Assignment Preference</h3>
+            <p>How would you like to be matched with a legal professional?</p>
+          </div>
+        </div>
+
+        <div class="radio-group" role="group" aria-labelledby="prefLabel">
+          <span id="prefLabel" class="form-label" style="margin-bottom:0;">Assignment method <span class="required-star">*</span></span>
+          <label class="radio-label">
+            <input type="radio" name="assignmentPreference" value="admin" checked>
+            <div class="radio-label-text">
+              <strong><i class="ph ph-sparkle" style="color:var(--gold);margin-right:4px;"></i> Admin Assigned (Recommended)</strong>
+              <span>An administrator assigns a suitable lawyer based on your case category and urgency — fastest resolution.</span>
+            </div>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="assignmentPreference" value="manual">
+            <div class="radio-label-text">
+              <strong><i class="ph ph-magnifying-glass" style="color:var(--text-muted);margin-right:4px;"></i> Choose Lawyer Manually</strong>
+              <span>Browse our directory and select from available verified legal professionals after registration.</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- PANEL 4: Consent -->
+      <div class="panel reveal rd4">
+        <div class="panel-head">
+          <div class="panel-icon pi-rose"><i class="ph-duotone ph-seal-check"></i></div>
+          <div class="panel-head-text">
+            <h3>Consent &amp; Privacy Agreement</h3>
+            <p>Please read and accept each item before submitting.</p>
+          </div>
+        </div>
+
+        <div class="consent-list">
+          <label class="consent-item">
+            <input type="checkbox" name="consentTruth" required>
+            I confirm that all details provided are accurate to the best of my knowledge.
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" name="consentSecurity" required>
+            I understand my uploaded documents are protected and restricted from unauthorized download or sharing.
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" name="consentTerms" required>
+            I agree to the <a href="terms.html" target="_blank">Terms of Service</a> &amp; <a href="privacy.html" target="_blank">Privacy Policy</a>.
+          </label>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="reveal" style="margin-top:8px;">
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span id="btnLabel">Create Secure Client Account</span>
+          <i class="ph-bold ph-arrow-right" id="btnIcon"></i>
+        </button>
+
+        <div class="activation-notice">
+          <i class="ph-fill ph-info"></i>
+          Your account will be activated after identity verification by an administrator. You'll receive a confirmation email within 24 hours.
+        </div>
+
+        <p class="form-note" style="margin-top:20px;">
+          Already registered? <a href="cust_login.html">Log in as a client</a>
+        </p>
+      </div>
+
+    </form>
+  </div>
+
   <script>
-    // Show / hide password
-    document.querySelectorAll('.password-toggle').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.getAttribute('data-toggle-password');
-        const input = document.getElementById(targetId);
-        if (!input) return;
-        const isPassword = input.type === 'password';
-        input.type = isPassword ? 'text' : 'password';
+    /* DARK MODE */
+    const root=document.documentElement,tBtn=document.getElementById('themeToggle'),tIcon=document.getElementById('themeIcon');
+    const saved=localStorage.getItem('j4u-theme'),sys=window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const init=saved||(sys?'dark':'light');
+    root.setAttribute('data-theme',init);
+    tIcon.className=init==='dark'?'ph-fill ph-sun':'ph-fill ph-moon';
+    tBtn.addEventListener('click',()=>{
+      const n=root.getAttribute('data-theme')==='dark'?'light':'dark';
+      root.setAttribute('data-theme',n);
+      tIcon.className=n==='dark'?'ph-fill ph-sun':'ph-fill ph-moon';
+      localStorage.setItem('j4u-theme',n);
+    });
+
+    /* SCROLL REVEAL */
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+    },{threshold:.08});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+    /* PASSWORD TOGGLES */
+    function setupToggle(btnId,inputId){
+      document.getElementById(btnId).addEventListener('click',()=>{
+        const inp=document.getElementById(inputId);
+        const icon=document.querySelector('#'+btnId+' i');
+        const show=inp.type==='password';
+        inp.type=show?'text':'password';
+        icon.className=show?'ph ph-eye-slash':'ph ph-eye';
       });
+    }
+    setupToggle('passToggle1','password');
+    setupToggle('passToggle2','confirmPassword');
+
+    /* PASSWORD STRENGTH */
+    document.getElementById('password').addEventListener('input',function(){
+      const v=this.value;
+      let score=0;
+      if(v.length>=8)score++;
+      if(/[A-Z]/.test(v))score++;
+      if(/[0-9]/.test(v))score++;
+      if(/[^A-Za-z0-9]/.test(v))score++;
+      const segs=[document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+      const colors=['#ef4444','#f97316','#eab308','#22c55e'];
+      const labels=['','Weak','Fair','Good','Strong'];
+      segs.forEach((s,i)=>{ s.style.background=i<score?colors[score-1]:'var(--border)'; });
+      document.getElementById('strengthLabel').textContent=v.length?labels[score]:'';
     });
 
-    // Very simple front-end validation (no backend logic here)
-    document.getElementById('clientRegistrationForm').addEventListener('submit', function (e) {
-      const form = this;
-      const errorBox = document.getElementById('formError');
-      errorBox.style.display = 'none';
-
-      // Password match check
-      const pwd = form.password.value.trim();
-      const cpwd = form.confirmPassword.value.trim();
-      let hasError = false;
-
-      if (pwd !== cpwd) {
-        hasError = true;
-        errorBox.textContent = 'Passwords do not match. Please re-enter.';
-      }
-
-      if (!form.checkValidity() || hasError) {
+    /* FORM SUBMIT */
+    document.getElementById('clientForm').addEventListener('submit',function(e){
+      const banner=document.getElementById('errorBanner');
+      banner.classList.remove('visible');
+      const pwd=document.getElementById('password').value;
+      const cpwd=document.getElementById('confirmPassword').value;
+      if(pwd!==cpwd){
         e.preventDefault();
-        errorBox.style.display = 'block';
-        errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('errorText').textContent='Passwords do not match. Please re-enter.';
+        banner.classList.add('visible');
+        banner.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
       }
+      if(!this.checkValidity()){
+        e.preventDefault();
+        document.getElementById('errorText').textContent='Please fill in all required fields before submitting.';
+        banner.classList.add('visible');
+        banner.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
+      const btn=document.getElementById('submitBtn');
+      btn.disabled=true;
+      document.getElementById('btnLabel').textContent='Creating account…';
+      document.getElementById('btnIcon').className='ph ph-spinner ph-spin';
     });
+
+    /* URL ERROR */
+    const params=new URLSearchParams(window.location.search);
+    const err=params.get('error')||params.get('msg');
+    if(err){
+      const b=document.getElementById('errorBanner');
+      document.getElementById('errorText').textContent=decodeURIComponent(err);
+      b.classList.add('visible');
+    }
   </script>
 </body>
 </html>

@@ -181,7 +181,7 @@
           background: linear-gradient(135deg, #2563eb, #1d4ed8);
           color: #f9fafb;
           box-shadow: 0 10px 22px rgba(37, 99, 235, 0.35);
-          transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+          transition: none;
         }
 
         .btn-primary-main:hover {
@@ -201,7 +201,7 @@
           background: rgba(253, 251, 246, 0.9);
           text-decoration: none;
           text-align: center;
-          transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+          transition: none;
           display: inline-block;
         }
 
@@ -406,3 +406,4 @@
     </body>
 
     </html>
+

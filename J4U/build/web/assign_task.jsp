@@ -84,7 +84,7 @@
             max-width: 600px; width: 100%;
             overflow: hidden;
             opacity: 0; transform: translateY(15px);
-            animation: enterUp 0.6s var(--ease-smart) forwards;
+            /* animation removed */
         }
 
         @keyframes enterUp { to { opacity: 1; transform: translateY(0); } }
@@ -117,7 +117,7 @@
         .form-control, .form-select {
             padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-subtle);
             font-size: 0.95rem; font-family: "Inter", sans-serif; color: var(--ink-primary);
-            box-shadow: none; transition: all 0.2s; background: #fff;
+            box-shadow: none; transition: none; background: #fff;
         }
         .form-control:focus, .form-select:focus { border-color: var(--ink-primary); box-shadow: 0 0 0 3px rgba(18, 18, 18, 0.05); outline:none; }
 
@@ -129,7 +129,7 @@
         .btn-custom {
             padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            transition: all 0.2s; text-decoration: none; border: none; cursor: pointer; flex: 1;
+            transition: none; text-decoration: none; border: none; cursor: pointer; flex: 1;
         }
 
         .btn-secondary-custom {
@@ -200,3 +200,4 @@
     </div>
 </body>
 </html>
+

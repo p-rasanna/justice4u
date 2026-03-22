@@ -272,7 +272,7 @@
       justify-content: center;
       color: white;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: none;
     }
 
     .btn-send:hover {
@@ -292,7 +292,7 @@
       cursor: pointer;
       padding: 4px;
       border-radius: 6px;
-      transition: background 0.2s ease;
+      transition: none;
     }
 
     .back-btn:hover {
@@ -462,3 +462,4 @@
   </script>
 </body>
 </html>
+

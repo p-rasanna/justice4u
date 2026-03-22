@@ -206,7 +206,7 @@
             background: #fff; border: 1px solid var(--border-subtle); 
             width: 40px; height: 40px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: var(--ink-primary); transition: all 0.2s;
+            cursor: pointer; color: var(--ink-primary); transition: none;
             text-decoration: none;
         }
         .back-btn:hover { border-color: var(--gold-main); color: var(--gold-main); transform: translateY(-2px); }
@@ -236,7 +236,7 @@
             background: var(--surface-card);
         }
 
-        .message { display: flex; align-items: flex-end; gap: 12px; max-width: 75%; animation: fadeIn 0.3s ease; }
+        .message { display: flex; align-items: flex-end; gap: 12px; max-width: 75%; animation: none; }
         .message.sent { align-self: flex-end; flex-direction: row-reverse; }
         
         .message-content { 
@@ -281,7 +281,7 @@
             background: var(--gold-main); color: white; border: none; 
             width: 44px; height: 44px; border-radius: 8px; 
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s; flex-shrink: 0;
+            transition: none; flex-shrink: 0;
         }
         .btn-send:hover { background: var(--gold-dim); transform: translateY(-2px); }
 
@@ -426,3 +426,4 @@
     </script>
 </body>
 </html>
+

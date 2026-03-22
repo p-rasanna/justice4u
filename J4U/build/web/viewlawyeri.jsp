@@ -133,11 +133,7 @@
         padding: 20px 20px 16px;
         position: relative;
         overflow: hidden;
-        transition:
-          transform 0.22s ease,
-          box-shadow 0.24s ease,
-          border-color 0.24s ease,
-          background 0.24s ease;
+        transition: none;
       }
 
       .j4u-card::before {
@@ -243,10 +239,7 @@
 
       .table tbody tr {
         background: transparent;
-        transition:
-          background 0.14s ease,
-          transform 0.1s ease,
-          box-shadow 0.1s ease;
+        transition: none;
       }
 
       .table tbody tr:nth-child(even) {
@@ -304,11 +297,7 @@
         box-shadow:
           0 6px 14px rgba(15, 23, 42, 0.12),
           0 1px 0 rgba(255, 255, 255, 0.8) inset;
-        transition:
-          transform 0.1s ease,
-          box-shadow 0.1s ease,
-          background 0.12s ease,
-          border-color 0.12s ease;
+        transition: none;
       }
 
       .btn-approve {
@@ -358,11 +347,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        transition:
-          transform 0.12s ease,
-          box-shadow 0.12s ease,
-          background 0.12s ease,
-          border-color 0.12s ease;
+        transition: none;
       }
 
       .btn-shell-main:hover {
@@ -543,4 +528,5 @@
     </div>
   </body>
 </html>
+
 

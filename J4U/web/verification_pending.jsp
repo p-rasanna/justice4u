@@ -116,7 +116,7 @@
       display: flex; align-items: center; justify-content: center;
       position: relative;
       opacity: 0; transform: scale(0.5);
-      animation: popIn 0.5s var(--ease-snap) forwards 0.3s;
+      animation: none;
     }
 
     /* The SVG Checkmark */
@@ -141,12 +141,12 @@
     h2 {
       font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 8px; color: var(--ink-primary);
       opacity: 0; transform: translateY(10px);
-      animation: fadeUp 0.6s var(--ease-snap) forwards 0.4s;
+      animation: none;
     }
     .status-desc {
       color: var(--ink-secondary); font-size: 0.95rem; margin: 0;
       opacity: 0; transform: translateY(10px);
-      animation: fadeUp 0.6s var(--ease-snap) forwards 0.5s;
+      animation: none;
     }
 
     /* The Docket */
@@ -155,7 +155,7 @@
       border: 1px solid var(--border-line);
       border-radius: 8px; margin-bottom: 40px; overflow: hidden;
       opacity: 0; transform: translateY(15px);
-      animation: fadeUp 0.6s var(--ease-snap) forwards 0.6s;
+      animation: none;
     }
     .docket-header {
       padding: 12px 20px; background: #F5F5F5;
@@ -167,7 +167,7 @@
     .detail-row {
       display: flex; justify-content: space-between; align-items: center;
       padding: 14px 20px; border-bottom: 1px solid var(--border-line);
-      transition: background 0.2s;
+      transition: none;
     }
     .detail-row:last-child { border-bottom: none; }
     .detail-row:hover { background: #FFFFFF; }
@@ -177,7 +177,7 @@
     /* Timeline */
     .process-area {
       margin-bottom: 40px; padding-left: 8px;
-      opacity: 0; animation: fadeUp 0.6s var(--ease-snap) forwards 0.7s;
+      opacity: 0; animation: none;
     }
     .step { display: flex; gap: 16px; position: relative; padding-bottom: 32px; }
     .step:last-child { padding-bottom: 0; }
@@ -213,7 +213,7 @@
       font-size: 0.8rem; display: flex; align-items: center; gap: 10px;
       margin-bottom: 32px;
       opacity: 0; transform: translateY(10px);
-      animation: fadeUp 0.6s var(--ease-snap) forwards 1.5s;
+      animation: none;
     }
     .toast-icon { color: var(--gold-main); }
 
@@ -223,8 +223,8 @@
       border: 1px solid var(--border-line);
       background: transparent; color: var(--ink-primary);
       font-weight: 600; font-size: 0.9rem;
-      text-decoration: none; transition: all 0.2s;
-      opacity: 0; animation: fadeUp 0.6s var(--ease-snap) forwards 0.8s;
+      text-decoration: none; transition: none;
+      opacity: 0; animation: none;
     }
     .btn-return:hover { background: #F9F9F9; border-color: var(--ink-primary); }
 
@@ -340,3 +340,4 @@
 
 </body>
 </html>
+

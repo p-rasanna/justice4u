@@ -12,7 +12,7 @@
         .error-icon { font-size: 4rem; color: #888888; margin-bottom: 20px; }
         h1 { font-family: 'Playfair Display', serif; color: #121212; margin-bottom: 10px; }
         p { color: #555555; margin-bottom: 24px; font-size: 0.95rem; }
-        .btn-home { background-color: #121212; color: #FFFFFF; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 500; transition: background 0.2s; }
+        .btn-home { background-color: #121212; color: #FFFFFF; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 500; transition: none; }
         .btn-home:hover { background-color: #C6A75E; color: #FFFFFF; }
     </style>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -26,3 +26,4 @@
     </div>
 </body>
 </html>
+

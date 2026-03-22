@@ -77,9 +77,9 @@
           opacity: 0; transform: translateY(15px);
           /* animation removed */
       }
-      .d-1 { animation-delay: 0.1s; }
-      .d-2 { animation-delay: 0.2s; }
-      .d-3 { animation-delay: 0.3s; }
+      .d-1 { animation-delay: 0s; }
+      .d-2 { animation-delay: 0s; }
+      .d-3 { animation-delay: 0s; }
 
       @keyframes enterUp { to { opacity: 1; transform: translateY(0); } }
 
@@ -153,7 +153,7 @@
           display: flex; align-items: center; gap: 12px;
           background: #FFF; border: 1px solid var(--border-subtle);
           padding: 8px 16px; border-radius: 100px; width: 300px;
-          transition: all 0.2s;
+          transition: none;
       }
       .search-bar:focus-within { border-color: var(--gold-main); box-shadow: 0 0 0 3px rgba(198, 167, 94, 0.1); }
       .search-input { border: none; outline: none; width: 100%; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--ink-primary); }
@@ -181,7 +181,7 @@
       }
 
       .table tbody tr {
-          transition: background 0.2s;
+          transition: none;
           border-bottom: 1px solid #f5f5f5;
       }
       
@@ -214,7 +214,7 @@
           display: inline-flex; align-items: center; justify-content: center; gap: 6px;
           padding: 8px 14px; border-radius: 8px;
           font-size: 0.8rem; font-weight: 600; text-decoration: none; border: none;
-          transition: all 0.2s; background: #fff; border: 1px solid var(--border-subtle);
+          transition: none; background: #fff; border: 1px solid var(--border-subtle);
           cursor: pointer; color: var(--ink-primary);
       }
       .btn-action:hover {
@@ -231,7 +231,7 @@
       .btn-nav {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;
-          text-decoration: none; transition: all 0.2s;
+          text-decoration: none; transition: none;
       }
       
       .btn-back {
@@ -427,3 +427,4 @@
 
 </body>
 </html>
+

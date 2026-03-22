@@ -110,10 +110,7 @@ body {
   font-weight: 500;
   border: none;
   outline: none;
-  transition:
-    background 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.12s ease;
+  transition: none;
   text-decoration: none;
   display: inline-block;
   width: 100%;
@@ -215,3 +212,4 @@ body {
 
 </body>
 </html>
+
