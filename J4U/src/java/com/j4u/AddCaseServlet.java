@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-@WebServlet(name = "AddCaseServlet", urlPatterns = { "/AddCaseServlet" })
+@WebServlet(name = "AddCaseServlet", urlPatterns = { "/AddCaseServlet", "/ProcessCaseRequestServlet" })
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 10, // 10MB
         maxRequestSize = 1024 * 1024 * 50 // 50MB
@@ -27,7 +27,7 @@ import javax.servlet.http.Part;
 public class AddCaseServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(AddCaseServlet.class.getName());
-    private static final String UPLOAD_DIR = "C:" + File.separator + "J4U_Uploads" + File.separator + "case_docs";
+    private static final String UPLOAD_SUBDIR = "uploads" + File.separator + "case_docs";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -173,13 +173,14 @@ public class AddCaseServlet extends HttpServlet {
     private void handleFileUpload(HttpServletRequest request, int caseId) throws IOException, ServletException {
         Part filePart = request.getPart("documents");
         if (filePart != null && filePart.getSize() > 0) {
-            File uploadDir = new File(UPLOAD_DIR);
+            String uploadDirPath = request.getServletContext().getRealPath("/") + UPLOAD_SUBDIR;
+            File uploadDir = new File(uploadDirPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
 
             String fileName = "Case_" + caseId + "_" + UUID.randomUUID().toString().substring(0, 8) + ".pdf";
-            filePart.write(UPLOAD_DIR + File.separator + fileName);
+            filePart.write(uploadDirPath + File.separator + fileName);
         }
     }
 }

@@ -117,7 +117,7 @@ public class ProcessInternServlet extends HttpServlet {
 
             // 2. Business Logic Checks
             if (dao.isEmailRegistered(email)) {
-                response.sendRedirect("internlogin.html?msg=Email already registered");
+                response.sendRedirect(request.getContextPath() + "/auth/internlogin.html?msg=Email already registered");
                 return;
             }
 
@@ -170,9 +170,9 @@ public class ProcessInternServlet extends HttpServlet {
                         areasOfInterest, skills, preferredCity, availabilityDuration,
                         internship_mode, frontPath, backPath, bonafidePath);
 
-                response.sendRedirect("internlogin.html?msg=Registration details submitted. Awaiting Admin Approval.");
+                response.sendRedirect(request.getContextPath() + "/auth/internlogin.html?msg=Registration details submitted. Awaiting Admin Approval.");
             } else {
-                response.sendRedirect("intern.jsp?error=Registration failed at main step.");
+                response.sendRedirect(request.getContextPath() + "/intern/intern.jsp?error=Registration failed at main step.");
             }
 
         } catch (Exception e) {
@@ -185,7 +185,7 @@ public class ProcessInternServlet extends HttpServlet {
                 LOGGER.log(Level.SEVERE, "Could not write to custom log", io);
             }
             LOGGER.log(Level.SEVERE, "Error processing intern registration", e);
-            response.sendRedirect("intern.jsp?error=Server Error processing registration.");
+            response.sendRedirect(request.getContextPath() + "/intern/intern.jsp?error=Server Error processing registration.");
         }
     }
 }

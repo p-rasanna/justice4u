@@ -48,7 +48,7 @@ public class RegisterServlet extends HttpServlet {
         String practiceAreas = (practiceAreasArr != null) ? String.join(", ", practiceAreasArr) : "";
 
         if (email == null || password == null || fullName == null) {
-            response.sendRedirect("Lawyer.html?error=Missing required fields");
+            response.sendRedirect("landing/Lawyer.html?error=Missing required fields");
             return;
         }
 
@@ -64,7 +64,7 @@ public class RegisterServlet extends HttpServlet {
                 checkStmt.setString(2, barNumber);
                 try (ResultSet rs = checkStmt.executeQuery()) {
                     if (rs.next() && rs.getInt(1) > 0) {
-                        response.sendRedirect("Lawyer.html?error=Email or Bar Number already registered");
+                        response.sendRedirect("landing/Lawyer.html?error=Email or Bar Number already registered");
                         return;
                     }
                 }
@@ -117,10 +117,10 @@ public class RegisterServlet extends HttpServlet {
                 saveDocument(request.getPart("selfie"), lawyerId, "LIVE_SELFIE", uploadPath, con);
 
                 con.commit();
-                response.sendRedirect("lawyer_registration_success.jsp");
+                response.sendRedirect("auth/lawyer_registration_success.jsp");
             } else {
                 con.rollback();
-                response.sendRedirect("Lawyer.html?error=Registration failed");
+                response.sendRedirect("landing/Lawyer.html?error=Registration failed");
             }
 
         } catch (Exception e) {
@@ -130,7 +130,7 @@ public class RegisterServlet extends HttpServlet {
                 } catch (Exception ex) {
                 }
             e.printStackTrace();
-            response.sendRedirect("Lawyer.html?error=Server error: " + e.getMessage());
+            response.sendRedirect("landing/Lawyer.html?error=Server error: " + e.getMessage());
         } finally {
             if (con != null)
                 try {

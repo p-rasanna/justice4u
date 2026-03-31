@@ -25,7 +25,7 @@ public class AssignLawyerServlet extends HttpServlet {
         // 1. Authorization Check
         HttpSession session = request.getSession(false);
         if (session == null) {
-            response.sendRedirect("accessDenied.jsp");
+            response.sendRedirect("auth/Login.html");
             return;
         }
 
@@ -34,7 +34,7 @@ public class AssignLawyerServlet extends HttpServlet {
         String lawyerIdStr = request.getParameter("lawyer_id");
 
         if (caseIdStr == null || lawyerIdStr == null || caseIdStr.isEmpty() || lawyerIdStr.isEmpty()) {
-            response.sendRedirect("viewcases.jsp?error=Missing parameters");
+            response.sendRedirect("ViewCases?error=Missing parameters");
             return;
         }
 
@@ -44,7 +44,7 @@ public class AssignLawyerServlet extends HttpServlet {
             caseId = Integer.parseInt(caseIdStr);
             lawyerId = Integer.parseInt(lawyerIdStr);
         } catch (NumberFormatException e) {
-            response.sendRedirect("viewcases.jsp?error=Invalid parameters format");
+            response.sendRedirect("ViewCases?error=Invalid parameters format");
             return;
         }
 
@@ -87,7 +87,7 @@ public class AssignLawyerServlet extends HttpServlet {
                 con.commit();
                 LOGGER.info("Successfully completed transaction to assign Lawyer " + lawyerId + " to Case " + caseId);
 
-                response.sendRedirect("viewcases.jsp?success=Lawyer Assigned Successfully");
+                response.sendRedirect("ViewCases?success=Lawyer Assigned Successfully");
 
             } catch (SQLException e) {
                 // ROLLBACK Transaction on any failure to maintain database integrity

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justice4U | Premier Legal Platform</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --navy: #0B192C;
+            --gold: #D4AF37;
+            --light-bg: #F8F9FA;
+            --text-main: #333333;
+            --text-muted: #6C757D;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            background-color: #FFFFFF;
+            line-height: 1.6;
+        }
+
+        .font-law {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Elegant Navbar */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        
+        /* Logo & Brand Styling */
+        .conceptual-logo-icon {
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-right: 0.75rem;
+        }
+        .justice-brand-text {
+            color: var(--navy);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .nav-link {
+            color: var(--navy) !important;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin: 0 15px;
+            transition: 0.3s;
+        }
+        .nav-link:hover { color: var(--gold) !important; }
+
+        /* Premium Buttons */
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 4px;
+            border: 2px solid var(--gold);
+            transition: all 0.3s;
+        }
+        .btn-gold:hover {
+            background-color: transparent;
+            color: var(--gold);
+        }
+        .btn-outline-light-custom {
+            background-color: transparent;
+            color: #FFFFFF;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 4px;
+            border: 2px solid #FFFFFF;
+            transition: all 0.3s;
+        }
+        .btn-outline-light-custom:hover {
+            background-color: #FFFFFF;
+            color: var(--navy);
+        }
+
+        /* Hero Section with LIVE Lady Justice Photo */
+        .hero {
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            /* This is a live URL to a professional Lady Justice/Scales photo */
+            background: linear-gradient(rgba(11, 25, 44, 0.88), rgba(11, 25, 44, 0.95)), url('https://images.unsplash.com/photo-1589391886645-d51941baf7fb?auto=format&fit=crop&w=2000&q=80') center/cover;
+            padding-top: 80px;
+        }
+        .hero-title {
+            color: #FFFFFF;
+            font-size: 4rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        .hero-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+        }
+
+        /* Section Styling */
+        .section-pad { padding: 100px 0; }
+        .section-header { margin-bottom: 60px; text-align: center; }
+        .section-tag {
+            color: var(--gold);
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--navy);
+        }
+
+        /* Premium Cards */
+        .role-card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            padding: 40px 30px;
+            height: 100%;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-top: 4px solid var(--gold);
+            transition: all 0.4s ease;
+        }
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(11, 25, 44, 0.08);
+        }
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 25px;
+        }
+
+        /* Process Steps */
+        .step-card {
+            padding: 30px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            height: 100%;
+        }
+        .step-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: var(--gold);
+            opacity: 0.3;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+
+        /* Deep Navy Footer */
+        footer {
+            background-color: var(--navy);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 70px 0 30px;
+            border-top: 4px solid var(--gold);
+        }
+        footer h4 { color: #FFFFFF; }
+        footer a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand font-law d-flex align-items-center text-decoration-none" href="#">
+                    <i class="bi bi-layers-half conceptual-logo-icon"></i>
+                    <span class="justice-brand-text">Justice4U</span>
+                </a>
+            </div>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list fs-1 text-dark"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="d-flex gap-3 align-items-center mt-3 mt-lg-0">
+                    <a class="text-decoration-none text-muted me-3 fw-medium" href="role_select.html">Sign In</a>
+                    <a href="role_select.html" class="btn btn-gold py-2 px-4">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero text-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <span class="section-tag mb-3">Bridging Citizens & Counsel</span>
+                    <h1 class="font-law hero-title fw-bold">Elevating Legal Access <br>Through Technology.</h1>
+                    <p class="hero-subtitle mb-5">Justice4U is a unified digital ecosystem designed to streamline case management, connect clients with verified advocates, and integrate interns into active legal practice.</p>
+                    <div class="d-flex gap-4 justify-content-center flex-wrap">
+                        <a href="role_select.html" class="btn btn-gold">Access Dashboard</a>
+<a href="../Lawyer.jsp" class="btn btn-outline-light-custom">Register as Counsel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecosystem" class="section-pad" style="background-color: var(--light-bg);">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">A Unified Network</span>
+                <h2 class="font-law section-title fw-bold">The Justice4U Ecosystem</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="role-card">
+                        <div class="icon-box"><i class="bi bi-person"></i></div>
+                        <h4 class="font-law fw-bold mb-3">For Citizens</h4>
+                        <p class="text-muted small">Submit your legal requirements instantly. Track your case progress in real-time, view uploaded documents, and communicate seamlessly with your assigned advocate.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="role-card">
+                        <div class="icon-box"><i class="bi bi-briefcase"></i></div>
+                        <h4 class="font-law fw-bold mb-3">For Legal Counsel</h4>
+                        <p class="text-muted small">Manage your entire client docket efficiently. Review incoming requests, organize your schedule, and assign crucial research tasks to interns from one central hub.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="role-card">
+                        <div class="icon-box"><i class="bi bi-book"></i></div>
+                        <h4 class="font-law fw-bold mb-3">For Legal Interns</h4>
+                        <p class="text-muted small">Gain invaluable practical experience. Assist senior advocates by accessing assigned research tasks, drafting documents, and learning the mechanics of active law.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="process" class="section-pad">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Streamlined Workflow</span>
+                <h2 class="font-law section-title fw-bold">Platform Mechanics</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <h4 class="font-law fw-bold mb-3 text-dark">Case Initiation</h4>
+                        <p class="text-muted small mb-0">Clients register on the portal and submit a description of their legal requirement, automatically routing it to the appropriate domain.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <h5 class="font-law fw-bold mb-3 text-dark">Counsel Assignment</h5>
+                        <p class="text-muted small mb-0">Verified lawyers review the pending docket and accept cases that match their expertise, establishing a direct connection with the client.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <h5 class="font-law fw-bold mb-3 text-dark">Collaborative Action</h5>
+                        <p class="text-muted small mb-0">Lawyers can draft interns to assist with active research. The client stays updated via their dashboard until the matter reaches resolution.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row g-5 mb-4">
+                <div class="col-lg-5">
+                    <h4 class="font-law fw-bold mb-3"><i class="bi bi-bank me-2" style="color: var(--gold);"></i>Justice4U</h4>
+                    <p class="small pe-lg-5 mb-4">A comprehensive digital platform dedicated to modernizing legal workflows, improving accessibility to counsel, and streamlining case management across India.</p>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-uppercase text-white mb-3" style="letter-spacing: 1px; font-size: 0.85rem;">Gateways</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="role_select.html">Platform Login</a></li>
+                        <li class="mb-2"><a href="Lawyer.jsp">Counsel Registration</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-6 text-lg-end ms-auto">
+                    <h6 class="text-uppercase text-white mb-3" style="letter-spacing: 1px; font-size: 0.85rem;">Headquarters</h6>
+                    <p class="small mb-0">
+                        <i class="bi bi-geo-alt me-2" style="color: var(--gold);"></i>Solapur, Maharashtra<br>
+                        India
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-top pt-4 mt-2 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
+                <p class="small text-white-50 mb-0">&copy; 2026 Justice4U. All rights reserved.</p>
+            </div>
+            
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth shadow transition for navbar on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+            } else {
+                navbar.style.boxShadow = '0 2px 15px rgba(0,0,0,0.05)';
+            }
+        });
+    </script>
+</body>
+</html>

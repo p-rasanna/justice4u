@@ -27,13 +27,13 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        String loginPage = "Login.html";
+        String loginPage = "auth/Login.jsp";
         if ("lawyer".equals(role)) {
-            loginPage = "Lawyer_login.html";
+            loginPage = "auth/Lawyer_login.html";
         } else if ("client".equals(role)) {
-            loginPage = "cust_login.html";
+            loginPage = "auth/cust_login.html";
         } else if ("intern".equals(role)) {
-            loginPage = "internlogin.html";
+            loginPage = "auth/internlogin.html";
         }
 
         if (!"admin".equals(role) && !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
@@ -78,7 +78,7 @@ public class LoginServlet extends HttpServlet {
             // Intern Table: internid, name, email, pass, flag
             else if ("intern".equals(role)) {
                 query = "SELECT internid, name, pass, flag FROM intern WHERE email = ?";
-                redirectUrl = "interndashboard.jsp";
+                redirectUrl = "InternDashboardServlet";
             } else {
                 response.sendRedirect(loginPage + "?error=invalid_role");
                 return;
@@ -90,6 +90,7 @@ public class LoginServlet extends HttpServlet {
 
             if (rs.next()) {
                 String storedPass = rs.getString("pass");
+                String normalizedProfileType = "manual";
 
                 // Verify Password (Hash or Plain Text)
                 if (PasswordUtil.verifyPassword(password, storedPass)) {
@@ -119,10 +120,16 @@ public class LoginServlet extends HttpServlet {
                         }
                         
                         String cProfileType = rs.getString("profile_type");
-                        if ("admin".equalsIgnoreCase(cProfileType)) {
-                            redirectUrl = "customerdashboard.jsp"; // Admin assigned dashboard
+                        normalizedProfileType = cProfileType == null ? "" : cProfileType.trim().toLowerCase();
+
+                        // Treat common variants as admin-assigned to avoid incorrect fallback to manual dashboard.
+                        if ("admin".equals(normalizedProfileType)
+                                || "admin_assigned".equals(normalizedProfileType)
+                                || "assigned".equals(normalizedProfileType)
+                                || "auto".equals(normalizedProfileType)) {
+                            redirectUrl = "client/customerdashboard.jsp"; // Admin assigned dashboard
                         } else {
-                            redirectUrl = "clientdashboard_manual.jsp"; // Manual selection dashboard
+                            redirectUrl = "client/clientdashboard_manual.jsp"; // Manual selection dashboard
                         }
                     }
 
@@ -165,6 +172,7 @@ public class LoginServlet extends HttpServlet {
                         // And we store the real name as c_full_name for display if needed,
                         // though dashboard fetches it from DB again.
                         session.setAttribute("c_full_name", clientName);
+                        session.setAttribute("profileType", normalizedProfileType);
                     } else if ("intern".equals(role)) {
                         session.setAttribute("user_id", rs.getInt("internid"));
                         session.setAttribute("name", rs.getString("name"));

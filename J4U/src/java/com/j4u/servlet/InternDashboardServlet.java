@@ -27,7 +27,7 @@ public class InternDashboardServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("iname") == null) {
-            response.sendRedirect("internlogin.html");
+            response.sendRedirect("auth/internlogin.html");
             return;
         }
 
@@ -53,7 +53,7 @@ public class InternDashboardServlet extends HttpServlet {
 
             request.setAttribute("uploadCaseList", uploadCaseList);
 
-            request.getRequestDispatcher("/interndashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("/intern/interndashboard.jsp").forward(request, response);
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Database error in InternDashboardServlet", e);

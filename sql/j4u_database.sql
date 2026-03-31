@@ -1,0 +1,1 @@
+-- Note: Copy contents from sql_scripts/db_schema_updates.sql here if primary schema

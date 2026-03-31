@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 -- Cust_Reg (Clients)
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
 CREATE TABLE IF NOT EXISTS `cust_reg` (
     `cid` int(11) NOT NULL AUTO_INCREMENT,
     `cname` varchar(255) NOT NULL,
@@ -221,16 +222,18 @@ CREATE TABLE IF NOT EXISTS `discussions` (
     FOREIGN KEY (`case_id`) REFERENCES `casetb`(`cid`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 -- Hearing Schedule
-CREATE TABLE IF NOT EXISTS `hearing_schedule` (
-    `hearing_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `hearings` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `case_id` int(11) NOT NULL,
     `hearing_date` date NOT NULL,
+    `hearing_time` time DEFAULT '10:00:00',
     `court_name` varchar(255) NOT NULL,
-    `remarks` text,
-    `created_by` varchar(200) NOT NULL,
-    `order_copy_path` varchar(500),
+    `court_address` varchar(500),
+    `notes` text,
+    `created_by` varchar(200),
+    `created_role` varchar(20) DEFAULT 'lawyer',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`hearing_id`),
+    PRIMARY KEY (`id`),
     KEY `case_id` (`case_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 -- Case Timeline
@@ -252,6 +255,11 @@ INSERT INTO `admin` (`email`, `pass`)
 VALUES ('admin', 'JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk='),
     ('admin@gmail.com', 'nkT02AxMCm6esBn87pYf4r6bcZzQBNKx4yWX5nWrS8cIX049Ay6hUwJtJ4Twejyy') ON DUPLICATE KEY
 UPDATE pass = 'JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk=';       
+
+-- Default Lawyer (Pre-Approved)
+INSERT INTO `lawyer_reg` (`lname`, `email`, `pass`, `status`, `flag`)
+VALUES ('Test Lawyer', 'lawyer@j4u.com', 'JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk=', 'Approved', 1)
+ON DUPLICATE KEY UPDATE pass = 'JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk=';       
 
 -- Justice4U Database Hardening Script
 -- This script upgrades the MySQL schema to professional diploma standards by enforcing strict integrity limits.
@@ -354,16 +362,18 @@ CREATE TABLE IF NOT EXISTS `discussions` (
     KEY `case_id` (`case_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 -- 5. Table for Hearing Schedule (referenced in manage_hearings.jsp)
-CREATE TABLE IF NOT EXISTS `hearing_schedule` (
-    `hearing_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `hearings` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `case_id` int(11) NOT NULL,
     `hearing_date` date NOT NULL,
+    `hearing_time` time DEFAULT '10:00:00',
     `court_name` varchar(255) NOT NULL,
-    `remarks` text,
-    `created_by` varchar(200) NOT NULL,
-    `order_copy_path` varchar(500),
+    `court_address` varchar(500),
+    `notes` text,
+    `created_by` varchar(200),
+    `created_role` varchar(20) DEFAULT 'lawyer',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`hearing_id`),
+    PRIMARY KEY (`id`),
     KEY `case_id` (`case_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 -- 6. Table for Case Timeline (referenced in manage_hearings.jsp)
@@ -459,4 +469,5 @@ CREATE TABLE IF NOT EXISTS `case_status` (
     `remarks` TEXT,
     PRIMARY KEY (`status_id`),
     KEY `alid` (`alid`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;

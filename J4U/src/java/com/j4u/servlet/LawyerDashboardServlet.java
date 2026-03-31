@@ -27,7 +27,7 @@ public class LawyerDashboardServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("lname") == null) {
-            response.sendRedirect("Lawyer_login.html");
+            response.sendRedirect("auth/Lawyer_login.html");
             return;
         }
 
@@ -62,9 +62,9 @@ public class LawyerDashboardServlet extends HttpServlet {
                 request.setAttribute("pendingInternWork", new java.util.ArrayList<>());
             }
 
-            request.getRequestDispatcher("/Lawyerdashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("/lawyer/Lawyerdashboard.jsp").forward(request, response);
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error in LawyerDashboardServlet", e);
             String errorMsg = e.getMessage() != null ? e.getMessage() : e.toString();
             response.sendRedirect("error.jsp?error=" + java.net.URLEncoder.encode(errorMsg, "UTF-8"));

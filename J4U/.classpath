@@ -5,16 +5,9 @@
 	<classpathentry kind="lib" path="web/WEB-INF/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/jsp-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/mysql-connector-j-9.4.0.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/activation.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/mail.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/mailapi.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/smtp.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/pop3.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/imap.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/dsn.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/gimap.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/commons-fileupload-1.5.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/commons-io-2.11.0.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/jakarta.mail-api.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/gson-2.10.1.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/jstl-1.2.jar"/>
 	<classpathentry kind="output" path="build/web/WEB-INF/classes"/>
 </classpath>

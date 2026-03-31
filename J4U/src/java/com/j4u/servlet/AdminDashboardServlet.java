@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 @WebServlet("/AdminDashboard")
 public class AdminDashboardServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(AdminDashboardServlet.class.getName());
-    private final AdminDAO adminDAO = new AdminDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -25,22 +24,11 @@ public class AdminDashboardServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("aname") == null) {
-            response.sendRedirect("Login.html");
+            response.sendRedirect(request.getContextPath() + "/auth/Login.jsp");
             return;
         }
 
-        try {
-            Map<String, Integer> metrics = adminDAO.getDashboardMetrics();
-            List<Map<String, Object>> pendingClients = adminDAO.getPendingClients(5);
-
-            request.setAttribute("metrics", metrics);
-            request.setAttribute("pendingClients", pendingClients);
-
-            request.getRequestDispatcher("/admindashboard.jsp").forward(request, response);
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Database error retrieving admin dashboard metrics", e);
-            throw new ServletException("Unable to load the Command Center successfully.", e);
-        }
+        // Forward to JSP - it loads its own data
+        request.getRequestDispatcher("/admin/admindashboard.jsp").forward(request, response);
     }
 }

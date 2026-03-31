@@ -25,14 +25,14 @@ public class ViewLawyersServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("aname") == null) {
-            response.sendRedirect("Login.html");
+            response.sendRedirect("auth/Login.html");
             return;
         }
 
         try {
             List<Map<String, Object>> pendingLawyers = lawyerDAO.getPendingLawyers();
             request.setAttribute("pendingLawyers", pendingLawyers);
-            request.getRequestDispatcher("/viewlawyers.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/viewlawyers.jsp").forward(request, response);
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Database error acquiring lawyers for admin review", e);

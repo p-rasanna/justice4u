@@ -15,20 +15,16 @@ public class AdminDAO {
     public Map<String, Integer> getDashboardMetrics() throws SQLException {
         Map<String, Integer> metrics = new HashMap<>();
 
-        String queryClients = "SELECT COUNT(*) FROM cust_reg";
-        String queryVerifyQueue = "SELECT COUNT(*) FROM cust_reg WHERE verification_status='PENDING'";
-        String queryPendingMatches = "SELECT COUNT(*) FROM customer_cases WHERE status='PENDING_LAWYER_CONFIRMATION'";
-        String queryLawyerReqs = "SELECT COUNT(*) FROM lawyer_reg WHERE flag=0";
-        String queryDocVerify = "SELECT COUNT(DISTINCT lawyer_id) FROM lawyer_documents WHERE status='PENDING'";
-        String queryInternApps = "SELECT COUNT(*) FROM intern WHERE flag=0";
+        String queryTotalCases = "SELECT COUNT(*) FROM customer_cases";
+        String queryTotalLawyers = "SELECT COUNT(*) FROM lawyer_reg WHERE flag=1";
+        String queryPendingLawyers = "SELECT COUNT(*) FROM lawyer_reg WHERE flag=0";
+        String queryPendingClients = "SELECT COUNT(*) FROM cust_reg WHERE verification_status='PENDING'";
 
         try (Connection con = DatabaseConfig.getConnection()) {
-            metrics.put("totalClients", executeCountQuery(con, queryClients));
-            metrics.put("verifyQueue", executeCountQuery(con, queryVerifyQueue));
-            metrics.put("pendingMatches", executeCountQuery(con, queryPendingMatches));
-            metrics.put("lawyerRequests", executeCountQuery(con, queryLawyerReqs));
-            metrics.put("docVerification", executeCountQuery(con, queryDocVerify));
-            metrics.put("internApps", executeCountQuery(con, queryInternApps));
+            metrics.put("total_cases", executeCountQuery(con, queryTotalCases));
+            metrics.put("total_lawyers", executeCountQuery(con, queryTotalLawyers));
+            metrics.put("pending_lawyers", executeCountQuery(con, queryPendingLawyers));
+            metrics.put("pending_clients", executeCountQuery(con, queryPendingClients));
         }
         return metrics;
     }
@@ -54,11 +50,10 @@ public class AdminDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Map<String, Object> client = new HashMap<>();
-                    client.put("id", rs.getInt("cid"));
-                    client.put("name", rs.getString("cname"));
+                    client.put("cid", rs.getInt("cid"));
+                    client.put("cname", rs.getString("cname"));
                     client.put("email", rs.getString("email"));
-                    client.put("mobile", rs.getString("mobno"));
-                    client.put("registrationDate", "N/A"); // Default since column doesn't exist
+                    client.put("mobno", rs.getString("mobno"));
                     clients.add(client);
                 }
             }

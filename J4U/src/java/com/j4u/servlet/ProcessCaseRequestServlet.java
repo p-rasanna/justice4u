@@ -46,7 +46,7 @@ public class ProcessCaseRequestServlet extends HttpServlet {
                 sessionEmail = cname.toString();
         }
         if (sessionEmail == null) {
-            response.sendRedirect("cust_login.html?error=session_expired");
+            response.sendRedirect("auth/cust_login.html?error=session_expired");
             return;
         }
 
@@ -124,13 +124,13 @@ public class ProcessCaseRequestServlet extends HttpServlet {
 
             if (transactionId == null || transactionId.trim().length() < 8) {
                 response.sendRedirect(
-                        "case.jsp?error=1&msg=Invalid+Transaction+ID.+Please+enter+a+valid+payment+reference.");
+                        "client/case.jsp?error=1&msg=Invalid+Transaction+ID.+Please+enter+a+valid+payment+reference.");
                 return;
             }
 
             Object[] custData = dao.getCustomerByEmail(sessionEmail);
             if (custData == null) {
-                response.sendRedirect("cust_login.html?error=session_expired");
+                response.sendRedirect("auth/cust_login.html?error=session_expired");
                 return;
             }
 
@@ -183,14 +183,16 @@ public class ProcessCaseRequestServlet extends HttpServlet {
                     dao.syncToAllotLawyer(caseId, selectedLawyerEmail);
                 }
 
-                response.sendRedirect("clientdashboard_manual.jsp?msg=Case Created Successfully!");
+                String pt = (String) session.getAttribute("profileType");
+                boolean isAdmin = pt != null && (pt.equalsIgnoreCase("admin") || pt.equalsIgnoreCase("admin_assigned") || pt.equalsIgnoreCase("assigned") || pt.equalsIgnoreCase("auto"));
+                response.sendRedirect("client/" + (isAdmin ? "customerdashboard.jsp" : "clientdashboard_manual.jsp") + "?msg=Case Created Successfully!");
             } else {
-                response.sendRedirect("case.jsp?error=1&msg=Database Insertion Failed");
+                response.sendRedirect("client/case.jsp?error=1&msg=Database Insertion Failed");
             }
 
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error processing case request", e);
-            response.sendRedirect("case.jsp?error=1&msg=" + URLEncoder.encode(e.getMessage(), "UTF-8"));
+            response.sendRedirect("client/case.jsp?error=1&msg=" + URLEncoder.encode(e.getMessage(), "UTF-8"));
         }
     }
 }

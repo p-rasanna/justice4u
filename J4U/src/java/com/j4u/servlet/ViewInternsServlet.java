@@ -25,14 +25,14 @@ public class ViewInternsServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("aname") == null) {
-            response.sendRedirect("Login.html");
+            response.sendRedirect("auth/Login.html");
             return;
         }
 
         try {
             List<Map<String, Object>> pendingInterns = internDAO.getPendingInterns();
             request.setAttribute("pendingInterns", pendingInterns);
-            request.getRequestDispatcher("/viewinterns.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/viewinterns.jsp").forward(request, response);
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Database error acquiring interns for admin review", e);

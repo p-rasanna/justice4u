@@ -1,7 +1,7 @@
 package com.j4u.servlet;
 
 import com.j4u.dao.UserDAO;
-import util.EmailUtil;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +34,7 @@ public class ViewCustomersServlet extends HttpServlet {
         try {
             List<Map<String, Object>> customers = userDAO.getAllClients();
             request.setAttribute("customers", customers);
-            request.getRequestDispatcher("/viewcustomers.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/viewcustomers.jsp").forward(request, response);
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Database error retrieving clients", e);
@@ -73,39 +73,13 @@ public class ViewCustomersServlet extends HttpServlet {
 
                 if ("approve".equals(action)) {
                     if (userDAO.updateVerificationStatus(customerId, "VERIFIED")) {
-                        try {
-                            EmailUtil.sendEmail(customerEmail, "Account Approved - Justice4U",
-                                    "Dear " + customerName + ",\n\n" +
-                                            "Congratulations! Your account has been approved and is now active.\n\n" +
-                                            "You can now login to your account and access our services.\n\n" +
-                                            "Login URL: http://localhost:8080/J4U/cust_login.html\n\n" +
-                                            "Best regards,\n" +
-                                            "Justice4U Team");
                             request.setAttribute("actionMessage",
-                                    "✅ Customer " + customerName + " approved and email sent successfully!");
-                        } catch (Exception e) {
-                            request.setAttribute("actionMessage",
-                                    "✅ Customer " + customerName + " approved, but email failed: " + e.getMessage());
-                        }
+                                    "✅ Customer " + customerName + " approved successfully!");
                     }
                 } else if ("reject".equals(action)) {
                     if (userDAO.updateVerificationStatus(customerId, "REJECTED")) {
-                        try {
-                            EmailUtil.sendEmail(customerEmail, "Account Registration Status - Justice4U",
-                                    "Dear " + customerName + ",\n\n" +
-                                            "We regret to inform you that your registration has been rejected after review.\n\n"
-                                            +
-                                            "If you believe this is an error or need clarification, please contact our support team.\n\n"
-                                            +
-                                            "Email: support@justice4u.com\n\n" +
-                                            "Best regards,\n" +
-                                            "Justice4U Team");
                             request.setAttribute("actionMessage",
-                                    "❌ Customer " + customerName + " rejected and email sent successfully!");
-                        } catch (Exception e) {
-                            request.setAttribute("actionMessage",
-                                    "❌ Customer " + customerName + " rejected, but email failed: " + e.getMessage());
-                        }
+                                    "❌ Customer " + customerName + " rejected successfully!");
                     }
                 } else {
                     request.setAttribute("actionMessage", "❌ Invalid action type.");

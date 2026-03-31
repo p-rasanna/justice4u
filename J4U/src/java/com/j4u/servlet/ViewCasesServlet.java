@@ -25,14 +25,14 @@ public class ViewCasesServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("aname") == null) {
-            response.sendRedirect("Login.html");
+            response.sendRedirect("auth/Login.html");
             return;
         }
 
         try {
             List<Map<String, Object>> unassignedCases = caseDAO.getUnassignedCases();
             request.setAttribute("unassignedCases", unassignedCases);
-            request.getRequestDispatcher("/viewcases.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/viewcases.jsp").forward(request, response);
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Database error acquiring cases for admin view", e);

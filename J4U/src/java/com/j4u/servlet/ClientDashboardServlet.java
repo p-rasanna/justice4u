@@ -33,7 +33,7 @@ public class ClientDashboardServlet extends HttpServlet {
         }
 
         if (email == null) {
-            response.sendRedirect("cust_login.html?msg=Session expired");
+            response.sendRedirect("auth/cust_login.html?msg=Session expired");
             return;
         }
 
@@ -45,7 +45,7 @@ public class ClientDashboardServlet extends HttpServlet {
             request.setAttribute("caseList", caseList);
 
             // Forward execution formally to the pure View JSP component
-            request.getRequestDispatcher("/client_viewcases.jsp").forward(request, response);
+            request.getRequestDispatcher("/client/client_viewcases.jsp").forward(request, response);
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Database error acquiring cases for client dashboard", e);

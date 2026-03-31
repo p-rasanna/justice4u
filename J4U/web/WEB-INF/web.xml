@@ -88,10 +88,26 @@
         <url-pattern>/upload_case_doc.jsp</url-pattern>
     </servlet-mapping>
 
+    <!-- Client Case Document Upload -->
+    <servlet>
+        <servlet-name>ClientUploadServlet</servlet-name>
+        <jsp-file>/client/uploadClientDoc.jsp</jsp-file>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>52428800</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClientUploadServlet</servlet-name>
+        <url-pattern>/client/uploadClientDoc.jsp</url-pattern>
+    </servlet-mapping>
+
     <!-- Security Filter Configuration -->
     <!-- Removed J4USecurityFilter for simplification -->
 
     <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
         <welcome-file>Home.html</welcome-file>
     </welcome-file-list>
 
@@ -108,14 +124,14 @@
     <!-- 100/100 Upgrade: Global Error Handling -->
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/error.jsp</location>
+        <location>/shared/error.jsp</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
-        <location>/404.jsp</location>
+        <location>/shared/404.jsp</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/error.jsp</location>
+        <location>/shared/error.jsp</location>
     </error-page>
 </web-app>
