@@ -16,11 +16,13 @@ ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 # Remove default Tomcat apps
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy web content from J4U directory
+# Copy web content
 COPY J4U/web/ /usr/local/tomcat/webapps/J4U/
-COPY J4U/build/web/WEB-INF/classes/ /usr/local/tomcat/webapps/J4U/WEB-INF/classes/ 2>/dev/null || true
-COPY J4U/build/web/WEB-INF/lib/ /usr/local/tomcat/webapps/J4U/WEB-INF/lib/ 2>/dev/null || true
-COPY J4U/web/WEB-INF/web.xml /usr/local/tomcat/webapps/J4U/WEB-INF/ 2>/dev/null || true
+
+# Copy compiled classes and libraries if they exist
+COPY J4U/build/web/WEB-INF/classes/ /usr/local/tomcat/webapps/J4U/WEB-INF/classes/
+COPY J4U/build/web/WEB-INF/lib/ /usr/local/tomcat/webapps/J4U/WEB-INF/lib/
+COPY J4U/web/WEB-INF/web.xml /usr/local/tomcat/webapps/J4U/WEB-INF/
 
 # Set permissions
 RUN chmod -R 755 /usr/local/tomcat/webapps/J4U
