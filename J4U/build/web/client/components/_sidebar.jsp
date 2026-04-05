@@ -1,12 +1,12 @@
 <aside class="sidebar">
     <div class="sidebar-header">
-        <a href="customerdashboard.jsp" class="sidebar-brand">
+        <a href="clientdashboard.jsp" class="sidebar-brand">
             <i class="ph-fill ph-scales text-gold" style="font-size: 1.5rem;"></i> JUSTICE4U
         </a>
     </div>
     <nav class="sidebar-nav d-flex flex-column">
         <span class="nav-section-label">General</span>
-        <a href="customerdashboard.jsp" class="nav-link <%= request.getRequestURI().contains("customerdashboard.jsp") ? "active":""%>"><i class="ph ph-squares-four"></i> Overview</a>
+        <a href="clientdashboard.jsp" class="nav-link <%= request.getRequestURI().contains("clientdashboard.jsp") ? "active":""%>"><i class="ph ph-squares-four"></i> Overview</a>
         
         <span class="nav-section-label">Services</span>
         <a href="requestHelp.jsp" class="nav-link <%= request.getRequestURI().contains("requestHelp") ? "active":""%>"><i class="ph ph-paper-plane-tilt"></i> Submit Request</a>

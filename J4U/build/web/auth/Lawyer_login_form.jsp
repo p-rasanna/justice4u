@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,12 +48,13 @@
             <i class="bi bi-exclamation-circle me-2"></i> <span id="alertMessage"></span>
         </div>
 
-        <form id="loginForm" novalidate>
+        <form id="loginForm" action="${pageContext.request.contextPath}/LoginServlet" method="post">
+            <input type="hidden" name="role" value="lawyer">
             <div class="mb-3">
                 <label class="form-label small fw-bold text-muted text-uppercase mb-1">Professional Identity</label>
                 <div class="input-wrapper">
                     <i class="bi bi-briefcase input-icon icon-left"></i>
-                    <input type="email" id="email" class="form-control" placeholder="counsel@justice4u.com" required>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="counsel@justice4u.com" required>
                 </div>
             </div>
             
@@ -63,7 +65,7 @@
                 </div>
                 <div class="input-wrapper">
                     <i class="bi bi-shield-lock input-icon icon-left"></i>
-                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
                     <i class="bi bi-eye input-icon icon-right" id="passToggle"></i>
                 </div>
             </div>
@@ -74,10 +76,10 @@
         </form>
 
         <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-            <a href="role_select.html" class="text-muted text-decoration-none small">
+            <a href="../landing/role_select.html" class="text-muted text-decoration-none small">
                 <i class="bi bi-arrow-left me-1"></i> Return
             </a>
-            <a href="../lawyer/lawyerReg.html" class="fw-bold text-decoration-none small" style="color: var(--navy);">
+            <a href="../landing/Lawyer.html" class="fw-bold text-decoration-none small" style="color: var(--navy);">
                 Apply for Network
             </a>
         </div>
@@ -88,12 +90,18 @@
     </div>
 
     <script>
-        // Check for URL parameters (e.g., ?msg=SessionExpired)
+        // Check for URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const msg = urlParams.get('msg');
-        if (msg) {
+        const errorMsg = urlParams.get('error');
+        const infoMsg = urlParams.get('msg');
+        if (errorMsg) {
             document.getElementById('alertBox').classList.remove('d-none');
-            document.getElementById('alertMessage').innerText = msg;
+            document.getElementById('alertMessage').innerText = decodeURIComponent(errorMsg);
+        }
+        if (infoMsg) {
+            document.getElementById('alertBox').classList.remove('d-none');
+            document.getElementById('alertBox').classList.replace('alert-danger', 'alert-info');
+            document.getElementById('alertMessage').innerText = decodeURIComponent(infoMsg);
         }
 
         // Password Visibility Toggle
@@ -108,37 +116,11 @@
             }
         });
 
-        // Form Submission Simulation
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Stop page reload
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const alertBox = document.getElementById('alertBox');
-            
-            // Basic Validation
-            if (!email || !password) {
-                alertBox.classList.remove('d-none');
-                document.getElementById('alertMessage').innerText = 'Please complete all required fields.';
-                return;
-            }
-            
-            alertBox.classList.add('d-none');
+        // Loading state on submit
+        document.getElementById('loginForm').addEventListener('submit', function() {
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Verifying...';
-
-            // Simulate Network Delay & Redirect to Dashboard
-            setTimeout(() => {
-                // Save session so dashboard knows who logged in
-                localStorage.setItem('justice4u_active_user', JSON.stringify({
-                    role: 'Lawyer',
-                    email: email,
-                    name: 'Active Counsel' 
-                }));
-                
-                window.location.href = '../index.html'; // Redirect to AdminLTE Dashboard
-            }, 1000);
         });
     </script>
 </body>

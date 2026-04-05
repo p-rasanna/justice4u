@@ -4,7 +4,7 @@
 <%
     String lEmail = (String) session.getAttribute("lname");
     if (lEmail == null) {
-        response.sendRedirect("../auth/Lawyer_login.html?error=Session expired");
+        response.sendRedirect("../auth/Lawyer_login_form.jsp?error=Session expired");
         return;
     }
     String alidStr = request.getParameter("alid");

@@ -1,0 +1,37 @@
+﻿TOTAL LINES: 13648
+TOTAL BLANK LINES: 1173
+TOTAL COMMENT LINES: 754
+TOTAL INSERT LINES (SQL): 16
+MAX REMOVABLE: 1943
+
+Top 30 files by line count:
+  [729 lines | -227 removable] /justice4u_final.sql
+  [423 lines | -73 removable] /web/shared/caseDiscussion.jsp
+  [330 lines | -33 removable] /web/landing/Home.html
+  [320 lines | -21 removable] /web/lawyer/Lawyerdashboard.jsp
+  [307 lines | -23 removable] /web/admin/admindashboard.jsp
+  [303 lines | -20 removable] /web/client/clientdashboard.jsp
+  [273 lines | -93 removable] /src/java/com/j4u/FileUploadUtil.java
+  [267 lines | -25 removable] /web/intern/interndashboard.jsp
+  [237 lines | -21 removable] /web/intern/intern.jsp
+  [226 lines | -37 removable] /src/java/com/j4u/AddCaseServlet.java
+  [221 lines | -27 removable] /web/client/client_case_details.jsp
+  [211 lines | -16 removable] /web/intern/viewcase_intern.jsp
+  [209 lines | -71 removable] /src/java/com/j4u/dao/LawyerDashboardDAO.java
+  [205 lines | -40 removable] /src/java/com/j4u/LoginServlet.java
+  [198 lines | -45 removable] /src/java/com/j4u/dao/CaseRequestDAO.java
+  [195 lines | -14 removable] /web/landing/Lawyer.html
+  [194 lines | -28 removable] /src/java/com/j4u/RegisterServlet.java
+  [193 lines | -55 removable] /src/java/com/j4u/SendMessageServlet.java
+  [192 lines | -29 removable] /src/java/com/j4u/servlet/ProcessInternServlet.java
+  [189 lines | -10 removable] /web/lawyer/manage_hearings.jsp
+  [185 lines | -14 removable] /web/landing/Lawyer.jsp
+  [176 lines | -8 removable] /web/admin/assign_intern_to_lawyer.jsp
+  [174 lines | -7 removable] /web/lawyer/viewcustdetails.jsp
+  [167 lines | -5 removable] /web/lawyer/viewcusdet.jsp
+  [161 lines | -12 removable] /web/client/case.jsp
+  [158 lines | -15 removable] /web/client/customer_form.jsp
+  [158 lines | -9 removable] /web/client/findlawyer.jsp
+  [157 lines | -22 removable] /web/shared/script.js
+  [155 lines | -10 removable] /web/admin/viewcustomers.jsp
+  [152 lines | -34 removable] /web/shared/app-layout.css

@@ -1,0 +1,28 @@
+# Build folders
+/build/
+dist/
+out/
+
+# Dependencies
+node_modules/
+
+# IDE
+.nbproject/
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.temp
+*.class
+
+# Environment
+.env
+.env.local

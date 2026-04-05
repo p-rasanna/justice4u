@@ -111,6 +111,21 @@
         <welcome-file>Home.html</welcome-file>
     </welcome-file-list>
 
+    <!-- Case Discussion Message Servlet (with file upload) -->
+    <servlet>
+        <servlet-name>SendMessageServlet</servlet-name>
+        <servlet-class>com.j4u.SendMessageServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>15728640</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SendMessageServlet</servlet-name>
+        <url-pattern>/SendMessageServlet</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>AddCaseServlet</servlet-name>
         <servlet-class>com.j4u.AddCaseServlet</servlet-class>

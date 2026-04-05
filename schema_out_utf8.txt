@@ -1,0 +1,27 @@
+﻿Field	Type	Null	Key	Default	Extra
+lid	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+email	varchar(200)	NO	UNI	NULL	
+pass	varchar(200)	NO		NULL	
+dob	varchar(200)	NO		NULL	
+phone	varchar(20)	YES		NULL	
+ano	varchar(200)	NO		NULL	
+cadd	varchar(200)	NO		NULL	
+padd	varchar(200)	NO		NULL	
+mop	varchar(200)	NO		NULL	
+tid	varchar(200)	NO		NULL	
+amt	varchar(200)	NO		NULL	
+flag	int(11)	NO		0	
+document_verification_status	varchar(20)	YES		PENDING	
+profile_pic	varchar(255)	YES		default_lawyer.jpg	
+designation	varchar(100)	YES		Advocate	
+bar_council_number	varchar(100)	YES		NULL	
+practicing_courts	text	YES		NULL	
+languages_spoken	varchar(255)	YES		NULL	
+verified	tinyint(1)	YES		0	
+address	text	YES		NULL	
+response_time_avg	varchar(50)	YES		4 hours	
+specialization	varchar(255)	YES		NULL	
+experience_years	int(11)	YES		0	
+security_question	varchar(255)	YES		NULL	
+security_answer	varchar(255)	YES		NULL	

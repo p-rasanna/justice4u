@@ -1,8 +1,4 @@
-/* ============================================================
-   JUSTICE4U — Premium Legal SaaS Token System
-   ============================================================ */
 :root {
-  /* Brand Colors - Minimalist SaaS Theme */
   --bg:         #F9FAFB;
   --bg-dark:    #111827;
   --surface:    #FFFFFF;
@@ -11,83 +7,70 @@
   --text:       #111827;
   --text-muted: #6B7280;
   --text-faint: #9CA3AF;
-  
   --gold:       #B4975A;
   --gold-light: #F3EFE4;
   --gold-dark:  #8E743F;
-  
-  /* Semantic Colors */
   --success:    #10B981;
   --error:      #EF4444;
   --warning:    #F59E0B;
   --info:       #3B82F6;
-
-  /* Typography */
   --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
   --font-serif: 'DM Serif Display', serif;
-
-  /* AdminLTE Overrides */
   --lte-brand-color: var(--gold);
   --lte-sidebar-bg: var(--bg-dark);
   --lte-sidebar-color: #D1D5DB;
   --lte-sidebar-hover-bg: rgba(255, 255, 255, 0.05);
 }
-
-/* Global Reset & Base Styles */
-body { 
-  background: var(--bg); 
-  color: var(--text); 
-  font-family: var(--font-sans); 
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-
 h1, h2, h3, h4, h5, h6, .text-serif {
   font-family: var(--font-serif);
   font-weight: 400;
   color: var(--text);
 }
-
-/* Premium Components */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: none; /* Minimal look */
-  transition: border-color 0.2s ease;
+  box-shadow: none;
 }
-
-.card:hover { border-color: rgba(180, 151, 90, 0.3); }
-
-.btn-primary, .btn-gold { 
-  background-color: var(--bg-dark); 
-  color: white; 
+.card:hover { border-color: rgba(180, 151, 90, 0.2); }
+.btn-primary, .btn-gold {
+  background-color: var(--bg-dark);
+  color: white;
   border: none;
   font-weight: 500;
   padding: 0.625rem 1.25rem;
   border-radius: 8px;
   transition: all 0.2s ease;
 }
-
 .btn-gold { background-color: var(--gold); }
-.btn-gold:hover { background-color: var(--gold-dark); transform: translateY(-1px); }
-
+.btn-gold:hover { background-color: var(--gold-dark); }
 .table { --bs-table-bg: transparent; }
-.table thead th { 
-  font-weight: 600; 
-  text-transform: uppercase; 
-  font-size: 0.75rem; 
-  letter-spacing: 0.05em; 
+.table thead th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
   color: var(--text-muted);
   border-bottom-width: 1px;
 }
-
-/* Sidebar Refinements */
-.app-sidebar .nav-link { border-radius: 8px; margin: 2px 8px; font-size: 0.9rem; }
+.app-sidebar { background: #111827 !important; }
+.app-sidebar .sidebar-brand { color: #fff; }
+.app-sidebar .nav-link { border-radius: 8px; margin: 2px 8px; font-size: 0.9rem; color: #D1D5DB !important; }
+.app-sidebar .nav-link p { color: #D1D5DB !important; margin: 0; }
+.app-sidebar .nav-link i.nav-icon { color: #9CA3AF !important; }
+.app-sidebar .nav-link:hover:not(.active) { background: rgba(255, 255, 255, 0.08); }
+.app-sidebar .nav-link:hover:not(.active) p { color: #fff !important; }
 .app-sidebar .nav-link.active { background: var(--gold) !important; color: white !important; }
-.app-sidebar .nav-link:hover:not(.active) { background: var(--lte-sidebar-hover-bg); }
-
-/* Status Badges */
+.app-sidebar .nav-link.active p { color: white !important; }
+.app-sidebar .nav-link.active i.nav-icon { color: white !important; }
+.app-sidebar .nav-header { color: rgba(255,255,255,0.4) !important; font-size: 0.7rem !important; letter-spacing: 0.08em; }
+.app-sidebar .sidebar-wrapper { overflow-y: auto; }
 .badge { font-weight: 500; padding: 0.35em 0.65em; border-radius: 6px; }
 .badge-gold-subtle { background: var(--gold-light); color: var(--gold-dark); }
-

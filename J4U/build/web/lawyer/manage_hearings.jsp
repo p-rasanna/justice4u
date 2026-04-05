@@ -26,7 +26,7 @@
                 }
             }
             try(Connection con=DatabaseConfig.getConnection()){
-                PreparedStatement ps=con.prepareStatement("INSERT INTO hearing_schedule (alid,hearing_date,court_name,remarks,created_by,order_copy_path) VALUES (?,?,?,?,?,?)");
+                PreparedStatement ps=con.prepareStatement("INSERT INTO hearings (case_id,hearing_date,court_name,notes,created_by,order_copy_path) VALUES (?,?,?,?,?,?)");
                 ps.setInt(1,Integer.parseInt(cid)); ps.setString(2,date); ps.setString(3,court); ps.setString(4,rem); ps.setString(5,user); ps.setString(6,path); 
                 ps.executeUpdate();
             } 
@@ -40,12 +40,12 @@
     
     java.util.List<String[]> hList=new java.util.ArrayList<>(), cList=new java.util.ArrayList<>();
     try(Connection con=DatabaseConfig.getConnection()){
-        PreparedStatement ps=con.prepareStatement("SELECT a.alid, a.title FROM allotlawyer a JOIN case_status cs ON a.alid=cs.alid WHERE a.lname=? AND cs.status IN ('ACCEPTED','IN_PROGRESS')");
+        PreparedStatement ps=con.prepareStatement("SELECT a.alid, a.title FROM allotlawyer a JOIN case_status cs ON a.alid=cs.alid WHERE a.lname=? AND cs.status IN ('ACCEPTED','IN_PROGRESS','ACTIVE')");
         ps.setString(1,user); 
         ResultSet rs=ps.executeQuery(); 
         while(rs.next()) cList.add(new String[]{String.valueOf(rs.getInt(1)),rs.getString(2)});
         
-        ps=con.prepareStatement("SELECT hs.*, a.title FROM hearing_schedule hs JOIN allotlawyer a ON hs.alid=a.alid WHERE hs.created_by=? ORDER BY hs.hearing_date DESC");
+        ps=con.prepareStatement("SELECT h.*, a.title FROM hearings h JOIN allotlawyer a ON h.case_id=a.cid WHERE h.created_by=? ORDER BY h.hearing_date DESC");
         ps.setString(1,user); 
         rs=ps.executeQuery(); 
         while(rs.next()) hList.add(new String[]{rs.getString("hearing_date"),rs.getString("court_name"),rs.getString("title"),rs.getString("remarks"),rs.getString("order_copy_path")});

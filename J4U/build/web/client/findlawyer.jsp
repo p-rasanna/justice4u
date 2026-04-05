@@ -6,36 +6,42 @@
 %>
 <!DOCTYPE html>
 <html lang="en">
-<jsp:include page="components/_head.jsp"><jsp:param name="title" value="Attorney Directory"/></jsp:include>
+<jsp:include page="../shared/_head.jsp"><jsp:param name="title" value="Attorney Directory"/></jsp:include>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
-        <jsp:include page="components/_sidebar.jsp" />
+        <jsp:include page="../shared/_sidebar.jsp" />
         <main class="app-main">
-            <jsp:include page="components/_topbar.jsp">
-                <jsp:param name="title" value="Legal Counsel"/>
-                <jsp:param name="subtitle" value="Expert Attorney Directory"/>
+            <jsp:include page="../shared/_topbar.jsp">
+                <jsp:param name="title" value="Find Lawyer"/>
             </jsp:include>
             
             <div class="app-content pt-4">
                 <div class="container-fluid">
                     <!-- Search Header -->
-                    <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
-                        <div class="card-body p-4 p-md-5 bg-dark text-white position-relative">
-                            <div class="position-absolute top-50 end-0 translate-middle-y opacity-10 pe-5 d-none d-lg-block">
-                                <i class="bi bi-search" style="font-size: 8rem;"></i>
-                            </div>
+                    <div class="card border-0 mb-4 overflow-hidden">
+                        <div class="card-body p-4 p-md-5 text-white position-relative" style="background: linear-gradient(135deg, #111827 0%, #1f2937 100%);">
                             <div class="row position-relative">
-                                <div class="col-lg-7 text-start">
-                                    <h3 class="fw-bold text-serif mb-3">Find Expert Counsel</h3>
-                                    <p class="text-white-50 mb-4">Search across our verified network of specialized attorneys and legal associates.</p>
+                                <div class="col-lg-7">
+                                    <h3 class="fw-bold text-serif mb-2">Find Expert Counsel</h3>
+                                    <p class="opacity-75 mb-4 small">Search across our verified network of specialized attorneys.</p>
                                     <form action="findlawyer.jsp" method="get" class="d-flex gap-2">
-                                        <input type="hidden" name="case_id" value="<%=cid!=null?cid:""%>">
-                                        <div class="input-group input-group-lg shadow-sm">
-                                            <span class="input-group-text bg-white border-0 ps-4"><i class="bi bi-search text-muted"></i></span>
-                                            <input type="text" name="q" class="form-control border-0 py-3" placeholder="Search by name, expertise, or location..." value="<%=q!=null?q:""%>" aria-label="Search Counsel">
-                                            <button type="submit" class="btn btn-gold px-4 fw-bold">Search</button>
+                                        <% if(cid!=null && !cid.isEmpty()) { %>
+                                        <input type="hidden" name="case_id" value="<%=cid%>">
+                                        <% } %>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-white border-0 ps-3"><i class="bi bi-search text-muted"></i></span>
+                                            <input type="text" name="q" class="form-control border-0 py-2" placeholder="Search by name, specialization, or location..." value="<%=q!=null?q:""%>">
+                                            <button type="submit" class="btn px-4 fw-semibold" style="background:var(--gold);color:#111827;border:none;">Search</button>
                                         </div>
                                     </form>
+                                    <% if(cid!=null && !cid.isEmpty()) { %>
+                                    <div class="mt-3">
+                                        <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2">
+                                            <i class="bi bi-link-45deg me-1"></i>Selecting lawyer for Case #<%=cid%>
+                                        </span>
+                                        <a href="clientdashboard.jsp" class="btn btn-sm btn-outline-secondary ms-2">Cancel</a>
+                                    </div>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
@@ -45,8 +51,8 @@
                     <div class="row g-4">
                         <%
                         try(Connection con=DatabaseConfig.getConnection()){
-                            String sql="SELECT * FROM lawyer_reg WHERE flag=1 OR document_verification_status='VERIFIED'";
-                            if(q!=null && !q.trim().isEmpty()) sql+=" AND (name LIKE ? OR specialization LIKE ? OR cadd LIKE ?)";
+                            String sql="SELECT name, email, practice_area, experience_years, cadd FROM lawyer_reg WHERE flag=1";
+                            if(q!=null && !q.trim().isEmpty()) sql+=" AND (name LIKE ? OR practice_area LIKE ? OR cadd LIKE ?)";
                             PreparedStatement ps=con.prepareStatement(sql);
                             if(q!=null && !q.trim().isEmpty()){ 
                                 String s="%"+q.trim()+"%"; 
@@ -56,59 +62,67 @@
                             boolean none=true;
                             while(rs.next()){ 
                                 none=false; 
-                                String name=rs.getString("name"), 
-                                       email=rs.getString("email"), 
-                                       spec=rs.getString("specialization"), 
+                                String lname=rs.getString("name"), 
+                                       lemail=rs.getString("email"), 
+                                       spec=rs.getString("practice_area"), 
                                        loc=rs.getString("cadd"), 
                                        exp=rs.getString("experience_years");
-                                if(name==null || name.isEmpty()) name=rs.getString("fname")+" "+rs.getString("lname"); 
+                                if(lname==null || lname.isEmpty()) lname="Attorney";
+                                String desig = null; // designation column does not exist — removed
                         %>
                             <div class="col-xl-4 col-md-6">
-                                <div class="card border-0 shadow-sm rounded-4 h-100 attorney-card transition-base overflow-hidden">
-                                    <div class="card-body p-4 text-start">
+                                <div class="card border-0 h-100">
+                                    <div class="card-body p-4">
                                         <div class="d-flex align-items-center mb-3">
-                                            <div class="bg-gold-subtle text-gold rounded-circle d-flex align-items-center justify-content-center fw-bold text-serif" style="width:48px; height:48px;">
-                                                <%= name.charAt(0) %>
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-serif" style="width:48px; height:48px; background:var(--gold-light); color:var(--gold-dark);">
+                                                <%= lname.charAt(0) %>
                                             </div>
                                             <div class="ms-3">
-                                                <h5 class="fw-bold mb-0 text-serif">Adv. <%= name %></h5>
-                                                <span class="badge bg-gold-subtle text-gold text-uppercase fw-bold" style="font-size: 0.6rem; letter-spacing: 0.5px;">verified</span>
+                                                <h6 class="fw-bold mb-0 text-serif">Adv. <%= lname %></h6>
+                                                <span class="badge fw-normal px-2 py-1" style="font-size: 0.65rem; background:var(--gold-light); color:var(--gold-dark);">
+                                                    <i class="bi bi-patch-check-fill me-1"></i>Verified
+                                                </span>
                                             </div>
                                         </div>
                                         
-                                        <div class="mb-4">
-                                            <div class="text-muted small fw-bold text-uppercase ls-1 mb-1">Specialization</div>
-                                            <div class="text-dark small"><%= spec != null ? spec : "General Jurisprudence" %></div>
+                                        <% if(desig != null && !desig.isEmpty()) { %>
+                                        <p class="small text-muted mb-3"><%= desig %></p>
+                                        <% } %>
+
+                                        <div class="mb-3">
+                                            <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size:0.65rem; letter-spacing:0.5px;">Specialization</div>
+                                            <div class="small"><%= spec != null ? spec : "General Practice" %></div>
                                         </div>
 
-                                        <div class="row g-2 mb-4">
+                                        <div class="row g-2 mb-3">
                                             <div class="col-6">
-                                                <div class="bg-light rounded-3 p-2 text-center border border-light-subtle">
-                                                    <div class="text-muted small text-uppercase" style="font-size: 0.6rem;">Experience</div>
-                                                    <div class="fw-bold small text-dark"><%= exp != null ? exp : "0" %>+ Years</div>
+                                                <div class="rounded-3 p-2 text-center" style="background:var(--bg);">
+                                                    <div class="text-muted" style="font-size: 0.6rem; text-transform:uppercase;">Experience</div>
+                                                    <div class="fw-bold small"><%= exp != null ? exp : "0" %>+ Yrs</div>
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <div class="bg-light rounded-3 p-2 text-center border border-light-subtle">
-                                                    <div class="text-muted small text-uppercase" style="font-size: 0.6rem;">Location</div>
-                                                    <div class="fw-bold small text-dark text-truncate px-1" title="<%= loc != null ? loc : "N/A" %>">
-                                                        <%= loc != null ? loc : "Pan India" %>
-                                                    </div>
+                                                <div class="rounded-3 p-2 text-center" style="background:var(--bg);">
+                                                    <div class="text-muted" style="font-size: 0.6rem; text-transform:uppercase;">Location</div>
+                                                    <div class="fw-bold small text-truncate" title="<%= loc != null ? loc : "N/A" %>"><%= loc != null ? loc : "N/A" %></div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex gap-2 mt-auto">
-                                            <a href="../lawyer/lawyerprofile.jsp?id=<%= email %>" class="btn btn-sm btn-outline-dark flex-fill rounded-3 py-2 fw-semibold">
-                                                View Identity
-                                            </a>
+                                        <div class="d-flex gap-2">
                                             <% if(cid!=null && !cid.isEmpty()){ %>
-                                                <a href="update_case_lawyer.jsp?case_id=<%= cid %>&lawyer_email=<%= email %>" class="btn btn-sm btn-gold flex-fill rounded-3 py-2 fw-bold shadow-sm border-0">
-                                                    Assign File
-                                                </a>
+                                                <%-- Case exists: send REQUEST directly to this lawyer for the existing case --%>
+                                                <form action="send_lawyer_request.jsp" method="post" class="flex-fill">
+                                                    <input type="hidden" name="case_id" value="<%=cid%>">
+                                                    <input type="hidden" name="lawyer_email" value="<%= lemail %>">
+                                                    <button type="submit" class="btn btn-sm w-100 py-2 fw-semibold" style="background:var(--gold);color:#111827;border:none;">
+                                                        <i class="bi bi-send me-1"></i>Send Request
+                                                    </button>
+                                                </form>
                                             <% } else { %>
-                                                <a href="../client/requestlawyer.jsp?lawyer_email=<%= email %>" class="btn btn-sm btn-gold flex-fill rounded-3 py-2 fw-bold shadow-sm border-0">
-                                                    Request Counsel
+                                                <%-- No case yet: go to case filing form with lawyer pre-selected --%>
+                                                <a href="case.jsp?lawyer_email=<%= lemail %>&lawyer_name=<%= lname %>" class="btn btn-sm flex-fill py-2 fw-semibold" style="background:var(--gold);color:#111827;border:none;">
+                                                    <i class="bi bi-file-plus me-1"></i>File & Request
                                                 </a>
                                             <% } %>
                                         </div>
@@ -120,10 +134,10 @@
                             if(none){ 
                         %>
                             <div class="col-12">
-                                <div class="card border-0 shadow-sm rounded-4 text-center py-5">
+                                <div class="card border-0 text-center py-5">
                                     <div class="card-body">
                                         <i class="bi bi-person-x display-4 text-muted opacity-25"></i>
-                                        <h5 class="mt-3 text-muted">No counsel profiles matched your search parameters.</h5>
+                                        <h5 class="mt-3 text-muted">No counsel profiles matched your search.</h5>
                                         <p class="small text-muted">Try using broader keywords or clearing the search filter.</p>
                                         <a href="findlawyer.jsp" class="btn btn-outline-dark px-4 mt-2">Clear Filter</a>
                                     </div>
@@ -136,9 +150,8 @@
                     </div>
                 </div>
             </div>
-            <jsp:include page="components/_footer.jsp" />
+            <jsp:include page="../shared/_footer.jsp" />
         </main>
     </div>
 </body>
 </html>
-

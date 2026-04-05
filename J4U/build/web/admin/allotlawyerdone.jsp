@@ -28,13 +28,13 @@
             psUp.setInt(1,rsL.getInt(1)); psUp.setInt(2,cid); psUp.executeUpdate();
         }
         
-        try (PreparedStatement psUpCase = con.prepareStatement("UPDATE casetb SET status='ASSIGNED', flag=1 WHERE cid=?")) {
+        try (PreparedStatement psUpCase = con.prepareStatement("UPDATE casetb SET status='PENDING_ACCEPTANCE', flag=0 WHERE cid=?")) {
             psUpCase.setInt(1, cid);
             psUpCase.executeUpdate();
         }
 
         NotificationService.create(lname, "You have been assigned a new case: " + title, "case", "../lawyer/Lawyerdashboard.jsp");
-        NotificationService.create(cname, "A lawyer has been assigned to your case: " + title, "case", "../client/mycases.jsp");
+        NotificationService.create(cname, "A lawyer has been assigned to your case: " + title, "case", "../client/clientdashboard.jsp");
 
         response.sendRedirect("admindashboard.jsp?msg=Allotment confirmed");
     } catch(Exception e){ e.printStackTrace(); response.sendRedirect("admindashboard.jsp?msg=Error: "+java.net.URLEncoder.encode(e.getMessage(),"UTF-8")); }

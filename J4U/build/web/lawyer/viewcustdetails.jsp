@@ -7,7 +7,7 @@
   String lnameSession = (String) session.getAttribute("lname");
   if (lnameSession == null) {
     session.invalidate();
-    response.sendRedirect("../auth/Lawyer_login.html");
+    response.sendRedirect("../auth/Lawyer_login_form.jsp");
     return;
   }
 %>

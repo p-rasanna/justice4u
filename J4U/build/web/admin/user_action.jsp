@@ -19,13 +19,17 @@
         }
         
         if("client".equals(type)){
-            PreparedStatement ps1 = con.prepareStatement("UPDATE cust_reg SET flag=?, verification_status=? WHERE cid=?"); ps1.setInt(1, flagStatus); ps1.setString(2, vs); ps1.setInt(3, id); ps1.executeUpdate();
+            // cust_reg has no 'flag' column — use verification_status only
+            PreparedStatement ps1 = con.prepareStatement("UPDATE cust_reg SET verification_status=? WHERE cid=?");
+            ps1.setString(1, vs); ps1.setInt(2, id); ps1.executeUpdate();
             if(email!=null){
-                PreparedStatement np=con.prepareStatement("INSERT INTO notifications (user_email, user_role, message) VALUES (?,'client',?)");
+                PreparedStatement np=con.prepareStatement("INSERT INTO notifications (user_email, message, type) VALUES (?,?,'case')");
                 np.setString(1,email); np.setString(2,"approve".equals(action)?"Your account has been verified. You can now access full platform features.":"Your account configuration requires further review or has been rejected."); np.executeUpdate();
             }
         }else if("lawyer".equals(type)){
-            PreparedStatement ps1 = con.prepareStatement("UPDATE lawyer_reg SET flag=? WHERE lid=?"); ps1.setInt(1, flagStatus); ps1.setInt(2, id); ps1.executeUpdate();
+            // lawyer_reg uses 'flag'
+            PreparedStatement ps1 = con.prepareStatement("UPDATE lawyer_reg SET flag=? WHERE lid=?");
+            ps1.setInt(1, flagStatus); ps1.setInt(2, id); ps1.executeUpdate();
         }else if("intern".equals(type)){
             con.prepareStatement("UPDATE intern SET flag="+flagStatus+" WHERE internid="+id).executeUpdate();
             if(email!=null) con.prepareStatement("UPDATE intern_profiles SET verification_status='"+vs+"' WHERE intern_email='"+email+"'").executeUpdate();

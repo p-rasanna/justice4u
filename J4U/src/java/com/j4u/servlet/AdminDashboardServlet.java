@@ -1,5 +1,4 @@
 package com.j4u.servlet;
-
 import com.j4u.dao.AdminDAO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,22 +12,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 @WebServlet("/AdminDashboard")
 public class AdminDashboardServlet extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(AdminDashboardServlet.class.getName());
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("aname") == null) {
-            response.sendRedirect(request.getContextPath() + "/auth/Login.jsp");
-            return;
-        }
-
-        // Forward to JSP - it loads its own data
-        request.getRequestDispatcher("/admin/admindashboard.jsp").forward(request, response);
+  private static final Logger LOGGER = Logger.getLogger(AdminDashboardServlet.class.getName());
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    if (session == null || session.getAttribute("aname") == null) {
+      response.sendRedirect(request.getContextPath() + "/auth/Login.jsp");
+      return;
     }
+    request.getRequestDispatcher("/admin/admindashboard.jsp").forward(request, response);
+  }
 }

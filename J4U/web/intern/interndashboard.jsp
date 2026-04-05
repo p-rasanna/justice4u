@@ -1,214 +1,242 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.sql.*,com.j4u.DatabaseConfig" %>
 <%
-    String iEmail=(String)session.getAttribute("iname"); 
-    if(iEmail==null){response.sendRedirect("../auth/Login.jsp");return;}
-    
-    String action=request.getParameter("action"), tidS=request.getParameter("task_id");
-    if(action!=null && tidS!=null){
-        try(Connection con=DatabaseConfig.getConnection()){
-            int tid=Integer.parseInt(tidS); 
-            String st="accept".equals(action)?"IN_PROGRESS":"REJECTED";
-            PreparedStatement ps=con.prepareStatement("UPDATE intern_tasks SET status=? WHERE task_id=? AND intern_email=?");
-            ps.setString(1,st); ps.setInt(2,tid); ps.setString(3,iEmail); ps.executeUpdate();
-            if("accept".equals(action)){
-                PreparedStatement p=con.prepareStatement("SELECT case_alid, title FROM intern_tasks WHERE task_id=?"); 
-                p.setInt(1,tid); 
-                ResultSet r=p.executeQuery();
-                if(r.next()){
-                    PreparedStatement pi=con.prepareStatement("INSERT INTO case_timeline (alid,event_type,event_description,created_by) VALUES (?,'TASK_ACCEPTED',?,?)");
-                    pi.setInt(1,r.getInt(1)); 
-                    pi.setString(2,"Accepted task: "+r.getString(2)); 
-                    pi.setString(3,iEmail); 
-                    pi.executeUpdate();
-                }
-            }
-        }catch(Exception e){} 
-        response.sendRedirect("interndashboard.jsp?msg=Task updated"); 
-        return;
+  String iEmail=(String)session.getAttribute("iname");
+  if(iEmail==null){response.sendRedirect("../auth/Login.jsp");return;}
+  String lawyerEmail=null, lawyerName=null;
+  String assignStatus=null;
+  java.util.List<String[]> cases=new java.util.ArrayList<>();
+  try(Connection con=DatabaseConfig.getConnection()){
+    String internName = iEmail;
+    try(PreparedStatement pn=con.prepareStatement("SELECT name FROM intern WHERE email=?")){
+      pn.setString(1,iEmail);
+      ResultSet rn=pn.executeQuery();
+      if(rn.next() && rn.getString(1)!=null) internName=rn.getString(1);
     }
-    
-    int pnd=0, inp=0, cmp=0; 
-    java.util.List<String[]> tasks=new java.util.ArrayList<>(), cases=new java.util.ArrayList<>();
-    try(Connection con=DatabaseConfig.getConnection()){
-        PreparedStatement ps=con.prepareStatement("SELECT status, COUNT(*) FROM intern_tasks WHERE intern_email=? GROUP BY status"); 
-        ps.setString(1,iEmail); 
-        ResultSet rs=ps.executeQuery();
-        while(rs.next()){ 
-            String s=rs.getString(1); 
-            int c=rs.getInt(2); 
-            if(s.toUpperCase().contains("PENDING")) pnd+=c; 
-            else if(s.equals("IN_PROGRESS")) inp+=c; 
-            else if(s.equals("COMPLETED")) cmp+=c; 
-        }
-        ps=con.prepareStatement("SELECT task_id, title, due_date, status FROM intern_tasks WHERE intern_email=? AND status!='REJECTED' ORDER BY task_id DESC"); 
-        ps.setString(1,iEmail); 
-        rs=ps.executeQuery();
-        while(rs.next()) tasks.add(new String[]{String.valueOf(rs.getInt(1)), rs.getString(2), rs.getString(3), rs.getString(4)});
-        
-        ps=con.prepareStatement("SELECT a.alid, a.title, a.lname, ia.assigned_date FROM intern_assignments ia JOIN allotlawyer a ON ia.alid=a.alid WHERE ia.intern_email=? AND ia.status='ACTIVE'"); 
-        ps.setString(1,iEmail); 
-        rs=ps.executeQuery();
-        while(rs.next()) cases.add(new String[]{String.valueOf(rs.getInt(1)), rs.getString(2), rs.getString(3), rs.getString(4)});
-    }catch(Exception e){}
+    PreparedStatement ps=con.prepareStatement(
+      "SELECT ila.status, ila.lawyer_email, lr.name as lawyer_name " +
+      "FROM intern_lawyer_assignments ila " +
+      "JOIN lawyer_reg lr ON ila.lawyer_email=lr.email " +
+      "WHERE ila.intern_email=? AND ila.status IN ('PENDING','ACCEPTED') " +
+      "ORDER BY ila.assigned_date DESC LIMIT 1"
+    );
+    ps.setString(1,iEmail);
+    ResultSet rs=ps.executeQuery();
+    if(rs.next()){
+      assignStatus=rs.getString("status");
+      lawyerEmail=rs.getString("lawyer_email");
+      lawyerName=rs.getString("lawyer_name");
+    }
+    if("ACCEPTED".equals(assignStatus) && lawyerEmail!=null){
+      PreparedStatement pc=con.prepareStatement(
+        "SELECT c.cid, c.title, c.cname as client, c.courttype, c.city, c.curdate, c.flag " +
+        "FROM casetb c " +
+        "JOIN allotlawyer al ON al.cid=c.cid " +
+        "WHERE al.lname=? AND c.flag>=1 " +
+        "ORDER BY c.cid DESC"
+      );
+      pc.setString(1, lawyerEmail);
+      ResultSet rc=pc.executeQuery();
+      while(rc.next()){
+        cases.add(new String[]{
+          String.valueOf(rc.getInt("cid")),
+          rc.getString("title"),
+          rc.getString("client"),
+          rc.getString("courttype") != null ? rc.getString("courttype") : "",
+          rc.getString("city") != null ? rc.getString("city") : "",
+          rc.getString("curdate") != null ? rc.getString("curdate") : "",
+          rc.getInt("flag") == 1 ? "ACTIVE" : "CLOSED"
+        });
+      }
+    }
 %>
 <!DOCTYPE html>
 <html lang="en">
 <jsp:include page="../shared/_head.jsp">
-    <jsp:param name="title" value="Intern Workspace"/>
+  <jsp:param name="title" value="Intern Dashboard"/>
 </jsp:include>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <div class="app-wrapper">
-        <jsp:include page="../shared/_topbar.jsp" />
-        <jsp:include page="../shared/_sidebar.jsp" />
-        
-        <main class="app-main">
-            <!-- Content Header -->
-            <div class="app-content-header">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h3 class="mb-0 text-serif">Intern Workspace</h3>
-                        </div>
-                        <div class="col-sm-6 text-end">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#" class="text-gold">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
+  <div class="app-wrapper">
+    <jsp:include page="../shared/_topbar.jsp" />
+    <jsp:include page="../shared/_sidebar.jsp" />
+    <main class="app-main">
+      <div class="app-content-header mb-4">
+        <div class="container-fluid">
+          <div class="row align-items-center">
+            <div class="col-sm-6">
+              <h2 class="mb-0 text-serif fw-bold">Intern Workspace</h2>
+              <p class="text-muted small mb-0">Your legal practice training portal</p>
             </div>
-
-            <!-- Content Body -->
-            <div class="app-content">
-                <div class="container-fluid">
-                    <% if(request.getParameter("msg")!=null){ %>
-                        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4">
-                            <i class="bi bi-info-circle-fill me-2"></i>
-                            <%=request.getParameter("msg")%>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <% } %>
-
-                    <!-- Stats Boxes -->
-                    <div class="row g-4 mb-4">
-                        <div class="col-12 col-sm-6 col-md-4">
-                            <div class="info-box shadow-sm">
-                                <span class="info-box-icon bg-warning shadow-sm"><i class="bi bi-clock-history"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text text-uppercase small fw-bold text-muted">Pending Tasks</span>
-                                    <span class="info-box-number h4 mb-0"><%=pnd%></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-4">
-                            <div class="info-box shadow-sm">
-                                <span class="info-box-icon bg-primary shadow-sm"><i class="bi bi-play-circle-fill"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text text-uppercase small fw-bold text-muted">In Progress</span>
-                                    <span class="info-box-number h4 mb-0"><%=inp%></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-4">
-                            <div class="info-box shadow-sm">
-                                <span class="info-box-icon bg-success shadow-sm"><i class="bi bi-check-circle-fill"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text text-uppercase small fw-bold text-muted">Completed</span>
-                                    <span class="info-box-number h4 mb-0"><%=cmp%></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row g-4">
-                        <div class="col-lg-7">
-                            <!-- Action Queue Card -->
-                            <div class="card shadow-sm mb-4">
-                                <div class="card-header border-0 bg-transparent">
-                                    <h3 class="card-title text-serif"><i class="bi bi-list-task text-gold me-2"></i> Action Queue</h3>
-                                </div>
-                                <div class="card-body p-0">
-                                    <div class="list-group list-group-flush">
-                                        <% 
-                                            boolean anyTask = false;
-                                            for(String[] t : tasks){ 
-                                                boolean isPending = t[3].toUpperCase().contains("PENDING") || t[3].equals("Assigned");
-                                                boolean isInProgress = t[3].equals("IN_PROGRESS");
-                                                if(isPending || isInProgress){ 
-                                                    anyTask = true;
-                                        %>
-                                            <div class="list-group-item p-4">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <h6 class="mb-1 fw-bold"><%=t[1]%></h6>
-                                                        <small class="text-muted"><i class="bi bi-calendar-event text-gold me-1"></i> Due Date: <%=t[2]%></small>
-                                                    </div>
-                                                    <div class="btn-group">
-                                                        <% if(isPending){ %>
-                                                            <a href="?action=accept&task_id=<%=t[0]%>" class="btn btn-sm btn-gold px-3">Accept</a>
-                                                            <a href="?action=reject&task_id=<%=t[0]%>" class="btn btn-sm btn-outline-danger ms-2">Decline</a>
-                                                        <% } else { %>
-                                                            <a href="uploadInternWork.jsp?task_id=<%=t[0]%>" class="btn btn-sm btn-dark px-3">
-                                                                <i class="bi bi-cloud-upload me-1"></i> Submit Work
-                                                            </a>
-                                                        <% } %>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <% 
-                                                } 
-                                            } 
-                                            if(!anyTask){ 
-                                        %>
-                                            <div class="p-5 text-center text-muted">
-                                                <i class="bi bi-check2-all fs-1 d-block mb-2 opacity-25"></i> 
-                                                No tasks in your queue currently.
-                                            </div>
-                                        <% } %>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-5">
-                            <!-- Active Cases Card -->
-                            <div class="card shadow-sm">
-                                <div class="card-header border-0 bg-transparent">
-                                    <h3 class="card-title text-serif"><i class="bi bi-briefcase-fill text-gold me-2"></i> Active Cases</h3>
-                                </div>
-                                <div class="card-body p-0">
-                                    <div class="list-group list-group-flush">
-                                        <% for(String[] c : cases){ %>
-                                            <div class="list-group-item p-4 d-flex align-items-center justify-content-between">
-                                                <div>
-                                                    <h6 class="mb-1 fw-bold"><%=c[1]%></h6>
-                                                    <small class="text-muted"><i class="bi bi-person-badge-fill text-gold me-1"></i> Adv. <%=c[2]%></small>
-                                                </div>
-                                                <a href="viewcase_intern.jsp?id=<%=c[0]%>" class="btn btn-sm btn-outline-gold border-2" title="View Case Details">
-                                                    <i class="bi bi-arrow-right"></i>
-                                                </a>
-                                            </div>
-                                        <% } if(cases.isEmpty()){ %>
-                                            <div class="p-5 text-center text-muted">
-                                                <i class="bi bi-folder-x fs-1 d-block mb-2 opacity-25"></i>
-                                                No cases assigned yet.
-                                            </div>
-                                        <% } %>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-light-subtle text-center border-0 py-2">
-                                    <a href="intern.jsp" class="text-gold small fw-bold text-decoration-none">View All Assignments</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-sm-6 text-end d-none d-sm-block">
+              <span class="badge badge-gold-subtle px-3 py-2">
+                <i class="bi bi-mortarboard-fill me-1"></i>
+                <%= "ACCEPTED".equals(assignStatus) ? "Active Placement" : "Pending Placement" %>
+              </span>
             </div>
-        </main>
-        
-        <jsp:include page="../shared/_footer.jsp" />
-    </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-content">
+        <div class="container-fluid">
+          <% if(request.getParameter("msg")!=null){ %>
+            <div class="alert alert-success border-0 shadow-none small mb-4 py-3">
+              <i class="bi bi-check-circle-fill me-2 text-success"></i>
+              <%=request.getParameter("msg")%>
+            </div>
+          <% } %>
+          <div class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="card p-4 border-0 shadow-none bg-white">
+                <div class="text-muted small fw-bold text-uppercase ls-1 mb-2">Assignment Status</div>
+                <div class="h4 fw-bold mb-0 text-serif">
+                  <% if("ACCEPTED".equals(assignStatus)){ %>
+                    <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> Accepted</span>
+                  <% } else if("PENDING".equals(assignStatus)){ %>
+                    <span class="text-warning"><i class="bi bi-clock-fill me-1"></i> Pending</span>
+                  <% } else { %>
+                    <span class="text-muted"><i class="bi bi-dash-circle me-1"></i> Unassigned</span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="card p-4 border-0 shadow-none bg-white">
+                <div class="text-muted small fw-bold text-uppercase ls-1 mb-2">Supervising Lawyer</div>
+                <div class="h4 fw-bold mb-0 text-serif"><%= lawyerName != null ? lawyerName : "—" %></div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="card p-4 border-0 shadow-none bg-white">
+                <div class="text-muted small fw-bold text-uppercase ls-1 mb-2">Active Cases</div>
+                <div class="h2 fw-bold mb-0 text-serif text-gold"><%= cases.size() %></div>
+              </div>
+            </div>
+          </div>
+          <% if(assignStatus == null){ %>
+            <div class="card border-0 bg-white">
+              <div class="card-body text-center py-5">
+                <i class="bi bi-hourglass-split fs-1 d-block mb-3 text-muted opacity-25"></i>
+                <h4 class="text-serif fw-bold mb-2">Awaiting Assignment</h4>
+                <p class="text-muted small mb-0">The admin has not yet assigned you to a lawyer.<br>You will be notified when an assignment is made.</p>
+              </div>
+            </div>
+          <% } else if("PENDING".equals(assignStatus)){ %>
+            <div class="card border-0 bg-white">
+              <div class="card-body text-center py-5">
+                <i class="bi bi-clock-history fs-1 d-block mb-3 text-warning"></i>
+                <h4 class="text-serif fw-bold mb-2">Waiting for Lawyer Approval</h4>
+                <p class="text-muted small mb-0">
+                  You have been assigned to <strong><%= lawyerName %></strong>.<br>
+                  Waiting for the lawyer to accept your placement.<br>
+                  You will gain case access once approved.
+                </p>
+              </div>
+            </div>
+          <% } else if("ACCEPTED".equals(assignStatus)){ %>
+            <div class="row g-4">
+              <div class="col-lg-8">
+                <div class="card border-0 bg-white">
+                  <div class="card-header bg-transparent border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title fw-bold mb-0 text-serif">My Cases</h5>
+                    <span class="badge badge-gold-subtle px-2 py-1 small"><%= cases.size() %> matters</span>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th class="ps-4">Case</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <% if(cases.isEmpty()){ %>
+                          <tr>
+                            <td colspan="4" class="text-center py-5 text-muted small opacity-50">
+                              <i class="bi bi-briefcase fs-2 d-block mb-2"></i>
+                              No active cases yet. Your lawyer has no accepted cases.
+                            </td>
+                          </tr>
+                        <% } else { for(String[] c : cases){ %>
+                          <tr class="border-light">
+                            <td class="ps-4">
+                              <div class="fw-semibold text-dark"><%= c[1] %></div>
+                              <div class="text-muted small" style="font-size:0.7rem;">
+                                #<%= c[0] %> &middot; <%= c[3] %> &middot; <%= c[4] %>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="small fw-medium text-dark"><%= c[2] %></div>
+                            </td>
+                            <td>
+                              <span class="badge badge-gold-subtle px-2 py-1 text-uppercase fw-bold" style="font-size:0.6rem;"><%= c[6] %></span>
+                            </td>
+                            <td class="text-end pe-4">
+                              <div class="btn-group">
+                                <a href="viewcase_intern.jsp?cid=<%= c[0] %>" class="btn btn-sm btn-outline-dark border-0 px-2" title="View Case"><i class="bi bi-eye"></i></a>
+                                <a href="<%=request.getContextPath()%>/shared/caseDiscussion.jsp?case_id=<%= c[0] %>" class="btn btn-sm btn-outline-gold border-0 px-2" title="Discussion"><i class="bi bi-chat-dots-fill"></i></a>
+                              </div>
+                            </td>
+                          </tr>
+                        <% } } %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="card border-0 bg-white mb-4">
+                  <div class="card-header bg-transparent border-0 py-4 px-4">
+                    <h5 class="card-title fw-bold mb-0 text-serif">My Assigned Lawyer</h5>
+                  </div>
+                  <div class="card-body px-4 pb-4 pt-0">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                      <div class="bg-gold-light text-gold rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:48px; height:48px; font-size:1.2rem;">
+                        <%= lawyerName != null ? lawyerName.substring(0,1).toUpperCase() : "?" %>
+                      </div>
+                      <div>
+                        <div class="fw-bold text-dark"><%= lawyerName %></div>
+                        <div class="text-muted small"><%= lawyerEmail %></div>
+                      </div>
+                    </div>
+                    <div class="border-top pt-3">
+                      <div class="d-flex justify-content-between small mb-2">
+                        <span class="text-muted">Status</span>
+                        <span class="fw-bold text-success"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
+                      </div>
+                      <div class="d-flex justify-content-between small">
+                        <span class="text-muted">Cases Assigned</span>
+                        <span class="fw-bold"><%= cases.size() %></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card border-0 bg-white">
+                  <div class="card-header bg-transparent border-0 py-4 px-4">
+                    <h5 class="card-title fw-bold mb-0 text-serif">Quick Access</h5>
+                  </div>
+                  <div class="card-body px-4 pb-4 pt-0">
+                    <div class="d-grid gap-2">
+                      <a href="<%=request.getContextPath()%>/shared/caseDiscussions.jsp" class="btn btn-outline-dark btn-sm py-2">
+                        <i class="bi bi-chat-left-text me-1"></i> Case Discussions
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </main>
+    <jsp:include page="../shared/_footer.jsp" />
+  </div>
 </body>
 </html>
-
+<% } catch (Exception e) {
+  e.printStackTrace();
+  out.println("<div style='color:white;background:red;padding:20px;'><H3>JSP Execution Error:</H3>");
+  out.println("<pre>" + e.toString() + "</pre></div>");
+} %>

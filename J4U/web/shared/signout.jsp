@@ -2,9 +2,9 @@
 <%
   String role = request.getParameter("role");
   session.invalidate();
-  String redirect = "lawyer".equals(role) ? "../auth/Lawyer_login.jsp" :
-                    "intern".equals(role)  ? "../auth/internlogin.jsp" :
-                    "admin".equals(role)   ? "../auth/Login.jsp" :
-                                            "../auth/cust_login.html";
+  String redirect = "lawyer".equals(role) ? "../auth/Lawyer_login_form.jsp" :
+          "intern".equals(role)  ? "../auth/internlogin_form.jsp" :
+          "admin".equals(role)   ? "../auth/Login.jsp" :
+                      "../auth/cust_login.jsp";
   response.sendRedirect(redirect);
 %>

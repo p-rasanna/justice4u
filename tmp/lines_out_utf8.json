@@ -1,0 +1,125 @@
+{
+  "totalLines": 13648,
+  "topFiles": [
+    {
+      "file": "justice4u_final.sql",
+      "lines": 729
+    },
+    {
+      "file": "web/shared/caseDiscussion.jsp",
+      "lines": 423
+    },
+    {
+      "file": "web/landing/Home.html",
+      "lines": 330
+    },
+    {
+      "file": "web/lawyer/Lawyerdashboard.jsp",
+      "lines": 320
+    },
+    {
+      "file": "web/admin/admindashboard.jsp",
+      "lines": 307
+    },
+    {
+      "file": "web/client/clientdashboard.jsp",
+      "lines": 303
+    },
+    {
+      "file": "src/java/com/j4u/FileUploadUtil.java",
+      "lines": 273
+    },
+    {
+      "file": "web/intern/interndashboard.jsp",
+      "lines": 267
+    },
+    {
+      "file": "web/intern/intern.jsp",
+      "lines": 237
+    },
+    {
+      "file": "src/java/com/j4u/AddCaseServlet.java",
+      "lines": 226
+    },
+    {
+      "file": "web/client/client_case_details.jsp",
+      "lines": 221
+    },
+    {
+      "file": "web/intern/viewcase_intern.jsp",
+      "lines": 211
+    },
+    {
+      "file": "src/java/com/j4u/dao/LawyerDashboardDAO.java",
+      "lines": 209
+    },
+    {
+      "file": "src/java/com/j4u/LoginServlet.java",
+      "lines": 205
+    },
+    {
+      "file": "src/java/com/j4u/dao/CaseRequestDAO.java",
+      "lines": 198
+    },
+    {
+      "file": "web/landing/Lawyer.html",
+      "lines": 195
+    },
+    {
+      "file": "src/java/com/j4u/RegisterServlet.java",
+      "lines": 194
+    },
+    {
+      "file": "src/java/com/j4u/SendMessageServlet.java",
+      "lines": 193
+    },
+    {
+      "file": "src/java/com/j4u/servlet/ProcessInternServlet.java",
+      "lines": 192
+    },
+    {
+      "file": "web/lawyer/manage_hearings.jsp",
+      "lines": 189
+    },
+    {
+      "file": "web/landing/Lawyer.jsp",
+      "lines": 185
+    },
+    {
+      "file": "web/admin/assign_intern_to_lawyer.jsp",
+      "lines": 176
+    },
+    {
+      "file": "web/lawyer/viewcustdetails.jsp",
+      "lines": 174
+    },
+    {
+      "file": "web/lawyer/viewcusdet.jsp",
+      "lines": 167
+    },
+    {
+      "file": "web/client/case.jsp",
+      "lines": 161
+    },
+    {
+      "file": "web/client/customer_form.jsp",
+      "lines": 158
+    },
+    {
+      "file": "web/client/findlawyer.jsp",
+      "lines": 158
+    },
+    {
+      "file": "web/shared/script.js",
+      "lines": 157
+    },
+    {
+      "file": "web/admin/viewcustomers.jsp",
+      "lines": 155
+    },
+    {
+      "file": "web/shared/app-layout.css",
+      "lines": 152
+    }
+  ]
+}

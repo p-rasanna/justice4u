@@ -3,7 +3,7 @@
 <%@ page import="com.j4u.DatabaseConfig" %>
 <%
     String lEmail = (String) session.getAttribute("lname");
-    if (lEmail == null) { response.sendRedirect("../auth/Lawyer_login.html?error=Session expired"); return; }
+    if (lEmail == null) { response.sendRedirect("../auth/Lawyer_login_form.jsp?error=Session expired"); return; }
 
     String alidStr = request.getParameter("alid");
     if (alidStr == null) { response.sendRedirect("viewcases.jsp?msg=Invalid request"); return; }

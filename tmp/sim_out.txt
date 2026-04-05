@@ -1,0 +1,29 @@
+﻿=== SIMULATION RESULTS ===
+Before: 13648 lines
+After:  11891 lines
+Saved:  1757 lines (12.9%)
+
+Estimated pages before: ~273
+Estimated pages after:  ~238
+
+Top files by lines saved:
+  /src/java/com/j4u/FileUploadUtil.java: 273 -> 180 (saved 93)
+  /justice4u_final.sql: 729 -> 641 (saved 88)
+  /src/java/com/j4u/dao/LawyerDashboardDAO.java: 209 -> 138 (saved 71)
+  /web/shared/caseDiscussion.jsp: 423 -> 352 (saved 71)
+  /src/java/com/j4u/SendMessageServlet.java: 193 -> 138 (saved 55)
+  /src/java/com/j4u/dao/CaseRequestDAO.java: 198 -> 153 (saved 45)
+  /src/java/com/j4u/LoginServlet.java: 205 -> 165 (saved 40)
+  /src/java/com/j4u/AddCaseServlet.java: 226 -> 189 (saved 37)
+  /web/shared/app-layout.css: 152 -> 116 (saved 36)
+  /src/java/com/j4u/servlet/ProcessInternServlet.java: 192 -> 163 (saved 29)
+  /src/java/com/j4u/RegisterServlet.java: 194 -> 166 (saved 28)
+  /web/client/client_case_details.jsp: 221 -> 194 (saved 27)
+  /web/shared/justice4u-tokens.css: 102 -> 76 (saved 26)
+  /web/intern/interndashboard.jsp: 267 -> 242 (saved 25)
+  /web/lawyer/process_client_request.jsp: 129 -> 104 (saved 25)
+  /web/landing/Home.html: 330 -> 306 (saved 24)
+  /web/shared/main.js: 90 -> 66 (saved 24)
+  /src/java/com/j4u/dao/InternRegistrationDAO.java: 87 -> 64 (saved 23)
+  /web/admin/admindashboard.jsp: 307 -> 284 (saved 23)
+  /src/java/com/j4u/PasswordUtil.java: 55 -> 33 (saved 22)
