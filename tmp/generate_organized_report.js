@@ -1,0 +1,910 @@
+const fs = require('fs');
+
+const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; margin: 0; padding: 0; }
+  h1 { font-size: 22pt; color: #0B192C; text-align: center; border-bottom: 3px double #D4AF37; padding-bottom: 12px; margin-bottom: 8px; }
+  h2 { font-size: 16pt; color: #0B192C; border-bottom: 2px solid #D4AF37; padding-bottom: 6px; margin-top: 36px; }
+  h3 { font-size: 13pt; color: #1a3a5c; margin-top: 20px; margin-bottom: 4px; }
+  p.desc { font-size: 11pt; color: #444; font-style: italic; margin: 0 0 10px 0; }
+  pre { font-family: 'Courier New', monospace; font-size: 8.5pt; background: #f7f7f7; border-left: 4px solid #D4AF37; padding: 10px 14px; white-space: pre-wrap; word-wrap: break-word; margin: 6px 0 18px 0; line-height: 1.5; }
+  .subtitle { text-align: center; font-size: 12pt; color: #555; margin-bottom: 40px; }
+  hr.section-break { border: none; border-top: 1px solid #ccc; margin: 30px 0; }
+</style>
+</head>
+<body>
+
+<h1>Justice4U &mdash; Complete Project Source Code</h1>
+<p class="subtitle">Full-Stack Legal Services Platform &bull; JSP / Servlet / MySQL Architecture</p>
+
+<!-- ============================================================ -->
+<h2>1. Database Connection</h2>
+<p class="desc">Centralized MySQL connection configuration. All DAOs and Servlets use DatabaseConfig.getConnection() to obtain a database connection.</p>
+<h3>DatabaseConfig.java</h3>
+<pre>package com.j4u;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DatabaseConfig {
+  private static final String URL = "jdbc:mysql://localhost:3306/j4u?useSSL=false&serverTimezone=UTC";
+  private static final String USERNAME = "root";
+  private static final String PASSWORD = "";
+
+  static {
+    try { Class.forName("com.mysql.cj.jdbc.Driver"); }
+    catch (ClassNotFoundException e) { throw new RuntimeException(e); }
+  }
+
+  public static Connection getConnection() throws SQLException {
+    return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>2. Validation &amp; Security Logic</h2>
+<p class="desc">Shared utility classes for input validation, sanitization, and password hashing using SHA-256.</p>
+
+<h3>ValidationUtil.java</h3>
+<pre>package com.j4u;
+import java.util.regex.Pattern;
+
+public class ValidationUtil {
+  public static boolean validateInput(String value, String pattern, int maxLength) {
+    if (value == null || value.trim().isEmpty()) return false;
+    if (value.length() > maxLength) return false;
+    return pattern == null || Pattern.matches(pattern, value);
+  }
+
+  public static String sanitize(String input) {
+    if (input == null) return null;
+    return input.replace("<", "&lt;").replace(">", "&gt;")
+                .replace("\\"", "&quot;").replace("'", "&#x27;");
+  }
+}</pre>
+
+<h3>PasswordUtil.java</h3>
+<pre>package com.j4u;
+import java.security.MessageDigest;
+import java.util.Base64;
+
+public class PasswordUtil {
+  private static final String HASH_ALGORITHM = "SHA-256";
+
+  public static String hashPassword(String password) {
+    try {
+      MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
+      byte[] hashed = md.digest(password.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      return Base64.getEncoder().encodeToString(hashed);
+    } catch (Exception e) {
+      throw new RuntimeException("Error hashing password", e);
+    }
+  }
+
+  public static boolean verifyPassword(String password, String storedHash) {
+    if (password == null || storedHash == null) return false;
+    return hashPassword(password).equals(storedHash);
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>3. Login System</h2>
+<p class="desc">Handles authentication for all four roles: Admin, Lawyer, Client, and Intern. Validates credentials against the database, checks approval status (flag), and establishes a session.</p>
+
+<h3>LoginServlet.java</h3>
+<pre>package com.j4u;
+import java.io.IOException;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    String email    = request.getParameter("email");
+    String password = request.getParameter("password");
+    String role     = request.getParameter("role");
+
+    if (email == null || password == null || role == null) {
+      response.sendRedirect("auth/Login.jsp?error=missing_fields");
+      return;
+    }
+
+    String loginPage = "auth/Login.jsp";
+    if ("lawyer".equals(role))      loginPage = "auth/Lawyer_login_form.jsp";
+    else if ("client".equals(role)) loginPage = "auth/cust_login.jsp";
+    else if ("intern".equals(role)) loginPage = "auth/internlogin_form.jsp";
+
+    String query = "", redirectUrl = "";
+    if ("admin".equals(role)) {
+      query = "SELECT * FROM admin WHERE email = ?";
+      redirectUrl = "AdminDashboard";
+    } else if ("lawyer".equals(role)) {
+      query = "SELECT lid, name, pass, flag FROM lawyer_reg WHERE email = ?";
+      redirectUrl = "LawyerDashboardServlet";
+    } else if ("client".equals(role)) {
+      query = "SELECT cid, cname, pass, verification_status, profile_type FROM cust_reg WHERE email = ?";
+      redirectUrl = "client/clientdashboard.jsp";
+    } else if ("intern".equals(role)) {
+      query = "SELECT internid, name, pass, flag FROM intern WHERE email = ?";
+      redirectUrl = "InternDashboardServlet";
+    } else {
+      response.sendRedirect(loginPage + "?error=invalid_role"); return;
+    }
+
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement pst = con.prepareStatement(query)) {
+      pst.setString(1, email);
+      try (ResultSet rs = pst.executeQuery()) {
+        if (rs.next()) {
+          if (PasswordUtil.verifyPassword(password, rs.getString("pass"))) {
+            if ("lawyer".equals(role) || "intern".equals(role)) {
+              int flag = rs.getInt("flag");
+              if (flag == 0) { response.sendRedirect(loginPage + "?error=Account%20Pending%20Approval"); return; }
+              if (flag == 2) { response.sendRedirect(loginPage + "?error=Account%20Rejected"); return; }
+            }
+            HttpSession session = request.getSession(true);
+            session.setAttribute("user", email);
+            session.setAttribute("role", role);
+            if ("lawyer".equals(role)) {
+              session.setAttribute("lid", rs.getInt("lid"));
+              session.setAttribute("lname", email);
+              session.setAttribute("name", rs.getString("name"));
+            } else if ("client".equals(role)) {
+              session.setAttribute("cid", rs.getInt("cid"));
+              session.setAttribute("cname", email);
+              session.setAttribute("cemail", email);
+              session.setAttribute("name", rs.getString("cname"));
+              session.setAttribute("profileType", rs.getString("profile_type"));
+            } else if ("intern".equals(role)) {
+              session.setAttribute("intern_id", rs.getInt("internid"));
+              session.setAttribute("iname", email);
+              session.setAttribute("name", rs.getString("name"));
+            } else {
+              session.setAttribute("aname", email);
+            }
+            response.sendRedirect(redirectUrl);
+          } else {
+            response.sendRedirect(loginPage + "?error=Invalid%20Credentials");
+          }
+        } else {
+          response.sendRedirect(loginPage + "?error=User%20Not%20Found");
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      response.sendRedirect(loginPage + "?error=Server+Error");
+    }
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>4. Client Registration</h2>
+<p class="desc">Handles new client sign-ups. Stores personal details, hashed password, and address in the cust_reg table. Admin must approve before login is allowed.</p>
+
+<h3>customer_form.jsp (Form Logic)</h3>
+<pre>&lt;%@ page contentType="text/html; charset=UTF-8" %&gt;
+&lt;%
+  String error = request.getParameter("error");
+%&gt;
+&lt;form action="customer.jsp" method="post"&gt;
+  &lt;input type="text"     name="txtname"        class="form-control" required placeholder="Full Name"&gt;
+  &lt;input type="email"    name="txtemail"        class="form-control" required placeholder="Email Address"&gt;
+  &lt;input type="tel"      name="txtmno"          class="form-control" required placeholder="Mobile Number"&gt;
+  &lt;input type="date"     name="txtdob"          class="form-control"&gt;
+  &lt;input type="text"     name="txtadhar"        class="form-control" required placeholder="12-digit Aadhaar"&gt;
+  &lt;textarea              name="txtadd"          class="form-control" required&gt;&lt;/textarea&gt;
+  &lt;input type="password" name="txtpass"         class="form-control" required minlength="6"&gt;
+  &lt;input type="password" name="txtpassconfirm"  class="form-control" required&gt;
+  &lt;!-- Assignment Preference: admin or manual --&gt;
+  &lt;input type="radio" name="assignmentPreference" value="admin" checked&gt; Admin Assignment
+  &lt;input type="radio" name="assignmentPreference" value="manual"&gt; Manual Selection
+  &lt;button type="submit" class="btn btn-gold"&gt;Register as Client&lt;/button&gt;
+&lt;/form&gt;</pre>
+
+<!-- ============================================================ -->
+<h2>5. Lawyer Registration</h2>
+<p class="desc">Accepts lawyer applications with Bar Council details and required documents. The RegisterServlet validates inputs, hashes the password, inserts into lawyer_reg with flag=0 (pending), and stores uploaded documents.</p>
+
+<h3>RegisterServlet.java</h3>
+<pre>package com.j4u;
+import java.io.*;
+import java.sql.*;
+import java.util.UUID;
+import javax.servlet.*;
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
+
+@WebServlet("/RegisterServlet")
+@MultipartConfig(maxFileSize = 1024*1024*10, maxRequestSize = 1024*1024*50)
+public class RegisterServlet extends HttpServlet {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    String fullName  = request.getParameter("fullName");
+    String email     = request.getParameter("email");
+    String password  = request.getParameter("password");
+    String phone     = request.getParameter("phone");
+    String barNumber = request.getParameter("barNumber");
+    String ano       = request.getParameter("ano");
+    String cadd      = request.getParameter("cadd");
+    String padd      = request.getParameter("padd");
+    String[] areasArr = request.getParameterValues("practiceAreas");
+    String areas = areasArr != null ? String.join(", ", areasArr) : "";
+
+    // Validate inputs using shared utility
+    if (!ValidationUtil.validateInput(fullName, null, 100) ||
+        !ValidationUtil.validateInput(email, "^[a-zA-Z0-9._%+-]+@[^@]+\\.[a-zA-Z]{2,}$", 100) ||
+        !ValidationUtil.validateInput(ano, "^[0-9]{12}$", 12)) {
+      response.sendRedirect("landing/Lawyer.html?error=Invalid+input");
+      return;
+    }
+
+    try (Connection con = DatabaseConfig.getConnection()) {
+      con.setAutoCommit(false);
+
+      // Check for duplicate email or bar number
+      try (PreparedStatement chk = con.prepareStatement(
+          "SELECT COUNT(*) FROM lawyer_reg WHERE email=? OR bar_council_number=?")) {
+        chk.setString(1, email); chk.setString(2, barNumber);
+        try (ResultSet rs = chk.executeQuery()) {
+          if (rs.next() && rs.getInt(1) > 0) {
+            response.sendRedirect("landing/Lawyer.html?error=Email+or+Bar+Number+already+registered");
+            return;
+          }
+        }
+      }
+
+      // Insert lawyer record
+      String sql = "INSERT INTO lawyer_reg (name, email, pass, phone, bar_council_number, " +
+          "specialization, ano, cadd, padd, flag, security_question, security_answer) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
+      int lawyerId = 0;
+      try (PreparedStatement pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        pst.setString(1, fullName);
+        pst.setString(2, email);
+        pst.setString(3, PasswordUtil.hashPassword(password));
+        pst.setString(4, phone);
+        pst.setString(5, barNumber);
+        pst.setString(6, areas);
+        pst.setString(7, ano);
+        pst.setString(8, cadd);
+        pst.setString(9, padd);
+        pst.setString(10, request.getParameter("securityQuestion"));
+        pst.setString(11, request.getParameter("securityAnswer"));
+        pst.executeUpdate();
+        try (ResultSet rs = pst.getGeneratedKeys()) {
+          if (rs.next()) lawyerId = rs.getInt(1);
+        }
+      }
+
+      if (lawyerId > 0) {
+        // Save uploaded documents
+        String uploadPath = request.getServletContext().getRealPath("") + "/uploads/lawyer_documents";
+        new File(uploadPath).mkdirs();
+        saveDocument(request.getPart("barCertificate"), lawyerId, "BAR_CERTIFICATE", uploadPath, con);
+        saveDocument(request.getPart("idProof"),        lawyerId, "GOV_ID_PROOF",     uploadPath, con);
+        saveDocument(request.getPart("profilePhoto"),   lawyerId, "PROFILE_PHOTO",    uploadPath, con);
+        con.commit();
+        response.sendRedirect("landing/Lawyer.html?success=true");
+      } else {
+        con.rollback();
+        response.sendRedirect("landing/Lawyer.html?error=Registration+failed");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      response.sendRedirect("landing/Lawyer.html?error=Server+Error");
+    }
+  }
+
+  private void saveDocument(Part part, int lawyerId, String docType, String uploadPath, Connection con)
+      throws IOException {
+    if (part == null || part.getSize() == 0) return;
+    String unique = UUID.randomUUID().toString() + "_" + part.getName();
+    part.write(uploadPath + "/" + unique);
+    String relPath = "uploads/lawyer_documents/" + unique;
+    try (PreparedStatement ps = con.prepareStatement(
+        "INSERT INTO lawyer_documents (lawyer_id, document_type, file_path, status) VALUES (?,?,?,'PENDING')")) {
+      ps.setInt(1, lawyerId); ps.setString(2, docType); ps.setString(3, relPath);
+      ps.executeUpdate();
+    } catch (SQLException e) { throw new IOException("DB error saving document", e); }
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>6. Intern Registration</h2>
+<p class="desc">Processes intern applications including academic details, skills, and document uploads. Stored in the intern and intern_profiles tables with flag=0 pending admin approval.</p>
+
+<h3>InternRegistrationDAO.java</h3>
+<pre>package com.j4u.dao;
+import com.j4u.DatabaseConfig;
+import java.sql.*;
+
+public class InternRegistrationDAO {
+  public boolean isEmailRegistered(String email) throws SQLException {
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement("SELECT internid FROM intern WHERE email=?")) {
+      ps.setString(1, email);
+      try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
+    }
+  }
+
+  public boolean registerIntern(String fullName, String email, String hashedPass, String dob,
+      String phone, String aadhar, String cadd, String padd, String mop, String tid,
+      String amount, String secQuestion, String secAnswer) throws SQLException {
+    String sql = "INSERT INTO intern (name, email, pass, dob, mobno, ano, cadd, padd, " +
+        "mop, tid, amt, flag, security_question, security_answer) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setString(1, fullName);  ps.setString(2, email);  ps.setString(3, hashedPass);
+      ps.setString(4, dob);       ps.setString(5, phone);  ps.setString(6, aadhar);
+      ps.setString(7, cadd);      ps.setString(8, padd);   ps.setString(9, mop);
+      ps.setString(10, tid);      ps.setString(11, amount);
+      ps.setString(12, secQuestion); ps.setString(13, secAnswer);
+      return ps.executeUpdate() > 0;
+    }
+  }
+
+  public boolean saveInternProfile(String email, String college, String degree, String yearSem,
+      String studentId, String areas, String skills, String city, String duration,
+      String mode, String frontPath, String backPath, String bonafidePath) throws SQLException {
+    String sql = "INSERT INTO intern_profiles (intern_email, college_name, degree_program, " +
+        "current_year, student_id_number, areas_of_interest, skills, preferred_city, " +
+        "availability_duration, internship_mode, id_card_front_path, id_card_back_path, " +
+        "bonafide_cert_path, verification_status) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'UNVERIFIED')";
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setString(1, email);  ps.setString(2, college); ps.setString(3, degree);
+      ps.setString(4, yearSem); ps.setString(5, studentId); ps.setString(6, areas);
+      ps.setString(7, skills);  ps.setString(8, city);   ps.setString(9, duration);
+      ps.setString(10, mode); ps.setString(11, frontPath); ps.setString(12, backPath);
+      ps.setString(13, bonafidePath);
+      return ps.executeUpdate() > 0;
+    }
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>7. Admin Dashboard</h2>
+<p class="desc">The admin dashboard fetches pending approvals (clients, lawyers, interns) and case queue statistics. Guards access via session attribute "aname".</p>
+
+<h3>admindashboard.jsp (Backend Logic)</h3>
+<pre>&lt;%@ page import="java.sql.*, com.j4u.DatabaseConfig" %&gt;
+&lt;%
+  String adminEmail = (String) session.getAttribute("aname");
+  if (adminEmail == null) { response.sendRedirect("../auth/Login.jsp"); return; }
+
+  int pClient=0, pLawyer=0, pIntern=0, openCases=0;
+
+  try (Connection con = DatabaseConfig.getConnection()) {
+    PreparedStatement ps;
+    ResultSet rs;
+
+    ps = con.prepareStatement("SELECT COUNT(*) FROM cust_reg WHERE verification_status='PENDING'");
+    rs = ps.executeQuery(); if (rs.next()) pClient = rs.getInt(1);
+
+    ps = con.prepareStatement("SELECT COUNT(*) FROM lawyer_reg WHERE flag=0");
+    rs = ps.executeQuery(); if (rs.next()) pLawyer = rs.getInt(1);
+
+    ps = con.prepareStatement("SELECT COUNT(*) FROM intern WHERE flag=0");
+    rs = ps.executeQuery(); if (rs.next()) pIntern = rs.getInt(1);
+
+    ps = con.prepareStatement("SELECT COUNT(*) FROM casetb WHERE flag=0");
+    rs = ps.executeQuery(); if (rs.next()) openCases = rs.getInt(1);
+  } catch (Exception e) { e.printStackTrace(); }
+%&gt;</pre>
+
+<h3>admindashboard.jsp (Pending Authorization Table)</h3>
+<pre>&lt;% try (Connection c2 = DatabaseConfig.getConnection()) {
+  PreparedStatement ps2 = c2.prepareStatement(
+    "SELECT lid, name FROM lawyer_reg WHERE flag=0 LIMIT 6");
+  ResultSet rs2 = ps2.executeQuery();
+  while (rs2.next()) {
+    String name = rs2.getString("name");
+    int id = rs2.getInt("lid");
+%&gt;
+&lt;tr&gt;
+  &lt;td&gt;&lt;%=name%&gt;&lt;/td&gt;
+  &lt;td&gt;&lt;span class="badge bg-dark"&gt;Lawyer&lt;/span&gt;&lt;/td&gt;
+  &lt;td&gt;
+    &lt;a href="user_action.jsp?type=lawyer&amp;action=approve&amp;id=&lt;%=id%&gt;"&gt;Approve&lt;/a&gt;
+    &lt;a href="user_action.jsp?type=lawyer&amp;action=reject&amp;id=&lt;%=id%&gt;"&gt;Reject&lt;/a&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;% } } catch(Exception e) {} %&gt;</pre>
+
+<!-- ============================================================ -->
+<h2>8. Lawyer Assignment</h2>
+<p class="desc">Admin selects an approved lawyer from a dropdown and assigns them to an unassigned case. The case record is updated in both casetb and allotlawyer tables.</p>
+
+<h3>allotlawyer.jsp (Assignment Form)</h3>
+<pre>&lt;%@ page import="java.sql.*, com.j4u.DatabaseConfig" %&gt;
+&lt;%
+  String adminEmail = (String) session.getAttribute("aname");
+  if (adminEmail == null) { response.sendRedirect("../auth/Login.jsp"); return; }
+  String cid = request.getParameter("id");
+  String cName = "", title = "", cEmail = "";
+
+  try (Connection con = DatabaseConfig.getConnection();
+       PreparedStatement ps = con.prepareStatement("SELECT * FROM casetb WHERE cid=?")) {
+    ps.setInt(1, Integer.parseInt(cid));
+    ResultSet rs = ps.executeQuery();
+    if (rs.next()) {
+      cName  = rs.getString("name");
+      title  = rs.getString("title");
+      cEmail = rs.getString("cname");
+    }
+  }
+%&gt;
+
+&lt;form action="allotlawyerdone.jsp" method="post"&gt;
+  &lt;input type="hidden" name="customerid" value="&lt;%=cid%&gt;"&gt;
+  &lt;input type="hidden" name="cname"      value="&lt;%=cEmail%&gt;"&gt;
+  &lt;input type="text"   name="title"      value="&lt;%=title%&gt;" readonly&gt;
+
+  &lt;!-- Dropdown of approved lawyers --&gt;
+  &lt;select name="lname" required&gt;
+    &lt;option value=""&gt;Select Lawyer...&lt;/option&gt;
+    &lt;% try (Connection con2 = DatabaseConfig.getConnection();
+            ResultSet rl  = con2.createStatement().executeQuery(
+              "SELECT email, name FROM lawyer_reg WHERE flag=1")) {
+      while (rl.next()) { %&gt;
+        &lt;option value="&lt;%=rl.getString("email")%&gt;"&gt;
+          &lt;%=rl.getString("name")%&gt; (&lt;%=rl.getString("email")%&gt;)
+        &lt;/option&gt;
+    &lt;% } } catch (Exception e) {} %&gt;
+  &lt;/select&gt;
+  &lt;button type="submit"&gt;Confirm Assignment&lt;/button&gt;
+&lt;/form&gt;</pre>
+
+<!-- ============================================================ -->
+<h2>9. Intern Assignment</h2>
+<p class="desc">Links an approved intern to a verified lawyer. Inserts a record into intern_lawyer_assignments with status PENDING, which the lawyer can then accept or reject.</p>
+
+<h3>assign_intern_to_lawyer.jsp (Form Logic)</h3>
+<pre>&lt;%@ page import="java.sql.*, com.j4u.DatabaseConfig" %&gt;
+&lt;%
+  if (session.getAttribute("aname") == null) { response.sendRedirect("../auth/Login.jsp"); return; }
+%&gt;
+
+&lt;form action="process_assign_intern_lawyer.jsp" method="post"&gt;
+  &lt;!-- Intern Dropdown: Only approved interns without active assignments --&gt;
+  &lt;select name="intern_email" required&gt;
+    &lt;% try (Connection con = DatabaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(
+              "SELECT i.email, i.name FROM intern i WHERE i.flag=1 " +
+              "AND i.email NOT IN (SELECT intern_email FROM intern_lawyer_assignments " +
+              "WHERE status IN ('PENDING','ACCEPTED')) ORDER BY i.name");
+            ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) { %&gt;
+        &lt;option value="&lt;%=rs.getString("email")%&gt;"&gt;&lt;%=rs.getString("name")%&gt;&lt;/option&gt;
+    &lt;% } } catch (Exception e) {} %&gt;
+  &lt;/select&gt;
+
+  &lt;!-- Lawyer Dropdown --&gt;
+  &lt;select name="lawyer_email" required&gt;
+    &lt;% try (Connection con = DatabaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(
+              "SELECT email, name FROM lawyer_reg WHERE flag=1 ORDER BY name");
+            ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) { %&gt;
+        &lt;option value="&lt;%=rs.getString("email")%&gt;"&gt;&lt;%=rs.getString("name")%&gt;&lt;/option&gt;
+    &lt;% } } catch (Exception e) {} %&gt;
+  &lt;/select&gt;
+
+  &lt;button type="submit"&gt;Submit Assignment&lt;/button&gt;
+&lt;/form&gt;</pre>
+
+<!-- ============================================================ -->
+<h2>10. Case Management</h2>
+<p class="desc">Clients file cases via AddCaseServlet. The servlet inserts into casetb and customer_cases, handles file attachments, and routes the case either to admin assignment or manual lawyer selection based on the client's profile type.</p>
+
+<h3>AddCaseServlet.java</h3>
+<pre>package com.j4u;
+import java.io.*;
+import java.sql.*;
+import java.util.UUID;
+import java.util.logging.*;
+import javax.servlet.*;
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
+
+@WebServlet("/AddCaseServlet")
+@MultipartConfig(maxFileSize = 1024*1024*10, maxRequestSize = 1024*1024*50)
+public class AddCaseServlet extends HttpServlet {
+  private static final Logger LOGGER = Logger.getLogger(AddCaseServlet.class.getName());
+
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    String sessionEmail = session != null ? (String) session.getAttribute("cemail") : null;
+    if (sessionEmail == null &amp;&amp; session != null)
+      sessionEmail = (String) session.getAttribute("cname");
+    if (sessionEmail == null) {
+      response.sendRedirect(request.getContextPath() + "/auth/cust_login.jsp?msg=Session expired");
+      return;
+    }
+
+    String title       = request.getParameter("title");
+    String description = request.getParameter("description");
+    if (title == null || title.trim().isEmpty() || description == null || description.trim().isEmpty()) {
+      response.sendRedirect(request.getContextPath() + "/client/case.jsp?error=Missing+required+fields");
+      return;
+    }
+
+    String profileType   = (String) session.getAttribute("profileType");
+    String assignType    = "manual".equalsIgnoreCase(profileType) ? "MANUAL" : "ADMIN";
+    String initialStatus = "MANUAL".equals(assignType) ? "SEARCHING" : "PENDING";
+    String courtType     = request.getParameter("courtType");
+    String city          = request.getParameter("city");
+    String mop           = request.getParameter("paymentMode");
+    String tid           = request.getParameter("transactionId");
+
+    try (Connection con = DatabaseConfig.getConnection()) {
+      // 1. Get client name
+      String customerName = "Unknown";
+      try (PreparedStatement ps = con.prepareStatement(
+           "SELECT cname FROM cust_reg WHERE email=?")) {
+        ps.setString(1, sessionEmail);
+        try (ResultSet rs = ps.executeQuery()) {
+          if (rs.next()) customerName = rs.getString("cname");
+        }
+      }
+
+      // 2. Insert into casetb
+      String sql = "INSERT INTO casetb (name, title, des, curdate, courttype, city, mop, tid, " +
+          "amt, cname, flag, assignment_type, case_status) " +
+          "VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, 500, ?, 0, ?, ?)";
+      try (PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, customerName); ps.setString(2, title);
+        ps.setString(3, description);  ps.setString(4, courtType != null ? courtType : "General");
+        ps.setString(5, city);         ps.setString(6, mop != null ? mop : "N/A");
+        ps.setString(7, tid != null ? tid : "N/A");
+        ps.setString(8, sessionEmail); ps.setString(9, assignType);
+        ps.setString(10, initialStatus);
+        ps.executeUpdate();
+      }
+
+      // 3. Get new case ID
+      int caseId = 0;
+      try (PreparedStatement ps = con.prepareStatement(
+           "SELECT MAX(cid) FROM casetb WHERE cname=?")) {
+        ps.setString(1, sessionEmail);
+        try (ResultSet rs = ps.executeQuery()) { if (rs.next()) caseId = rs.getInt(1); }
+      }
+
+      // 4. Link to customer_cases
+      if (caseId > 0) {
+        try (PreparedStatement ps = con.prepareStatement(
+             "INSERT INTO customer_cases (case_id, customer_id, title, description, status) VALUES (?,?,?,?,'OPEN')")) {
+          ps.setInt(1, caseId);
+          ps.setInt(2, (Integer) session.getAttribute("cid"));
+          ps.setString(3, title); ps.setString(4, description);
+          ps.executeUpdate();
+        }
+
+        // 5. Handle manual lawyer request
+        String lawyerEmail = request.getParameter("selected_lawyer_email");
+        if ("MANUAL".equals(assignType) &amp;&amp; lawyerEmail != null &amp;&amp; !lawyerEmail.trim().isEmpty()) {
+          try (PreparedStatement ps = con.prepareStatement(
+               "INSERT INTO lawyer_requests (case_id, client_email, lawyer_email, status) VALUES (?,?,?,'PENDING')")) {
+            ps.setInt(1, caseId); ps.setString(2, sessionEmail); ps.setString(3, lawyerEmail.trim());
+            ps.executeUpdate();
+          }
+        }
+
+        // 6. Handle file upload
+        Part filePart = request.getPart("documents");
+        if (filePart != null &amp;&amp; filePart.getSize() > 0) {
+          String dir = request.getServletContext().getRealPath("/") + "uploads/case_docs";
+          new File(dir).mkdirs();
+          String fileName = "Case_" + caseId + "_" + UUID.randomUUID().toString().substring(0, 8) + ".pdf";
+          filePart.write(dir + "/" + fileName);
+        }
+      }
+
+      response.sendRedirect(request.getContextPath() + "/client/clientdashboard.jsp?msg=Case+filed+successfully");
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, "Error in case submission", e);
+      response.sendRedirect(request.getContextPath() + "/client/case.jsp?error=Server+Error");
+    }
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>11. Case Discussion (Messaging System)</h2>
+<p class="desc">Enables all users (Client, Lawyer, Intern, Admin) to send messages and file attachments on a specific case. Messages are stored in case_messages with sender identity detected from the session role.</p>
+
+<h3>SendMessageServlet.java</h3>
+<pre>package com.j4u;
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
+
+@MultipartConfig(maxFileSize = 10*1024*1024, maxRequestSize = 15*1024*1024)
+public class SendMessageServlet extends HttpServlet {
+  private static final String[] ALLOWED_EXT = {".pdf",".jpg",".jpeg",".png",".doc",".docx",".txt"};
+
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    if (session == null) { response.sendRedirect("auth/cust_login.jsp"); return; }
+
+    // Detect sender from session role
+    String senderEmail = null, senderRole = null;
+    if (session.getAttribute("cname") != null) { senderEmail = (String)session.getAttribute("cname"); senderRole = "client"; }
+    else if (session.getAttribute("lname") != null) { senderEmail = (String)session.getAttribute("lname"); senderRole = "lawyer"; }
+    else if (session.getAttribute("iname") != null) { senderEmail = (String)session.getAttribute("iname"); senderRole = "intern"; }
+    else if (session.getAttribute("aname") != null) { senderEmail = (String)session.getAttribute("aname"); senderRole = "admin"; }
+
+    if (senderEmail == null) { response.sendRedirect("auth/cust_login.jsp"); return; }
+
+    int caseId = Integer.parseInt(request.getParameter("case_id").trim());
+    String messageText = request.getParameter("message_text");
+    Part filePart = request.getPart("attachment");
+
+    String fileName = null, filePath = null;
+    boolean hasFile = filePart != null &amp;&amp; filePart.getSize() > 0;
+    if (hasFile) {
+      String submittedName = getFileName(filePart);
+      if (submittedName != null &amp;&amp; isAllowed(submittedName)) {
+        String uploadDir = getServletContext().getRealPath("") + "/uploads/case_" + caseId;
+        new File(uploadDir).mkdirs();
+        String unique = System.currentTimeMillis() + "_" + submittedName.replaceAll("[^a-zA-Z0-9._-]","_");
+        filePart.write(uploadDir + "/" + unique);
+        fileName = submittedName;
+        filePath = "uploads/case_" + caseId + "/" + unique;
+      }
+    }
+
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement(
+           "INSERT INTO case_messages (case_id, sender_email, sender_role, message_text, file_name, file_path, created_at) " +
+           "VALUES (?, ?, ?, ?, ?, ?, NOW())")) {
+      ps.setInt(1, caseId); ps.setString(2, senderEmail); ps.setString(3, senderRole);
+      ps.setString(4, messageText); ps.setString(5, fileName); ps.setString(6, filePath);
+      ps.executeUpdate();
+    } catch (Exception e) { e.printStackTrace(); }
+
+    response.sendRedirect(request.getContextPath() + "/shared/caseDiscussion.jsp?case_id=" + caseId + "&amp;msg=Sent");
+  }
+
+  private String getFileName(Part part) {
+    for (String token : part.getHeader("content-disposition").split(";"))
+      if (token.trim().startsWith("filename"))
+        return token.substring(token.indexOf('=')+1).trim().replace("\\"","");
+    return null;
+  }
+
+  private boolean isAllowed(String name) {
+    String lower = name.toLowerCase();
+    for (String ext : ALLOWED_EXT) if (lower.endsWith(ext)) return true;
+    return false;
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>12. Lawyer Dashboard (Data Layer)</h2>
+<p class="desc">DAO that fetches all relevant data for the lawyer dashboard: pending client requests, assigned clients, assigned interns, and pending intern task submissions.</p>
+
+<h3>LawyerDashboardDAO.java</h3>
+<pre>package com.j4u.dao;
+import com.j4u.DatabaseConfig;
+import java.sql.*;
+import java.util.*;
+
+public class LawyerDashboardDAO {
+  public int getLawyerIdByEmail(String email) throws SQLException, ClassNotFoundException {
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement("SELECT lid FROM lawyer_reg WHERE email=?")) {
+      ps.setString(1, email);
+      try (ResultSet rs = ps.executeQuery()) {
+        return rs.next() ? rs.getInt("lid") : 0;
+      }
+    }
+  }
+
+  public List&lt;Map&lt;String,Object&gt;&gt; getAssignedClients(int lawyerId, int limit)
+      throws SQLException, ClassNotFoundException {
+    List&lt;Map&lt;String,Object&gt;&gt; clients = new ArrayList&lt;&gt;();
+    String lawyerEmail = getEmailById(lawyerId);
+    if (lawyerEmail == null) return clients;
+    String sql = "SELECT a.cid, a.title, a.name FROM allotlawyer a " +
+        "JOIN casetb c ON a.cid=c.cid WHERE a.lname=? AND c.flag &gt;= 1 ORDER BY a.cid DESC LIMIT ?";
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setString(1, lawyerEmail); ps.setInt(2, limit);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          Map&lt;String,Object&gt; m = new HashMap&lt;&gt;();
+          m.put("caseId", rs.getInt("cid")); m.put("clientName", rs.getString("name"));
+          m.put("title", rs.getString("title"));
+          clients.add(m);
+        }
+      }
+    }
+    return clients;
+  }
+
+  public List&lt;Map&lt;String,Object&gt;&gt; getAssignedInterns(int lawyerId) throws SQLException, ClassNotFoundException {
+    List&lt;Map&lt;String,Object&gt;&gt; interns = new ArrayList&lt;&gt;();
+    String sql = "SELECT i.name, i.email FROM intern i " +
+        "JOIN intern_assignments ia ON i.email=ia.intern_email " +
+        "WHERE ia.alid=? AND ia.status='ACTIVE'";
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setInt(1, lawyerId);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          Map&lt;String,Object&gt; m = new HashMap&lt;&gt;();
+          m.put("name", rs.getString("name")); m.put("email", rs.getString("email"));
+          interns.add(m);
+        }
+      }
+    }
+    return interns;
+  }
+
+  private String getEmailById(int id) throws SQLException, ClassNotFoundException {
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement("SELECT email FROM lawyer_reg WHERE lid=?")) {
+      ps.setInt(1, id);
+      try (ResultSet rs = ps.executeQuery()) {
+        return rs.next() ? rs.getString("email") : null;
+      }
+    }
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>13. Lawyer Dashboard (Servlet Layer)</h2>
+<p class="desc">Orchestrates the lawyer dashboard by fetching data from LawyerDashboardDAO and forwarding to the JSP view with request attributes.</p>
+
+<h3>LawyerDashboardServlet.java</h3>
+<pre>package com.j4u.servlet;
+import com.j4u.dao.LawyerDashboardDAO;
+import java.io.IOException;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+@WebServlet("/LawyerDashboardServlet")
+public class LawyerDashboardServlet extends HttpServlet {
+  private final LawyerDashboardDAO dao = new LawyerDashboardDAO();
+
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    if (session == null || session.getAttribute("lname") == null) {
+      response.sendRedirect("auth/Lawyer_login.html"); return;
+    }
+    String lawyerEmail = (String) session.getAttribute("lname");
+    try {
+      int lawyerId = dao.getLawyerIdByEmail(lawyerEmail);
+      List&lt;Map&lt;String,Object&gt;&gt; clients = dao.getAssignedClients(lawyerId, 5);
+      List&lt;Map&lt;String,Object&gt;&gt; interns = dao.getAssignedInterns(lawyerId);
+      request.setAttribute("assignedClients", clients);
+      request.setAttribute("assignedInterns", interns);
+      request.setAttribute("activeMattersCount", clients.size());
+      request.getRequestDispatcher("/lawyer/Lawyerdashboard.jsp").forward(request, response);
+    } catch (Exception e) {
+      e.printStackTrace();
+      response.sendRedirect(request.getContextPath() + "/shared/error.jsp?error=Server+Error");
+    }
+  }
+}</pre>
+
+<!-- ============================================================ -->
+<h2>14. Database Schema (Key Tables)</h2>
+<p class="desc">Core table definitions used across the Justice4U platform. All relationships are enforced via foreign keys and flag-based status columns.</p>
+
+<pre>-- Users
+CREATE TABLE cust_reg (
+  cid INT AUTO_INCREMENT PRIMARY KEY,
+  cname VARCHAR(100), email VARCHAR(100) UNIQUE,
+  pass VARCHAR(255), mobno VARCHAR(15),
+  cadd TEXT, padd TEXT, dob DATE,
+  verification_status ENUM('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
+  profile_type VARCHAR(20) DEFAULT 'admin'
+);
+
+CREATE TABLE lawyer_reg (
+  lid INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100), email VARCHAR(100) UNIQUE,
+  pass VARCHAR(255), phone VARCHAR(15),
+  bar_council_number VARCHAR(50), specialization TEXT,
+  experience_years INT, dob DATE, ano VARCHAR(15),
+  cadd TEXT, padd TEXT,
+  flag TINYINT DEFAULT 0,  -- 0=pending, 1=approved, 2=rejected
+  security_question TEXT, security_answer VARCHAR(255)
+);
+
+CREATE TABLE intern (
+  internid INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100), email VARCHAR(100) UNIQUE,
+  pass VARCHAR(255), dob DATE, mobno VARCHAR(15),
+  flag TINYINT DEFAULT 0,
+  security_question TEXT, security_answer VARCHAR(255)
+);
+
+-- Cases
+CREATE TABLE casetb (
+  cid INT AUTO_INCREMENT PRIMARY KEY,
+  cname VARCHAR(200),          -- client email
+  name VARCHAR(100),           -- client name
+  title VARCHAR(200), des TEXT,
+  curdate VARCHAR(20), courttype VARCHAR(100), city VARCHAR(100),
+  mop VARCHAR(50), tid VARCHAR(100), amt INT DEFAULT 500,
+  flag INT DEFAULT 0,          -- 0=open, 1=assigned, 2=closed
+  assignment_type VARCHAR(20) DEFAULT 'ADMIN',
+  case_status VARCHAR(30) DEFAULT 'PENDING'
+);
+
+CREATE TABLE allotlawyer (
+  alid INT AUTO_INCREMENT PRIMARY KEY,
+  cid INT, name VARCHAR(100), title VARCHAR(200),
+  des TEXT, curdate VARCHAR(20), courttype VARCHAR(100),
+  city VARCHAR(100), mop VARCHAR(50), tid VARCHAR(100), amt INT,
+  cname VARCHAR(200),     -- client email
+  lname VARCHAR(200)      -- lawyer email
+);
+
+CREATE TABLE customer_cases (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  case_id INT, customer_id INT, assigned_lawyer_id INT,
+  title VARCHAR(200), description TEXT,
+  status VARCHAR(30) DEFAULT 'OPEN', case_type_id INT
+);
+
+-- Messaging
+CREATE TABLE case_messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  case_id INT, sender_email VARCHAR(200),
+  sender_role VARCHAR(20), message_text TEXT,
+  file_name VARCHAR(255), file_path VARCHAR(500),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Intern System
+CREATE TABLE intern_profiles (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  intern_email VARCHAR(200),
+  college_name VARCHAR(200), degree_program VARCHAR(50),
+  current_year VARCHAR(50), student_id_number VARCHAR(50),
+  areas_of_interest TEXT, skills TEXT,
+  preferred_city VARCHAR(100), availability_duration VARCHAR(50),
+  internship_mode VARCHAR(30),
+  id_card_front_path TEXT, id_card_back_path TEXT, bonafide_cert_path TEXT,
+  verification_status VARCHAR(20) DEFAULT 'UNVERIFIED'
+);
+
+CREATE TABLE intern_assignments (
+  assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+  alid INT, intern_email VARCHAR(200),
+  case_id INT, status VARCHAR(20) DEFAULT 'ACTIVE'
+);
+
+CREATE TABLE lawyer_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  case_id INT, client_email VARCHAR(200),
+  lawyer_email VARCHAR(200),
+  status VARCHAR(20) DEFAULT 'PENDING'
+);</pre>
+
+</body>
+</html>`;
+
+fs.writeFileSync('c:/xampp/htdocs/J4U/Justice4U_Organized_Report.doc', html, 'utf8');
+console.log("Done! Saved as Justice4U_Organized_Report.doc");

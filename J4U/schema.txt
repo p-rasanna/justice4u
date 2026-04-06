@@ -1,0 +1,9 @@
+﻿CREATE TABLE `case_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_id` int(11) NOT NULL,
+  `sender_email` varchar(255) NOT NULL,
+  `sender_role` varchar(20) NOT NULL,
+  `message_text` text DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_path` varchar(500) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),

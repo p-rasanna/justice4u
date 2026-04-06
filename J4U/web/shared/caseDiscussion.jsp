@@ -1,5 +1,87 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.sql.*,com.j4u.DatabaseConfig" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.sql.*,java.util.*,com.j4u.DatabaseConfig" %>
 <%
+    String senderEmail = "", senderDisplayName = "", senderRole = "";
+    if (session.getAttribute("cname") != null) {
+        senderEmail = (String) session.getAttribute("cname");
+        senderRole = "client";
+        senderDisplayName = senderEmail.split("@")[0];
+    } else if (session.getAttribute("lname") != null) {
+        senderEmail = (String) session.getAttribute("lname");
+        senderRole = "lawyer";
+        senderDisplayName = senderEmail.split("@")[0];
+    } else if (session.getAttribute("iname") != null) {
+        senderEmail = (String) session.getAttribute("iname");
+        senderRole = "intern";
+        senderDisplayName = senderEmail.split("@")[0];
+    } else if (session.getAttribute("aname") != null) {
+        senderEmail = (String) session.getAttribute("aname");
+        senderRole = "admin";
+        senderDisplayName = "Admin";
+    }
+
+    if (senderEmail.isEmpty()) {
+        response.sendRedirect("../auth/Login.jsp");
+        return;
+    }
+
+    String caseIdStr = request.getParameter("case_id");
+    if (caseIdStr == null || caseIdStr.isEmpty()) {
+        response.sendRedirect("../index.jsp");
+        return;
+    }
+
+    int caseId = Integer.parseInt(caseIdStr);
+    String caseTitle = "Unknown", caseCity = "", caseCourt = "N/A";
+    List<String[]> messages = new ArrayList<>();
+
+    try (Connection con = DatabaseConfig.getConnection()) {
+        // Get case info
+        PreparedStatement pCase = con.prepareStatement("SELECT title, city, courttype FROM casetb WHERE cid=?");
+        pCase.setInt(1, caseId);
+        ResultSet rsCase = pCase.executeQuery();
+        if (rsCase.next()) {
+            caseTitle = rsCase.getString("title");
+            caseCity = rsCase.getString("city");
+            caseCourt = rsCase.getString("courttype");
+        }
+
+        // Get messages
+        PreparedStatement pMsg = con.prepareStatement(
+            "SELECT sender_email, sender_role, message_text, file_name AS attachment_name, file_path AS attachment_path, DATE_FORMAT(created_at, '%b %d, %Y %I:%i %p') AS msg_time " +
+            "FROM case_messages WHERE case_id=? ORDER BY created_at ASC");
+        pMsg.setInt(1, caseId);
+        ResultSet rsMsg = pMsg.executeQuery();
+        while (rsMsg.next()) {
+            String mEmail = rsMsg.getString("sender_email");
+            String mRole = rsMsg.getString("sender_role");
+            String mText = rsMsg.getString("message_text");
+            String mFileName = rsMsg.getString("attachment_name");
+            String mFilePath = rsMsg.getString("attachment_path");
+            String mTime = rsMsg.getString("msg_time");
+            String mName = mEmail != null ? mEmail.split("@")[0] : "User";
+            messages.add(new String[]{mEmail, mRole, mText, mFileName, mFilePath, mTime, mName});
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<jsp:include page="../shared/_head.jsp"><jsp:param name="title" value="Case Discussion"/></jsp:include>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<div class="app-wrapper">
+  <jsp:include page="../shared/_topbar.jsp"/>
+  <jsp:include page="../shared/_sidebar.jsp"/>
+  <main class="app-main">
+    <div class="app-content-header pb-0 pt-4">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div><h2 class="mb-1 fw-semibold text-dark">Case Discussion Form</h2></div>
+        </div>
+      </div>
+    </div>
+    <div class="app-content mt-2">
+      <div class="container-fluid">
         <% if(request.getParameter("msg") != null) { %>
           <div class="alert alert-success alert-dismissible fade show border-0 mb-3" style="border-left: 4px solid var(--success) !important;">
             <i class="bi bi-check-circle-fill me-2"></i><%= request.getParameter("msg") %>

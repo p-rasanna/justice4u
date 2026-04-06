@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Justice4U - Project File Directory</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11pt; margin: 40px; }
+  h1 { font-size: 20pt; color: #0B192C; text-align: center; border-bottom: 3px double #D4AF37; padding-bottom: 10px; margin-bottom: 6px; }
+  .subtitle { text-align: center; color: #555; font-size: 10pt; margin-bottom: 30px; }
+  .stats { background: #f0f4f8; border-left: 4px solid #D4AF37; padding: 10px 16px; margin-bottom: 20px; font-size: 10pt; }
+  pre {
+    font-family: 'Courier New', monospace;
+    font-size: 9pt;
+    line-height: 1.7;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .sz { color: #888; font-size: 8pt; }
+</style>
+</head>
+<body>
+<h1>Justice4U &mdash; Complete Project File Directory</h1>
+<p class="subtitle">Full Project Structure &bull; JSP / Servlet / MySQL Platform</p>
+
+<div class="stats">
+  <strong>📁 Total Directories:</strong> 38 &nbsp;&nbsp;
+  <strong>📄 Total Files:</strong> 209 &nbsp;&nbsp;
+  <strong>📂 Root:</strong> J4U/J4U/
+</div>
+
+<pre>📁 J4U/ (Project Root)
+├── 📁 J4U/
+├── 📁 nbproject/
+│   ├── 📁 private/
+│   │   ├── 📄 private.properties  <span class="sz">[603 B]</span>
+│   │   └── ⚙️ private.xml  <span class="sz">[458 B]</span>
+│   ├── ⚙️ ant-deploy.xml  <span class="sz">[3.3 KB]</span>
+│   ├── ⚙️ build-impl.xml  <span class="sz">[81.8 KB]</span>
+│   ├── 📄 build-impl.xml~  <span class="sz">[82.7 KB]</span>
+│   ├── 📄 genfiles.properties  <span class="sz">[475 B]</span>
+│   ├── 📄 project.properties  <span class="sz">[4.5 KB]</span>
+│   └── ⚙️ project.xml  <span class="sz">[1.4 KB]</span>
+├── 📁 src/
+│   ├── 📁 conf/
+│   │   └── 📄 MANIFEST.MF  <span class="sz">[25 B]</span>
+│   └── 📁 java/
+│       ├── 📁 com/
+│       │   └── 📁 j4u/
+│       │       ├── 📁 dao/
+│       │       │   ├── ☕ AdminDAO.java  <span class="sz">[2.2 KB]</span>
+│       │       │   ├── ☕ CaseDAO.java  <span class="sz">[1.6 KB]</span>
+│       │       │   ├── ☕ CaseManagementDAO.java  <span class="sz">[1.4 KB]</span>
+│       │       │   ├── ☕ CaseRequestDAO.java  <span class="sz">[6.3 KB]</span>
+│       │       │   ├── ☕ InternDAO.java  <span class="sz">[1.5 KB]</span>
+│       │       │   ├── ☕ InternDashboardDAO.java  <span class="sz">[4.0 KB]</span>
+│       │       │   ├── ☕ InternRegistrationDAO.java  <span class="sz">[3.0 KB]</span>
+│       │       │   ├── ☕ LawyerDAO.java  <span class="sz">[1.6 KB]</span>
+│       │       │   ├── ☕ LawyerDashboardDAO.java  <span class="sz">[5.8 KB]</span>
+│       │       │   └── ☕ UserDAO.java  <span class="sz">[2.4 KB]</span>
+│       │       ├── 📁 servlet/
+│       │       │   ├── ☕ AdminDashboardServlet.java  <span class="sz">[1.1 KB]</span>
+│       │       │   ├── ☕ ClientDashboardServlet.java  <span class="sz">[1.7 KB]</span>
+│       │       │   ├── ☕ InternDashboardServlet.java  <span class="sz">[2.4 KB]</span>
+│       │       │   ├── ☕ LawyerDashboardServlet.java  <span class="sz">[2.9 KB]</span>
+│       │       │   └── ☕ ProcessInternServlet.java  <span class="sz">[7.1 KB]</span>
+│       │       ├── ☕ AddCaseServlet.java  <span class="sz">[8.8 KB]</span>
+│       │       ├── ☕ DatabaseConfig.java  <span class="sz">[634 B]</span>
+│       │       ├── ☕ FileUploadUtil.java  <span class="sz">[6.6 KB]</span>
+│       │       ├── ☕ LoginServlet.java  <span class="sz">[6.8 KB]</span>
+│       │       ├── ☕ NotificationService.java  <span class="sz">[1.5 KB]</span>
+│       │       ├── ☕ PasswordUtil.java  <span class="sz">[1.2 KB]</span>
+│       │       ├── ☕ RegisterServlet.java  <span class="sz">[7.5 KB]</span>
+│       │       ├── ☕ SendMessageServlet.java  <span class="sz">[5.3 KB]</span>
+│       │       └── ☕ ValidationUtil.java  <span class="sz">[585 B]</span>
+│       └── 📁 util/
+├── 📁 web/
+│   ├── 📁 META-INF/
+│   │   ├── 📁 hk2-locator/
+│   │   │   └── 📄 default  <span class="sz">[337 B]</span>
+│   │   ├── 📁 maven/
+│   │   ├── 📁 services/
+│   │   │   └── 📄 java.sql.Driver  <span class="sz">[24 B]</span>
+│   │   ├── 📄 INDEX.LIST  <span class="sz">[887 B]</span>
+│   │   ├── 📄 LICENSE.txt  <span class="sz">[38.5 KB]</span>
+│   │   ├── 📄 MANIFEST.MF  <span class="sz">[2.6 KB]</span>
+│   │   ├── ⚙️ context.xml  <span class="sz">[62 B]</span>
+│   │   └── ⚙️ gfprobe-provider.xml  <span class="sz">[3.7 KB]</span>
+│   ├── 📁 WEB-INF/
+│   │   ├── 📁 classes/
+│   │   │   ├── 📁 com/
+│   │   │   │   └── 📁 j4u/
+│   │   │   │       ├── 📁 dao/
+│   │   │   │       │   ├── 📄 AdminDAO.class  <span class="sz">[4.4 KB]</span>
+│   │   │   │       │   ├── 📄 CaseDAO.class  <span class="sz">[2.8 KB]</span>
+│   │   │   │       │   ├── 📄 CaseManagementDAO.class  <span class="sz">[2.8 KB]</span>
+│   │   │   │       │   ├── 📄 CaseRequestDAO.class  <span class="sz">[8.4 KB]</span>
+│   │   │   │       │   ├── 📄 InternDAO.class  <span class="sz">[2.7 KB]</span>
+│   │   │   │       │   ├── 📄 InternDashboardDAO.class  <span class="sz">[7.2 KB]</span>
+│   │   │   │       │   ├── 📄 InternRegistrationDAO.class  <span class="sz">[4.5 KB]</span>
+│   │   │   │       │   ├── 📄 LawyerDAO.class  <span class="sz">[2.9 KB]</span>
+│   │   │   │       │   ├── 📄 LawyerDashboardDAO.class  <span class="sz">[9.6 KB]</span>
+│   │   │   │       │   └── 📄 UserDAO.class  <span class="sz">[4.6 KB]</span>
+│   │   │   │       ├── 📁 servlet/
+│   │   │   │       │   ├── 📄 AdminDashboardServlet.class  <span class="sz">[2.2 KB]</span>
+│   │   │   │       │   ├── 📄 AssignLawyerServlet.class  <span class="sz">[4.3 KB]</span>
+│   │   │   │       │   ├── 📄 ClientDashboardServlet.class  <span class="sz">[2.3 KB]</span>
+│   │   │   │       │   ├── 📄 InternDashboardServlet.class  <span class="sz">[3.0 KB]</span>
+│   │   │   │       │   ├── 📄 LawyerDashboardServlet.class  <span class="sz">[3.6 KB]</span>
+│   │   │   │       │   ├── 📄 ProcessCaseRequestServlet.class  <span class="sz">[7.5 KB]</span>
+│   │   │   │       │   ├── 📄 ProcessInternServlet.class  <span class="sz">[7.3 KB]</span>
+│   │   │   │       │   ├── 📄 ViewCasesServlet.class  <span class="sz">[2.2 KB]</span>
+│   │   │   │       │   ├── 📄 ViewCustomersServlet.class  <span class="sz">[4.8 KB]</span>
+│   │   │   │       │   ├── 📄 ViewInternsServlet.class  <span class="sz">[2.1 KB]</span>
+│   │   │   │       │   └── 📄 ViewLawyersServlet.class  <span class="sz">[2.1 KB]</span>
+│   │   │   │       ├── 📁 testing/
+│   │   │   │       │   └── 📄 TestControllerServlet.class  <span class="sz">[16.9 KB]</span>
+│   │   │   │       ├── 📄 AddCaseServlet.class  <span class="sz">[10.5 KB]</span>
+│   │   │   │       ├── 📄 CSRFFilter.class  <span class="sz">[4.1 KB]</span>
+│   │   │   │       ├── 📄 CSRFTokenUtil.class  <span class="sz">[2.3 KB]</span>
+│   │   │   │       ├── 📄 DatabaseConfig.class  <span class="sz">[2.4 KB]</span>
+│   │   │   │       ├── 📄 FileUploadUtil$UploadResult.class  <span class="sz">[1.0 KB]</span>
+│   │   │   │       ├── 📄 FileUploadUtil$ValidationResult.class  <span class="sz">[749 B]</span>
+│   │   │   │       ├── 📄 FileUploadUtil.class  <span class="sz">[7.8 KB]</span>
+│   │   │   │       ├── 📄 J4USecurityFilter.class  <span class="sz">[3.4 KB]</span>
+│   │   │   │       ├── 📄 LoginServlet.class  <span class="sz">[6.7 KB]</span>
+│   │   │   │       ├── 📄 PasswordResetServlet.class  <span class="sz">[4.4 KB]</span>
+│   │   │   │       ├── 📄 PasswordUtil.class  <span class="sz">[2.2 KB]</span>
+│   │   │   │       ├── 📄 RBACUtil.class  <span class="sz">[7.8 KB]</span>
+│   │   │   │       ├── 📄 RegisterServlet.class  <span class="sz">[8.7 KB]</span>
+│   │   │   │       ├── 📄 Sanitizer.class  <span class="sz">[1.2 KB]</span>
+│   │   │   │       ├── 📄 SecurityHeadersFilter.class  <span class="sz">[1.5 KB]</span>
+│   │   │   │       ├── 📄 SendMessageServlet.class  <span class="sz">[5.9 KB]</span>
+│   │   │   │       ├── 📄 ValidationHelper.class  <span class="sz">[3.7 KB]</span>
+│   │   │   │       └── 📄 ValidationUtil.class  <span class="sz">[1.1 KB]</span>
+│   │   │   └── 📁 util/
+│   │   ├── 📁 lib/
+│   │   │   ├── 📄 commons-fileupload-1.5.jar  <span class="sz">[72.4 KB]</span>
+│   │   │   ├── 📄 commons-io-2.11.0.jar  <span class="sz">[319.5 KB]</span>
+│   │   │   ├── 📄 gson-2.10.1.jar  <span class="sz">[276.7 KB]</span>
+│   │   │   ├── 📄 jsp-api.jar  <span class="sz">[69.6 KB]</span>
+│   │   │   ├── 📄 jstl-1.2.jar  <span class="sz">[404.5 KB]</span>
+│   │   │   ├── 📄 mysql-connector-j-9.4.0.jar  <span class="sz">[2.5 MB]</span>
+│   │   │   └── 📄 servlet-api.jar  <span class="sz">[243.5 KB]</span>
+│   │   └── ⚙️ web.xml  <span class="sz">[5.5 KB]</span>
+│   ├── 📁 admin/
+│   │   ├── 📁 components/
+│   │   │   ├── 🌐 _head.jsp  <span class="sz">[437 B]</span>
+│   │   │   ├── 🌐 _sidebar.jsp  <span class="sz">[1.3 KB]</span>
+│   │   │   └── 🌐 _topbar.jsp  <span class="sz">[194 B]</span>
+│   │   ├── 🌐 admindashboard.jsp  <span class="sz">[15.1 KB]</span>
+│   │   ├── 🌐 allotlawyer.jsp  <span class="sz">[4.1 KB]</span>
+│   │   ├── 🌐 allotlawyerdone.jsp  <span class="sz">[3.6 KB]</span>
+│   │   ├── 🌐 assign_intern_to_lawyer.jsp  <span class="sz">[8.3 KB]</span>
+│   │   ├── 🌐 interns.jsp  <span class="sz">[3.2 KB]</span>
+│   │   ├── 🌐 lawyers.jsp  <span class="sz">[3.1 KB]</span>
+│   │   ├── 🌐 process_assign_intern_lawyer.jsp  <span class="sz">[2.1 KB]</span>
+│   │   ├── 🌐 user_action.jsp  <span class="sz">[2.6 KB]</span>
+│   │   ├── 🌐 verifylawyerdoc.jsp  <span class="sz">[2.1 KB]</span>
+│   │   ├── 🌐 viewcases.jsp  <span class="sz">[6.1 KB]</span>
+│   │   ├── 🌐 viewcustomers.jsp  <span class="sz">[7.1 KB]</span>
+│   │   ├── 🌐 viewinterns.jsp  <span class="sz">[5.8 KB]</span>
+│   │   ├── 🌐 viewlawdetails.jsp  <span class="sz">[4.0 KB]</span>
+│   │   ├── 🌐 viewlawyerdocuments.jsp  <span class="sz">[3.2 KB]</span>
+│   │   └── 🌐 viewlawyers.jsp  <span class="sz">[6.5 KB]</span>
+│   ├── 📁 auth/
+│   │   ├── 🌐 Lawyer_login_form.jsp  <span class="sz">[5.7 KB]</span>
+│   │   ├── 🌐 Login.jsp  <span class="sz">[4.0 KB]</span>
+│   │   ├── 🌐 cust_login.html  <span class="sz">[4.4 KB]</span>
+│   │   ├── 🌐 cust_login.jsp  <span class="sz">[4.3 KB]</span>
+│   │   ├── 🌐 internlogin.html  <span class="sz">[5.4 KB]</span>
+│   │   ├── 🌐 internlogin.jsp  <span class="sz">[1.7 KB]</span>
+│   │   ├── 🌐 internlogin_form.jsp  <span class="sz">[5.3 KB]</span>
+│   │   └── 🌐 verification_pending.jsp  <span class="sz">[3.6 KB]</span>
+│   ├── 📁 client/
+│   │   ├── 📁 components/
+│   │   │   ├── 🌐 _head.jsp  <span class="sz">[437 B]</span>
+│   │   │   ├── 🌐 _sidebar.jsp  <span class="sz">[1.2 KB]</span>
+│   │   │   └── 🌐 _topbar.jsp  <span class="sz">[337 B]</span>
+│   │   ├── 🌐 billing.jsp  <span class="sz">[2.3 KB]</span>
+│   │   ├── 🌐 cancel_lawyer_request.jsp  <span class="sz">[2.1 KB]</span>
+│   │   ├── 🌐 case.jsp  <span class="sz">[8.9 KB]</span>
+│   │   ├── 🌐 client_case_details.jsp  <span class="sz">[10.3 KB]</span>
+│   │   ├── 🌐 client_viewcases.jsp  <span class="sz">[6.3 KB]</span>
+│   │   ├── 🌐 clientdashboard.jsp  <span class="sz">[16.7 KB]</span>
+│   │   ├── 🌐 close_case_client.jsp  <span class="sz">[2.1 KB]</span>
+│   │   ├── 🌐 customer.jsp  <span class="sz">[2.6 KB]</span>
+│   │   ├── 🌐 customer_form.jsp  <span class="sz">[8.7 KB]</span>
+│   │   ├── 🌐 documents.jsp  <span class="sz">[2.4 KB]</span>
+│   │   ├── 🌐 findlawyer.jsp  <span class="sz">[8.2 KB]</span>
+│   │   ├── 🌐 notifications.jsp  <span class="sz">[2.4 KB]</span>
+│   │   ├── 🌐 requestlawyer.jsp  <span class="sz">[5.3 KB]</span>
+│   │   ├── 🌐 send_lawyer_request.jsp  <span class="sz">[3.3 KB]</span>
+│   │   └── 🌐 uploadClientDoc.jsp  <span class="sz">[1.6 KB]</span>
+│   ├── 📁 intern/
+│   │   ├── 📁 components/
+│   │   │   ├── 🌐 _head.jsp  <span class="sz">[437 B]</span>
+│   │   │   ├── 🌐 _sidebar.jsp  <span class="sz">[1.2 KB]</span>
+│   │   │   └── 🌐 _topbar.jsp  <span class="sz">[340 B]</span>
+│   │   ├── 🌐 assign_intern_case.jsp  <span class="sz">[2.3 KB]</span>
+│   │   ├── 🌐 assign_task.jsp  <span class="sz">[2.9 KB]</span>
+│   │   ├── 🌐 intern.jsp  <span class="sz">[15.3 KB]</span>
+│   │   ├── 🌐 interndashboard.jsp  <span class="sz">[11.9 KB]</span>
+│   │   ├── 🌐 process_assign_intern.jsp  <span class="sz">[3.0 KB]</span>
+│   │   ├── 🌐 uploadInternWork.jsp  <span class="sz">[3.5 KB]</span>
+│   │   └── 🌐 viewcase_intern.jsp  <span class="sz">[9.2 KB]</span>
+│   ├── 📁 landing/
+│   │   ├── 🌐 Home.html  <span class="sz">[11.2 KB]</span>
+│   │   ├── 🌐 Lawyer.html  <span class="sz">[10.8 KB]</span>
+│   │   ├── 🌐 Lawyer.jsp  <span class="sz">[8.5 KB]</span>
+│   │   ├── 🌐 about.html  <span class="sz">[437 B]</span>
+│   │   ├── 🌐 case_success.jsp  <span class="sz">[1.2 KB]</span>
+│   │   ├── 🌐 customer_reg_success.jsp  <span class="sz">[1.2 KB]</span>
+│   │   ├── 🌐 header.html  <span class="sz">[1.6 KB]</span>
+│   │   └── 🌐 role_select.html  <span class="sz">[4.9 KB]</span>
+│   ├── 📁 lawyer/
+│   │   ├── 📁 components/
+│   │   │   ├── 🌐 _head.jsp  <span class="sz">[437 B]</span>
+│   │   │   ├── 🌐 _sidebar.jsp  <span class="sz">[1.1 KB]</span>
+│   │   │   └── 🌐 _topbar.jsp  <span class="sz">[339 B]</span>
+│   │   ├── 🌐 Lawyerdashboard.jsp  <span class="sz">[15.4 KB]</span>
+│   │   ├── 🌐 accept_case.jsp  <span class="sz">[4.0 KB]</span>
+│   │   ├── 🌐 acceptcase.jsp  <span class="sz">[2.5 KB]</span>
+│   │   ├── 🌐 close_case.jsp  <span class="sz">[2.1 KB]</span>
+│   │   ├── 🌐 closecase.jsp  <span class="sz">[2.4 KB]</span>
+│   │   ├── 🌐 intern_action.jsp  <span class="sz">[2.6 KB]</span>
+│   │   ├── 🌐 lawyerprofile.jsp  <span class="sz">[6.9 KB]</span>
+│   │   ├── 🌐 manage_hearings.jsp  <span class="sz">[10.4 KB]</span>
+│   │   ├── 🌐 notifications.jsp  <span class="sz">[2.4 KB]</span>
+│   │   ├── 🌐 process_client_request.jsp  <span class="sz">[4.8 KB]</span>
+│   │   ├── 🌐 rejectcase.jsp  <span class="sz">[2.5 KB]</span>
+│   │   ├── 🌐 update_case_status.jsp  <span class="sz">[4.6 KB]</span>
+│   │   ├── 🌐 view_case_documents.jsp  <span class="sz">[2.5 KB]</span>
+│   │   ├── 🌐 viewcase.jsp  <span class="sz">[6.6 KB]</span>
+│   │   ├── 🌐 viewcases.jsp  <span class="sz">[5.7 KB]</span>
+│   │   ├── 🌐 viewcusdet.jsp  <span class="sz">[7.5 KB]</span>
+│   │   └── 🌐 viewcustdetails.jsp  <span class="sz">[6.7 KB]</span>
+│   ├── 📁 shared/
+│   │   ├── 🌐 404.jsp  <span class="sz">[1.0 KB]</span>
+│   │   ├── 🖼️ QR.jpg  <span class="sz">[51.3 KB]</span>
+│   │   ├── 🌐 _footer.jsp  <span class="sz">[836 B]</span>
+│   │   ├── 🌐 _head.jsp  <span class="sz">[1.5 KB]</span>
+│   │   ├── 🌐 _sidebar.jsp  <span class="sz">[4.7 KB]</span>
+│   │   ├── 🌐 _topbar.jsp  <span class="sz">[2.6 KB]</span>
+│   │   ├── 🌐 accessDenied.jsp  <span class="sz">[1.1 KB]</span>
+│   │   ├── 🎨 app-layout.css  <span class="sz">[9.3 KB]</span>
+│   │   ├── 🌐 caseDiscussion.jsp  <span class="sz">[13.8 KB]</span>
+│   │   ├── 🌐 caseDiscussions.jsp  <span class="sz">[5.7 KB]</span>
+│   │   ├── 🌐 chat_archive.jsp  <span class="sz">[4.4 KB]</span>
+│   │   ├── 🌐 csrf_token.jsp  <span class="sz">[275 B]</span>
+│   │   ├── 🌐 db_connection.jsp  <span class="sz">[96 B]</span>
+│   │   ├── 📄 dbconfig.properties  <span class="sz">[72 B]</span>
+│   │   ├── 🌐 downloadDoc.jsp  <span class="sz">[3.9 KB]</span>
+│   │   ├── 🌐 download_case_doc.jsp  <span class="sz">[2.2 KB]</span>
+│   │   ├── 🌐 error.jsp  <span class="sz">[3.0 KB]</span>
+│   │   ├── 🖼️ fake QR.jpg  <span class="sz">[14.9 KB]</span>
+│   │   ├── 🌐 get_messages.jsp  <span class="sz">[2.8 KB]</span>
+│   │   ├── 🌐 get_new_messages.jsp  <span class="sz">[5.0 KB]</span>
+│   │   ├── 🎨 justice4u-tokens.css  <span class="sz">[2.6 KB]</span>
+│   │   ├── ⚡ main.js  <span class="sz">[2.1 KB]</span>
+│   │   ├── ⚡ script.js  <span class="sz">[5.5 KB]</span>
+│   │   ├── 🌐 send_message.jsp  <span class="sz">[4.5 KB]</span>
+│   │   ├── 🌐 session_validator.jsp  <span class="sz">[78 B]</span>
+│   │   ├── 🌐 signout.jsp  <span class="sz">[418 B]</span>
+│   │   ├── 🌐 upload_case_doc.jsp  <span class="sz">[3.8 KB]</span>
+│   │   └── 🌐 view_case_documents.jsp  <span class="sz">[4.6 KB]</span>
+│   ├── 📁 uploads/
+│   │   └── 📁 intern_documents/
+│   ├── 📄 .htaccess  <span class="sz">[9.1 KB]</span>
+│   └── 🌐 index.jsp  <span class="sz">[121 B]</span>
+├── 📄 .classpath  <span class="sz">[771 B]</span>
+├── 📄 .gitignore  <span class="sz">[203 B]</span>
+├── 📄 .project  <span class="sz">[686 B]</span>
+├── 📄 Dockerfile  <span class="sz">[1.1 KB]</span>
+├── ⚙️ build.xml  <span class="sz">[3.4 KB]</span>
+├── 📄 docker-compose.yml  <span class="sz">[724 B]</span>
+├── 🗄️ justice4u_final.sql  <span class="sz">[191.2 KB]</span>
+├── 📄 package-lock.json  <span class="sz">[2.2 KB]</span>
+└── 📄 package.json  <span class="sz">[378 B]</span>
+</pre>
+
+</body>
+</html>
